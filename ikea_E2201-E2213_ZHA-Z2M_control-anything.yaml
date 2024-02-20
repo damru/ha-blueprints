@@ -1,6 +1,6 @@
 blueprint:
-  name: IKEA Rodret or Somrig Controls (ZHA/Z2M)
-  description: "## Control anything with IKEA RODRET or SOMRIG remotes
+  name: IKEA Rodret (E2201) or IKEA Somrig (E2213) Controls (ZHA/Z2M)
+  description: "## Control anything with IKEA RODRET or IKEA SOMRIG remotes
 
 
     Only for use with [ZHA](https://www.home-assistant.io/integrations/zha/)
@@ -8,13 +8,13 @@ blueprint:
     + [Z2M addon](https://www.zigbee2mqtt.io/guide/installation/03_ha_addon.html)).
 
 
-    Available controls:
+    Available controls on  **up** (Rodret), **down** (Rodret), **1 dot** (Somrig) or **2 dots** (Somrig) buttons:
 
-    - Press the **on** or **off** buttons
+    - Single press
 
-    - Double press the **on** or **off** buttons (optional) in **Helper - Double press delay** interval. When disabled, there will be no delay for the simple press actions
+    - Double press (optional for Rodret)
 
-    - Press and hold the **on**/**off** buttons. Actions will be executed every **Helper - Hold delay**, but maximum **Helper - Max number of loops** times.
+    - Hold. Actions will be executed every **Helper - Hold delay**, but maximum **Helper - Max number of loops** times.
     "
   domain: automation
   input:
