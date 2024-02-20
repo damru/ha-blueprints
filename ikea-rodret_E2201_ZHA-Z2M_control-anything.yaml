@@ -21,7 +21,6 @@ blueprint:
     remote_device:
       name: (ZHA) Remote
       description: IKEA remote to use. **_Choose if you are using ZHA._**
-      default: ""
       selector:
         device:
           filter:
@@ -35,7 +34,6 @@ blueprint:
     remote_name:
       name: (Zigbee2MQTT) Remote Name
       description: The name of the controller (e.g. IKEA Rodret). **_Choose if you are using Zigbee2MQTT._**
-      default: ""
     base_topic:
       name: (Zigbee2MQTT) Base mqtt topic
       description: The topic configured in [Z2M addon](https://www.zigbee2mqtt.io/guide/usage/mqtt_topics_and_messages.html).
