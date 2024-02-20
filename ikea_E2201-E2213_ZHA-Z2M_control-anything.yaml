@@ -64,53 +64,22 @@ blueprint:
       default: []
       selector:
         action: {}
-    on_double_press_exposed:
-      name: (Rodret only) Up - Double press event 
-      description: >
-        **(Rodret only)** Choose whether or not to expose the virtual **double press** event for the **up** button. 
-        Turn this on if you are providing action(s) for the **Up or 1 dot - Double press action**.
-      default: false
-      selector:
-        boolean: {}
     on_double_press_action:
       name: Up or 1 dot - Double press action
       description: >
-        Choose action(s) to run when the **up** (Rodret) or **1 dot** (Somrig) button is **pressed twice** in **Helper - Double press
-        delay** interval. (NB for Rodret only: **Up - Double press event** must be exposed.)
+        Choose action(s) to run when the **up** (Rodret) or **1 dot** (Somrig) button is **pressed twice**.
+        (**NB for Rodret only**: **Up - Double press event** must be exposed and **Helper - Double press delay** interval is used as a timeout.)
       default: []
       selector:
         action: {}
-    off_double_press_exposed:
-      name: (Rodret only) Down - Double press event
-      description: >
-        **(Rodret only)** Choose whether or not to expose the virtual **double press** event for the **down** button. 
-        Turn this on if you are providing an action for the **Down or 2 dots - Double press action**.
-      default: false
-      selector:
-        boolean: {}
     off_double_press_action:
       name: Down or 2 dots - Double press action
       description: >
-        Choose action(s) to run when the **down** (Rodret) or **2 dots** (Rodret) button is **pressed twice** in **Helper - Double press
-        delay** interval. (NB for Rodret only: **Down - Double press event** must be exposed.)
+        Choose action(s) to run when the **down** (Rodret) or **2 dots** (Rodret) button is **pressed twice**. 
+        (**NB for Rodret only**: **Down - Double press event** must be exposed and **Helper - Double press delay** interval is used as a timeout.)
       default: []
       selector:
         action: {}
-    helper_double_press_delay:
-      name: Helper - Double press delay
-      description:
-        Max delay between the first and the second button press for the
-        **Double press events**. Provide a value only if you are using a double press action.
-        Increase this value if you notice that the double press action is not triggered
-        properly.
-      default: 250
-      selector:
-        number:
-          unit_of_measurement: milliseconds
-          min: 100.0
-          max: 5000.0
-          step: 10.0
-          mode: slider
     helper_hold_delay:
       name: Helper - Hold delay
       description: Delay between the execution of the **Hold** action(s).
@@ -131,6 +100,37 @@ blueprint:
           min: 1.0
           max: 1000.0
           step: 1.0
+          mode: slider
+    on_double_press_exposed:
+      name: (Rodret only) Up - Double press event 
+      description: >
+        **(Rodret only)** Choose whether or not to expose the virtual **double press** event for the **up** button. 
+        Turn this on if you are providing action(s) for the **Up or 1 dot - Double press action**.
+      default: false
+      selector:
+        boolean: {}
+    off_double_press_exposed:
+      name: (Rodret only) Down - Double press event
+      description: >
+        **(Rodret only)** Choose whether or not to expose the virtual **double press** event for the **down** button. 
+        Turn this on if you are providing an action for the **Down or 2 dots - Double press action**.
+      default: false
+      selector:
+        boolean: {}
+    helper_double_press_delay:
+      name: (Rodret only) Helper - Double press delay
+      description: >
+        **(Rodret only)** Max delay between the first and the second button press for the
+        **Double press events**. Provide a value only if you are using a double press action.
+        Increase this value if you notice that the double press action is not triggered
+        properly.
+      default: 250
+      selector:
+        number:
+          unit_of_measurement: milliseconds
+          min: 100.0
+          max: 5000.0
+          step: 10.0
           mode: slider
 mode: single
 max_exceeded: silent
