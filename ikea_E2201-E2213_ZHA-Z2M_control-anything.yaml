@@ -41,60 +41,60 @@ blueprint:
       description: The topic configured in [Z2M addon](https://www.zigbee2mqtt.io/guide/usage/mqtt_topics_and_messages.html).
       default: zigbee2mqtt
     on_press_action:
-      name: On - Single press action
-      description: Choose action(s) to run when **on** button is pressed.
+      name:  Up or 1 dot - Single press action
+      description: Choose action(s) to run when **up** (Rodret) or **1 dot** (Somrig) button is **pressed**.
       default: []
       selector:
         action: {}
     off_press_action:
-      name: Off - Single press action
-      description: Choose action(s) to run when **off** button is **pressed**.
+      name: Down or 2 dots - Single press action
+      description: Choose action(s) to run when **down** (Rodret) or **2 dots** (Somrig) button is **pressed**.
       default: []
       selector:
         action: {}
     on_hold_action:
-      name: On - Hold action
-      description: Choose action(s) to run when **on** button is **pressed and hold**.
+      name: Up or 1 dot - Hold action
+      description: Choose action(s) to run when **up** (Rodret) or **1 dot** (Somrig) button is **held**.
       default: []
       selector:
         action: {}
     off_hold_action:
-      name: Off - Hold action
-      description: Choose action(s) to run when **off** button is **pressed and hold**.
+      name: Down or 2 dots - Hold action
+      description: Choose action(s) to run when **down** (Rodret) or **2 dots** (Somrig) button is **held**.
       default: []
       selector:
         action: {}
-    on_double_press:
-      name: On - Double press event
-      description:
-        Choose whether or not to expose the virtual **double press** event
-        for the **on** button. Turn this on if you are providing an action for the **on**
-        button double press event.
+    on_double_press_exposed:
+      name: >
+        **(Rodret only)** Up - Double press event 
+      description: >
+        **(Rodret only)** Choose whether or not to expose the virtual **double press** event for the **up** button. 
+        Turn this on if you are providing action(s) for the **Up or 1 dot - Double press action**.
       default: false
       selector:
         boolean: {}
     on_double_press_action:
-      name: On - Double press action
-      description:
-        Choose action(s) to run when pressing the **on** button twice in **Helper - Double press
-        delay** interval. **On - Double press event** must be exposed.
+      name: Up or 1 dot - Double press action
+      description: >
+        Choose action(s) to run when the **up** (Rodret) or **1 dot** (Somrig) button is **pressed twice** in **Helper - Double press
+        delay** interval. (NB for Rodret only: **Up - Double press event** must be exposed.)
       default: []
       selector:
         action: {}
-    off_double_press:
-      name: Off - Double press event
-      description:
-        Choose whether or not to expose the virtual **double press** event
-        for the **off** button. Turn this on if you are providing an action for the **off**
-        button double press event.
+    off_double_press_exposed:
+      name: > 
+        **(Rodret only)** Down - Double press event
+      description: >
+        **(Rodret only)** Choose whether or not to expose the virtual **double press** event for the **down** button. 
+        Turn this on if you are providing an action for the **Down or 2 dots - Double press action**.
       default: false
       selector:
         boolean: {}
     off_double_press_action:
-      name: Off - Double press action
-      description:
-        Choose action(s) to run when pressing the **off** button twice in **Helper - Double press
-        delay** interval. **Off - Double press event** must be exposed.
+      name: Down or 2 dots - Double press action
+      description: >
+        Choose action(s) to run when the **down** (Rodret) or **2 dots** (Rodret) button is **pressed twice** in **Helper - Double press
+        delay** interval. (NB for Rodret only: **Down - Double press event** must be exposed.)
       default: []
       selector:
         action: {}
@@ -240,8 +240,8 @@ trigger:
     id: release-hold-dots2-z2m-e2213
 action:
   - variables:
-      on_double_press: !input on_double_press
-      off_double_press: !input off_double_press
+      on_double_press_exposed: !input on_double_press_exposed
+      off_double_press_exposed: !input off_double_press_exposed
       zha_remote: !input remote_device
       z2m_base_topic: !input base_topic
       z2m_controller: !input remote_name
@@ -255,7 +255,7 @@ action:
         sequence:
           - if:
               - condition: template
-                value_template: "{{ on_double_press }}"
+                value_template: "{{ on_double_press_exposed }}"
             then:
               - choose:
                   - conditions:
@@ -306,7 +306,7 @@ action:
         sequence:
           - if:
               - condition: template
-                value_template: "{{ off_double_press }}"
+                value_template: "{{ off_double_press_exposed }}"
             then:
               - choose:
                   - conditions:
