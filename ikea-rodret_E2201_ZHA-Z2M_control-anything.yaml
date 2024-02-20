@@ -25,11 +25,12 @@ blueprint:
       selector:
         device:
           filter:
-            integration: zha
-            manufacturer: IKEA of Sweden
-            model: 
-              - RODRET Dimmer
-              - SOMRIG shortcut button
+            - integration: zha
+              manufacturer: IKEA of Sweden
+              model: RODRET Dimmer
+            - integration: zha
+              manufacturer: IKEA of Sweden
+              model: SOMRIG shortcut button
           multiple: false
     remote_name:
       name: (Zigbee2MQTT) Remote Name
