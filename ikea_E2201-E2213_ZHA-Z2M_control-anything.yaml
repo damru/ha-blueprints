@@ -65,8 +65,7 @@ blueprint:
       selector:
         action: {}
     on_double_press_exposed:
-      name: >
-        **(Rodret only)** Up - Double press event 
+      name: (Rodret only) Up - Double press event 
       description: >
         **(Rodret only)** Choose whether or not to expose the virtual **double press** event for the **up** button. 
         Turn this on if you are providing action(s) for the **Up or 1 dot - Double press action**.
@@ -82,8 +81,7 @@ blueprint:
       selector:
         action: {}
     off_double_press_exposed:
-      name: > 
-        **(Rodret only)** Down - Double press event
+      name: (Rodret only) Down - Double press event
       description: >
         **(Rodret only)** Choose whether or not to expose the virtual **double press** event for the **down** button. 
         Turn this on if you are providing an action for the **Down or 2 dots - Double press action**.
