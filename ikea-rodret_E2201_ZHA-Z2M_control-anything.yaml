@@ -1,6 +1,6 @@
 blueprint:
-  name: IKEA Rodret Dimmer Controls (ZHA/Z2M)
-  description: "## Control anything with IKEA RODRET Dimmer remote (v1.2)
+  name: IKEA Rodret or Somrig Controls (ZHA/Z2M)
+  description: "## Control anything with IKEA RODRET or SOMRIG remotes
 
 
     Only for use with [ZHA](https://www.home-assistant.io/integrations/zha/)
@@ -27,7 +27,9 @@ blueprint:
           filter:
             integration: zha
             manufacturer: IKEA of Sweden
-            model: RODRET Dimmer
+            model: 
+              - RODRET Dimmer
+              - SOMRIG shortcut button
           multiple: false
     remote_name:
       name: (Zigbee2MQTT) Remote Name
