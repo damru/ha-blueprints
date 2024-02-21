@@ -207,34 +207,106 @@ trigger:
     id: release-z2m-e2201
 
   # SOMRIG - E2213
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_id: "{{ zha_controller }}"
+      command: "short_release"
+      cluster_id: 64640
+      endpoint_id: 1
+      args: [0]
+    id: press-dots1-zha-e2213
   - platform: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "1_short_release"
     id: press-dots1-z2m-e2213
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_id: "{{ zha_controller }}"
+      command: "short_release"
+      cluster_id: 64640
+      endpoint_id: 2
+      args: [0]
+    id: press-dots2-zha-e2213
   - platform: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "2_short_release"
     id: press-dots2-z2m-e2213
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_id: "{{ zha_controller }}"
+      command: "multi_press_complete"
+      cluster_id: 64640
+      endpoint_id: 1
+      args: [0, 2]
+    id: double-press-dots1-zha-e2213
   - platform: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "1_double_press"
     id: double-press-dots1-z2m-e2213
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_id: "{{ zha_controller }}"
+      command: "multi_press_complete"
+      cluster_id: 64640
+      endpoint_id: 2
+      args: [0, 2]
+    id: double-press-dots2-zha-e2213
   - platform: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "2_double_press"
     id: double-press-dots2-z2m-e2213
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_id: "{{ zha_controller }}"
+      command: "long_press"
+      cluster_id: 64640
+      endpoint_id: 1
+      args: [0]
+    id: hold-dots1-zha-e2213
   - platform: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "1_long_press"
     id: hold-dots1-z2m-e2213
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_id: "{{ zha_controller }}"
+      command: "long_press"
+      cluster_id: 64640
+      endpoint_id: 2
+      args: [0]
+    id: hold-dots2-zha-e2213
   - platform: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "2_long_press"
     id: hold-dots2-z2m-e2213
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_id: "{{ zha_controller }}"
+      command: "long_release"
+      cluster_id: 64640
+      endpoint_id: 1
+      args: [0]
+    id: release-hold-dots1-zha-e2213
   - platform: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "1_long_release"
     id: release-hold-dots1-z2m-e2213
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_id: "{{ zha_controller }}"
+      command: "long_release"
+      cluster_id: 64640
+      endpoint_id: 2
+      args: [0]
+    id: release-hold-dots2-zha-e2213
   - platform: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "2_long_release"
@@ -252,6 +324,7 @@ action:
             id:
               - press-up-zha-e2201
               - press-up-z2m-e2201
+              - press-dots1-zha-e2213
               - press-dots1-z2m-e2213
         sequence:
           - if:
@@ -304,6 +377,7 @@ action:
             id:
               - press-down-zha-e2201
               - press-down-z2m-e2201
+              - press-dots2-zha-e2213
               - press-dots2-z2m-e2213
         sequence:
           - if:
@@ -354,11 +428,13 @@ action:
       - conditions:
           - condition: trigger
             id:
+              - double-press-dots1-zha-e2213
               - double-press-dots1-z2m-e2213
         sequence: !input on_double_press_action
       - conditions:
           - condition: trigger
             id:
+              - double-press-dots2-zha-e2213
               - double-press-dots2-z2m-e2213
         sequence: !input off_double_press_action
       - conditions:
@@ -366,6 +442,7 @@ action:
             id:
               - hold-up-zha-e2201
               - hold-up-z2m-e2201
+              - hold-dots1-zha-e2213
               - hold-dots1-z2m-e2213
         sequence:
           - repeat:
@@ -379,6 +456,7 @@ action:
                                 - condition: trigger
                                   id:
                                     - hold-up-zha-e2201
+                                    - hold-dots1-zha-e2213
                               sequence:
                                 - wait_for_trigger:
                                     - platform: event
@@ -422,6 +500,7 @@ action:
             id:
               - hold-down-zha-e2201
               - hold-down-z2m-e2201
+              - hold-dots2-zha-e2213
               - hold-dots2-z2m-e2213
         sequence:
           - repeat:
@@ -435,6 +514,7 @@ action:
                                 - condition: trigger
                                   id:
                                     - hold-down-zha-e2201
+                                    - hold-dots2-zha-e2213
                               sequence:
                                 - wait_for_trigger:
                                     - platform: event
