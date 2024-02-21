@@ -1,7 +1,7 @@
 blueprint:
-  name: IKEA Rodret (E2201) or IKEA Somrig (E2213) Controls (ZHA/Z2M)
+  name: IKEA Rodret (E2201) or IKEA Somrig (E2213) Light control (ZHA/Z2M)
   description: >
-    ## Control Light with IKEA RODRET or IKEA SOMRIG remotes
+    ## Control a light with **IKEA RODRET** or **IKEA SOMRIG** remotes
 
 
     Only for use with [ZHA](https://www.home-assistant.io/integrations/zha/)
