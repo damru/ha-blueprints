@@ -11,14 +11,14 @@ blueprint:
 
     Available controls:
 
-    - Press **up** (Rodret) or **1 dot** (Somrig) to turn on the light 
+    - Press **on** (Rodret) or **1 dot** (Somrig) to turn on the light 
     (Optional: set the target brightness by enabling **Helper - Force Brightness** and setting a **Helper - Brightness** value)
 
-    - Press **down** (Rodret) or **2 dots** (Somrig) to turn off the light
+    - Press **off** (Rodret) or **2 dots** (Somrig) to turn off the light
 
-    - Hold **up** (Rodret) or **1 dot** button to increase the brightness
+    - Hold **on** (Rodret) or **1 dot** button to increase the brightness
 
-    - Hold **down** (Rodret) or **2 dots** button to decrease the brightness down to 1%
+    - Hold **off** (Rodret) or **2 dots** button to decrease the brightness down to 1%
   domain: automation
   input:
     remote_device:
@@ -87,11 +87,11 @@ trigger:
       command: "on"
       cluster_id: 6
       endpoint_id: 1
-    id: press-up-zha-e2201
+    id: press-on-zha-e2201
   - platform: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "on"
-    id: press-up-z2m-e2201
+    id: press-on-z2m-e2201
   - platform: event
     event_type: zha_event
     event_data:
@@ -99,11 +99,11 @@ trigger:
       command: "off"
       cluster_id: 6
       endpoint_id: 1
-    id: press-down-zha-e2201
+    id: press-off-zha-e2201
   - platform: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "off"
-    id: press-down-z2m-e2201
+    id: press-off-z2m-e2201
   - platform: event
     event_type: zha_event
     event_data:
@@ -112,11 +112,11 @@ trigger:
       cluster_id: 8
       endpoint_id: 1
       args: [0, 83]
-    id: hold-up-zha-e2201
+    id: hold-on-zha-e2201
   - platform: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "brightness_move_up"
-    id: hold-up-z2m-e2201
+    id: hold-on-z2m-e2201
   - platform: event
     event_type: zha_event
     event_data:
@@ -125,11 +125,11 @@ trigger:
       cluster_id: 8
       endpoint_id: 1
       args: [1, 83, 0, 0]
-    id: hold-down-zha-e2201
+    id: hold-off-zha-e2201
   - platform: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "brightness_move_down"
-    id: hold-down-z2m-e2201
+    id: hold-off-z2m-e2201
   - platform: event
     event_type: zha_event
     event_data:
@@ -258,8 +258,8 @@ action:
       - conditions:
           - condition: trigger
             id:
-              - press-up-zha-e2201
-              - press-up-z2m-e2201
+              - press-on-zha-e2201
+              - press-on-z2m-e2201
               - press-dots1-zha-e2213
               - press-dots1-z2m-e2213
         sequence:
@@ -281,8 +281,8 @@ action:
       - conditions:
           - condition: trigger
             id:
-              - press-down-zha
-              - press-down-z2m-e2201
+              - press-off-zha
+              - press-off-z2m-e2201
               - press-dots2-zha-e2213
               - press-dots2-z2m-e2213
         sequence:
@@ -294,8 +294,8 @@ action:
       - conditions:
           - condition: trigger
             id:
-              - hold-up-zha-e2201
-              - hold-up-z2m-e2201
+              - hold-on-zha-e2201
+              - hold-on-z2m-e2201
               - hold-dots1-zha-e2213
               - hold-dots1-z2m-e2213
         sequence:
@@ -303,8 +303,8 @@ action:
               while:
                 - condition: trigger
                   id:
-                    - hold-up-zha-e2201
-                    - hold-up-z2m-e2201
+                    - hold-on-zha-e2201
+                    - hold-on-z2m-e2201
                     - hold-dots1-zha-e2213
                     - hold-dots1-z2m-e2213
               sequence:
@@ -318,8 +318,8 @@ action:
       - conditions:
           - condition: trigger
             id:
-              - hold-down-zha-e2201
-              - hold-down-z2m-e2201
+              - hold-off-zha-e2201
+              - hold-off-z2m-e2201
               - hold-dots2-zha-e2213
               - hold-dots2-z2m-e2213
         sequence:
