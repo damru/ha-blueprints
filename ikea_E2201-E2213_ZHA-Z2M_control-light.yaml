@@ -146,11 +146,11 @@ trigger:
   # SOMRIG - E2213
   - platform: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
-    payload: "1_short_press"
+    payload: "1_short_release"
     id: press-dots1-z2m-e2213
   - platform: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
-    payload: "2_short_press"
+    payload: "2_short_release"
     id: press-dots2-z2m-e2213
   - platform: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
