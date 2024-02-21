@@ -41,31 +41,31 @@ blueprint:
       description: The topic configured in [Z2M addon](https://www.zigbee2mqtt.io/guide/usage/mqtt_topics_and_messages.html).
       default: zigbee2mqtt
     on_press_action:
-      name:  Up or 1 dot - Single press action
+      name: Single press action (Up / 1 dot)
       description: Choose action(s) to run when **up** (Rodret) or **1 dot** (Somrig) button is **pressed**.
       default: []
       selector:
         action: {}
     off_press_action:
-      name: Down or 2 dots - Single press action
+      name: Single press action (Down / 2 dots)
       description: Choose action(s) to run when **down** (Rodret) or **2 dots** (Somrig) button is **pressed**.
       default: []
       selector:
         action: {}
     on_hold_action:
-      name: Up or 1 dot - Hold action
+      name: Hold action (Up / 1 dot)
       description: Choose action(s) to run when **up** (Rodret) or **1 dot** (Somrig) button is **held**.
       default: []
       selector:
         action: {}
     off_hold_action:
-      name: Down or 2 dots - Hold action
+      name: Hold action (Down / 2 dots)
       description: Choose action(s) to run when **down** (Rodret) or **2 dots** (Somrig) button is **held**.
       default: []
       selector:
         action: {}
     on_double_press_action:
-      name: Up or 1 dot - Double press action
+      name: Double press action (Up / 1 dot)
       description: >
         Choose action(s) to run when the **up** (Rodret) or **1 dot** (Somrig) button is **pressed twice**.
         (**NB for Rodret only**: **Up - Double press event** must be exposed and **Helper - Double press delay** interval is used as a timeout.)
@@ -73,7 +73,7 @@ blueprint:
       selector:
         action: {}
     off_double_press_action:
-      name: Down or 2 dots - Double press action
+      name: Double press action (Down / 2 dots)
       description: >
         Choose action(s) to run when the **down** (Rodret) or **2 dots** (Rodret) button is **pressed twice**. 
         (**NB for Rodret only**: **Down - Double press event** must be exposed and **Helper - Double press delay** interval is used as a timeout.)
