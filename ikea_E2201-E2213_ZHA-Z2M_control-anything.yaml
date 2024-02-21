@@ -8,7 +8,7 @@ blueprint:
     + [Z2M addon](https://www.zigbee2mqtt.io/guide/installation/03_ha_addon.html)).
 
 
-    Available controls on  **up** (Rodret), **down** (Rodret), **1 dot** (Somrig) or **2 dots** (Somrig) buttons:
+    Available controls on IKEA Rodret and IKEA Somrig remotes:
 
     - Single press
 
