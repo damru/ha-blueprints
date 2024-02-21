@@ -70,7 +70,7 @@ blueprint:
       name: Double press action (Up / 1 dot)
       description: >
         Choose action(s) to run when the **up** (Rodret) or **1 dot** (Somrig) button is **pressed twice**.
-        (**NB for Rodret only**: **Up - Double press event** must be exposed and **Helper - Double press delay** interval is used as a timeout.)
+        (**_NB for Rodret only_**: **Up - Double press event** must be exposed and **Helper - Double press delay** interval is used as a timeout.)
       default: []
       selector:
         action: {}
@@ -78,7 +78,7 @@ blueprint:
       name: Double press action (Down / 2 dots)
       description: >
         Choose action(s) to run when the **down** (Rodret) or **2 dots** (Rodret) button is **pressed twice**. 
-        (**NB for Rodret only**: **Down - Double press event** must be exposed and **Helper - Double press delay** interval is used as a timeout.)
+        (**_NB for Rodret only_**: **Down - Double press event** must be exposed and **Helper - Double press delay** interval is used as a timeout.)
       default: []
       selector:
         action: {}
@@ -106,7 +106,7 @@ blueprint:
     on_double_press_exposed:
       name: (Rodret only) Up - Double press event 
       description: >
-        **(Rodret only)** Choose whether or not to expose the virtual **double press** event for the **up** button. 
+        **_(Rodret only)_** Choose whether or not to expose the virtual **double press** event for the **up** button. 
         Turn this on if you are providing action(s) for the **Up or 1 dot - Double press action**.
       default: false
       selector:
@@ -114,7 +114,7 @@ blueprint:
     off_double_press_exposed:
       name: (Rodret only) Down - Double press event
       description: >
-        **(Rodret only)** Choose whether or not to expose the virtual **double press** event for the **down** button. 
+        **_(Rodret only)_** Choose whether or not to expose the virtual **double press** event for the **down** button. 
         Turn this on if you are providing an action for the **Down or 2 dots - Double press action**.
       default: false
       selector:
