@@ -55,7 +55,7 @@ blueprint:
           multiple: false
     helper_force_brightness:
       name: Helper - Force brightness
-      description: Force the brightness to value below when light turns on.
+      description: Force the brightness to **Helper - Brightness** value when light turns on.
       default: false
       selector:
         boolean: {}
