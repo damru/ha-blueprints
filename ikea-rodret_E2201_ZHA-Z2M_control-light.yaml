@@ -1,6 +1,7 @@
 blueprint:
-  name: IKEA Rodret or Somrig Light Control (ZHA/Z2M)
-  description: "## Control Light with IKEA RODRET or SOMRIG remotes
+  name: IKEA Rodret (E2201) or IKEA Somrig (E2213) Controls (ZHA/Z2M)
+  description: >
+    ## Control Light with IKEA RODRET or IKEA SOMRIG remotes
 
 
     Only for use with [ZHA](https://www.home-assistant.io/integrations/zha/)
@@ -10,31 +11,35 @@ blueprint:
 
     Available controls:
 
-    - Press the **on** button to turn on the light (Optional: set the target brightness
-    by enabling **Helper - Force Brightness** and setting a **Helper - Brightness** value)
+    - Press **up** (Rodret) or **1 dot** (Somrig) to turn on the light 
+    (Optional: set the target brightness by enabling **Helper - Force Brightness** and setting a **Helper - Brightness** value)
 
-    - Press the **off** button to turn off the light
+    - Press **down** (Rodret) or **2 dots** (Somrig) to turn off the light
 
-    - Press and hold the **on** button to increase the brightness
+    - Hold **up** (Rodret) or **1 dot** button to increase the brightness
 
-    - Press and hold the **off** button to decrease the brightness down to 1%
-    "
+    - Hold **down** (Rodret) or **2 dots** button to decrease the brightness down to 1%
   domain: automation
   input:
     remote_device:
       name: (ZHA) Remote
-      description: IKEA remote to use. **_Choose if you are using ZHA._**
+      description: >
+        **_Choose if you are using ZHA._** IKEA remote to use.
       default: ""
       selector:
         device:
           filter:
-            integration: zha
-            manufacturer: IKEA of Sweden
-            model: RODRET Dimmer
+            - integration: zha
+              manufacturer: IKEA of Sweden
+              model: RODRET Dimmer
+            - integration: zha
+              manufacturer: IKEA of Sweden
+              model: SOMRIG shortcut button
           multiple: false
     remote_name:
       name: (Zigbee2MQTT) Remote Name
-      description: The name of the controller (e.g. IKEA Rodret). **_Choose if you are using Zigbee2MQTT._**
+      description: >
+        **_Choose if you are using Zigbee2MQTT._** The name of the controller (e.g. IKEA Rodret).
       default: ""
     base_topic:
       name: (Zigbee2MQTT) Base mqtt topic
@@ -74,6 +79,7 @@ trigger_variables:
   z2m_controller: !input remote_name
   zha_controller: !input remote_device
 trigger:
+  # RODRET - E2201
   - platform: event
     event_type: zha_event
     event_data:
@@ -81,11 +87,11 @@ trigger:
       command: "on"
       cluster_id: 6
       endpoint_id: 1
-    id: press-on-zha
+    id: press-up-zha-e2201
   - platform: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "on"
-    id: press-on-z2m
+    id: press-up-z2m-e2201
   - platform: event
     event_type: zha_event
     event_data:
@@ -93,11 +99,11 @@ trigger:
       command: "off"
       cluster_id: 6
       endpoint_id: 1
-    id: press-off-zha
+    id: press-down-zha-e2201
   - platform: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "off"
-    id: press-off-z2m
+    id: press-down-z2m-e2201
   - platform: event
     event_type: zha_event
     event_data:
@@ -106,11 +112,11 @@ trigger:
       cluster_id: 8
       endpoint_id: 1
       args: [0, 83]
-    id: hold-on-zha
+    id: hold-up-zha-e2201
   - platform: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "brightness_move_up"
-    id: hold-on-z2m
+    id: hold-up-z2m-e2201
   - platform: event
     event_type: zha_event
     event_data:
@@ -119,11 +125,11 @@ trigger:
       cluster_id: 8
       endpoint_id: 1
       args: [1, 83, 0, 0]
-    id: hold-off-zha
+    id: hold-down-zha-e2201
   - platform: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "brightness_move_down"
-    id: hold-off-z2m
+    id: hold-down-z2m-e2201
   - platform: event
     event_type: zha_event
     event_data:
@@ -131,11 +137,45 @@ trigger:
       command: stop_with_on_off
       endpoint_id: 1
       cluster_id: 8
-    id: release-zha
+    id: release-zha-e2201
   - platform: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "brightness_stop"
-    id: release-z2m
+    id: release-z2m-e2201
+
+  # SOMRIG - E2213
+  - platform: mqtt
+    topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
+    payload: "1_short_release"
+    id: press-dots1-z2m-e2213
+  - platform: mqtt
+    topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
+    payload: "2_short_release"
+    id: press-dots2-z2m-e2213
+  - platform: mqtt
+    topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
+    payload: "1_double_press"
+    id: double-press-dots1-z2m-e2213
+  - platform: mqtt
+    topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
+    payload: "2_double_press"
+    id: double-press-dots2-z2m-e2213
+  - platform: mqtt
+    topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
+    payload: "1_long_press"
+    id: hold-dots1-z2m-e2213
+  - platform: mqtt
+    topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
+    payload: "2_long_press"
+    id: hold-dots2-z2m-e2213
+  - platform: mqtt
+    topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
+    payload: "1_long_release"
+    id: release-hold-dots1-z2m-e2213
+  - platform: mqtt
+    topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
+    payload: "2_long_release"
+    id: release-hold-dots2-z2m-e2213
 action:
   - variables:
       helper_force_brightness: !input helper_force_brightness
@@ -146,8 +186,9 @@ action:
       - conditions:
           - condition: trigger
             id:
-              - press-on-zha
-              - press-on-z2m
+              - press-up-zha-e2201
+              - press-up-z2m-e2201
+              - press-dots1-z2m-e2213
         sequence:
           - choose:
               - conditions: "{{ helper_force_brightness }}"
@@ -167,8 +208,9 @@ action:
       - conditions:
           - condition: trigger
             id:
-              - press-off-zha
-              - press-off-z2m
+              - press-down-zha
+              - press-down-z2m-e2201
+              - press-dots2-z2m-e2213
         sequence:
           - service: light.turn_off
             target:
@@ -178,15 +220,17 @@ action:
       - conditions:
           - condition: trigger
             id:
-              - hold-on-zha
-              - hold-on-z2m
+              - hold-up-zha-e2201
+              - hold-up-z2m-e2201
+              - hold-dots1-z2m-e2213
         sequence:
           - repeat:
               while:
                 - condition: trigger
                   id:
-                    - hold-on-zha
-                    - hold-on-z2m
+                    - hold-up-zha-e2201
+                    - hold-up-z2m-e2201
+                    - hold-dots1-z2m-e2213
               sequence:
                 - parallel:
                     - service: light.turn_on
@@ -198,8 +242,9 @@ action:
       - conditions:
           - condition: trigger
             id:
-              - hold-off-zha
-              - hold-off-z2m
+              - hold-down-zha-e2201
+              - hold-down-z2m-e2201
+              - hold-dots2-z2m-e2213
         sequence:
           - repeat:
               while:

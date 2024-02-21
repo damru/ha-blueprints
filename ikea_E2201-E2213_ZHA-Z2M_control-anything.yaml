@@ -1,6 +1,7 @@
 blueprint:
   name: IKEA Rodret (E2201) or IKEA Somrig (E2213) Controls (ZHA/Z2M)
-  description: "## Control anything with IKEA RODRET or IKEA SOMRIG remotes
+  description: >
+    ## Control anything with IKEA RODRET or IKEA SOMRIG remotes
 
 
     Only for use with [ZHA](https://www.home-assistant.io/integrations/zha/)
@@ -15,7 +16,6 @@ blueprint:
     - Double press (optional for Rodret)
 
     - Hold. Actions will be executed every **Helper - Hold delay**, but maximum **Helper - Max number of loops** times.
-    "
   domain: automation
   input:
     remote_device:
