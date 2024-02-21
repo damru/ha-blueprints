@@ -140,13 +140,13 @@ max_exceeded: silent
 trigger_variables:
   z2m_base_topic: !input base_topic
   z2m_controller: !input remote_name
-  zha_remote: !input remote_device
+  zha_controller: !input remote_device
 trigger:
   # RODRET - E2201
   - platform: event
     event_type: zha_event
     event_data:
-      device_id: "{{ zha_remote }}"
+      device_id: "{{ zha_controller }}"
       command: "on"
       cluster_id: 6
       endpoint_id: 1
@@ -158,7 +158,7 @@ trigger:
   - platform: event
     event_type: zha_event
     event_data:
-      device_id: "{{ zha_remote }}"
+      device_id: "{{ zha_controller }}"
       command: "off"
       cluster_id: 6
       endpoint_id: 1
@@ -170,7 +170,7 @@ trigger:
   - platform: event
     event_type: zha_event
     event_data:
-      device_id: "{{ zha_remote }}"
+      device_id: "{{ zha_controller }}"
       command: "move_with_on_off"
       cluster_id: 8
       endpoint_id: 1
@@ -183,7 +183,7 @@ trigger:
   - platform: event
     event_type: zha_event
     event_data:
-      device_id: "{{ zha_remote }}"
+      device_id: "{{ zha_controller }}"
       command: "move"
       cluster_id: 8
       endpoint_id: 1
@@ -196,7 +196,7 @@ trigger:
   - platform: event
     event_type: zha_event
     event_data:
-      device_id: "{{ zha_remote }}"
+      device_id: "{{ zha_controller }}"
       endpoint_id: 1
       cluster_id: 8
       command: stop_with_on_off
@@ -315,7 +315,7 @@ action:
   - variables:
       on_double_press_exposed: !input on_double_press_exposed
       off_double_press_exposed: !input off_double_press_exposed
-      zha_remote: !input remote_device
+      zha_controller: !input remote_device
       z2m_base_topic: !input base_topic
       z2m_controller: !input remote_name
   - choose:
@@ -341,7 +341,7 @@ action:
                           - platform: event
                             event_type: zha_event
                             event_data:
-                              device_id: "{{ zha_remote }}"
+                              device_id: "{{ zha_controller }}"
                               command: "on"
                               cluster_id: 6
                               endpoint_id: 1
@@ -394,7 +394,7 @@ action:
                           - platform: event
                             event_type: zha_event
                             event_data:
-                              device_id: "{{ zha_remote }}"
+                              device_id: "{{ zha_controller }}"
                               command: "off"
                               cluster_id: 6
                               endpoint_id: 1
@@ -462,7 +462,7 @@ action:
                                     - platform: event
                                       event_type: zha_event
                                       event_data:
-                                        device_id: "{{ zha_remote }}"
+                                        device_id: "{{ zha_controller }}"
                                         command: "stop_with_on_off"
                                         cluster_id: 8
                                         endpoint_id: 1
@@ -520,7 +520,7 @@ action:
                                     - platform: event
                                       event_type: zha_event
                                       event_data:
-                                        device_id: "{{ zha_remote }}"
+                                        device_id: "{{ zha_controller }}"
                                         command: "stop_with_on_off"
                                         cluster_id: 8
                                         endpoint_id: 1
