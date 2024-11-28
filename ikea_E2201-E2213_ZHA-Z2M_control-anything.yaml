@@ -285,7 +285,7 @@ trigger:
     domain: mqtt
     device_id: "{{ remote_controller }}"
     type: action
-    subtype:"1_long_press"
+    subtype: "1_long_press"
     id: hold-dots1-z2m-e2213
   - trigger: event
     event_type: zha_event
