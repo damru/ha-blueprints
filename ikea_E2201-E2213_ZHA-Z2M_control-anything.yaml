@@ -134,42 +134,40 @@ blueprint:
           mode: slider
 mode: single
 max_exceeded: silent
-trigger_variables:
-  remote_controller: !input remote_device
 trigger:
   # RODRET - E2201
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: "{{ remote_controller }}"
+      device_id: !input remote_device
       command: "on"
       cluster_id: 6
       endpoint_id: 1
     id: press-on-zha-e2201
   - trigger: device
     domain: mqtt
-    device_id: "{{ remote_controller }}"
+    device_id: !input remote_device
     type: action
     subtype: "on"
     id: press-on-z2m-e2201
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: "{{ remote_controller }}"
+      device_id: !input remote_device
       command: "off"
       cluster_id: 6
       endpoint_id: 1
     id: press-off-zha-e2201
   - trigger: device
     domain: mqtt
-    device_id: "{{ remote_controller }}"
+    device_id: !input remote_device
     type: action
     subtype: "off"
     id: press-off-z2m-e2201
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: "{{ remote_controller }}"
+      device_id: !input remote_device
       command: "move_with_on_off"
       cluster_id: 8
       endpoint_id: 1
@@ -177,14 +175,14 @@ trigger:
     id: hold-on-zha-e2201
   - trigger: device
     domain: mqtt
-    device_id: "{{ remote_controller }}"
+    device_id: !input remote_device
     type: action
     subtype: "brightness_move_up"
     id: hold-on-z2m-e2201
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: "{{ remote_controller }}"
+      device_id: !input remote_device
       command: "move"
       cluster_id: 8
       endpoint_id: 1
@@ -192,21 +190,21 @@ trigger:
     id: hold-off-zha-e2201
   - trigger: device
     domain: mqtt
-    device_id: "{{ remote_controller }}"
+    device_id: !input remote_device
     type: action
     subtype: "brightness_move_down"
     id: hold-off-z2m-e2201
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: "{{ remote_controller }}"
+      device_id: !input remote_device
       endpoint_id: 1
       cluster_id: 8
       command: stop_with_on_off
     id: release-zha-e2201
   - trigger: device
     domain: mqtt
-    device_id: "{{ remote_controller }}"
+    device_id: !input remote_device
     type: action
     subtype: "brightness_stop"
     id: release-z2m-e2201
@@ -215,7 +213,7 @@ trigger:
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: "{{ remote_controller }}"
+      device_id: !input remote_device
       command: "short_release"
       cluster_id: 64640
       endpoint_id: 1
@@ -223,14 +221,14 @@ trigger:
     id: press-dots1-zha-e2213
   - trigger: device
     domain: mqtt
-    device_id: "{{ remote_controller }}"
+    device_id: !input remote_device
     type: action
     subtype: "1_short_release"
     id: press-dots1-z2m-e2213
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: "{{ remote_controller }}"
+      device_id: !input remote_device
       command: "short_release"
       cluster_id: 64640
       endpoint_id: 2
@@ -238,14 +236,14 @@ trigger:
     id: press-dots2-zha-e2213
   - trigger: device
     domain: mqtt
-    device_id: "{{ remote_controller }}"
+    device_id: !input remote_device
     type: action
     subtype: "2_short_release"
     id: press-dots2-z2m-e2213
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: "{{ remote_controller }}"
+      device_id: !input remote_device
       command: "multi_press_complete"
       cluster_id: 64640
       endpoint_id: 1
@@ -253,14 +251,14 @@ trigger:
     id: double-press-dots1-zha-e2213
   - trigger: device
     domain: mqtt
-    device_id: "{{ remote_controller }}"
+    device_id: !input remote_device
     type: action
     subtype:  "1_double_press"
     id: double-press-dots1-z2m-e2213
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: "{{ remote_controller }}"
+      device_id: !input remote_device
       command: "multi_press_complete"
       cluster_id: 64640
       endpoint_id: 2
@@ -268,14 +266,14 @@ trigger:
     id: double-press-dots2-zha-e2213
   - trigger: device
     domain: mqtt
-    device_id: "{{ remote_controller }}"
+    device_id: !input remote_device
     type: action
     subtype: "2_double_press"
     id: double-press-dots2-z2m-e2213
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: "{{ remote_controller }}"
+      device_id: !input remote_device
       command: "long_press"
       cluster_id: 64640
       endpoint_id: 1
@@ -283,14 +281,14 @@ trigger:
     id: hold-dots1-zha-e2213
   - trigger: device
     domain: mqtt
-    device_id: "{{ remote_controller }}"
+    device_id: !input remote_device
     type: action
     subtype: "1_long_press"
     id: hold-dots1-z2m-e2213
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: "{{ remote_controller }}"
+      device_id: !input remote_device
       command: "long_press"
       cluster_id: 64640
       endpoint_id: 2
@@ -298,14 +296,14 @@ trigger:
     id: hold-dots2-zha-e2213
   - trigger: device
     domain: mqtt
-    device_id: "{{ remote_controller }}"
+    device_id: !input remote_device
     type: action
     subtype: "2_long_press"
     id: hold-dots2-z2m-e2213
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: "{{ remote_controller }}"
+      device_id: !input remote_device
       command: "long_release"
       cluster_id: 64640
       endpoint_id: 1
@@ -313,14 +311,14 @@ trigger:
     id: release-hold-dots1-zha-e2213
   - trigger: device
     domain: mqtt
-    device_id: "{{ remote_controller }}"
+    device_id: !input remote_device
     type: action
     subtype: "1_long_release"
     id: release-hold-dots1-z2m-e2213
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: "{{ remote_controller }}"
+      device_id: !input remote_device
       command: "long_release"
       cluster_id: 64640
       endpoint_id: 2
@@ -328,7 +326,7 @@ trigger:
     id: release-hold-dots2-zha-e2213
   - trigger: device
     domain: mqtt
-    device_id: "{{ remote_controller }}"
+    device_id: !input remote_device
     type: action
     subtype: "2_long_release"
     id: release-hold-dots2-z2m-e2213
@@ -336,8 +334,6 @@ action:
   - variables:
       on_double_press_exposed: !input on_double_press_exposed
       off_double_press_exposed: !input off_double_press_exposed
-      remote_controller: !input remote_device
-      z2m_base_topic: !input base_topic
   - choose:
       - conditions:
           - condition: trigger
@@ -361,7 +357,7 @@ action:
                           - trigger: event
                             event_type: zha_event
                             event_data:
-                              device_id: "{{ remote_controller }}"
+                              device_id: !input remote_device
                               command: "on"
                               cluster_id: 6
                               endpoint_id: 1
@@ -381,7 +377,7 @@ action:
                       - wait_for_trigger:
                           - trigger: device
                             domain: mqtt
-                            device_id: "{{ remote_controller }}"
+                            device_id: !input remote_device
                             type: action
                             subtype: "on"
                         timeout:
@@ -416,7 +412,7 @@ action:
                           - trigger: event
                             event_type: zha_event
                             event_data:
-                              device_id: "{{ remote_controller }}"
+                              device_id: !input remote_device
                               command: "off"
                               cluster_id: 6
                               endpoint_id: 1
@@ -436,7 +432,7 @@ action:
                       - wait_for_trigger:
                           - trigger: device
                             domain: mqtt
-                            device_id: "{{ remote_controller }}"
+                            device_id: !input remote_device
                             type: action
                             subtype: "off"
                         timeout:
@@ -486,7 +482,7 @@ action:
                                     - trigger: event
                                       event_type: zha_event
                                       event_data:
-                                        device_id: "{{ remote_controller }}"
+                                        device_id: !input remote_device
                                         command: "stop_with_on_off"
                                         cluster_id: 8
                                         endpoint_id: 1
@@ -507,12 +503,12 @@ action:
                                 - wait_for_trigger:
                                     - trigger: device
                                       domain: mqtt
-                                      device_id: "{{ remote_controller }}"
+                                      device_id: !input remote_device
                                       type: action
                                       subtype: "brightness_stop"
                                     - trigger: device
                                       domain: mqtt
-                                      device_id: "{{ remote_controller }}"
+                                      device_id: !input remote_device
                                       type: action
                                       subtype: "1_long_release"
                                   timeout:
@@ -548,7 +544,7 @@ action:
                                     - trigger: event
                                       event_type: zha_event
                                       event_data:
-                                        device_id: "{{ remote_controller }}"
+                                        device_id: !input remote_device
                                         command: "stop_with_on_off"
                                         cluster_id: 8
                                         endpoint_id: 1
@@ -569,12 +565,12 @@ action:
                                 - wait_for_trigger:
                                     - trigger: device
                                       domain: mqtt
-                                      device_id: "{{ remote_controller }}"
+                                      device_id: !input remote_device
                                       type: action
                                       subtype: "brightness_stop"
                                     - trigger: device
                                       domain: mqtt
-                                      device_id: "{{ remote_controller }}"
+                                      device_id: !input remote_device
                                       type: action
                                       subtype: "2_long_release"
                                   timeout:
