@@ -143,7 +143,7 @@ trigger_variables:
   zha_controller: !input remote_device
 trigger:
   # RODRET - E2201
-  - platform: event
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: "{{ zha_controller }}"
@@ -151,11 +151,11 @@ trigger:
       cluster_id: 6
       endpoint_id: 1
     id: press-on-zha-e2201
-  - platform: mqtt
+  - trigger: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "on"
     id: press-on-z2m-e2201
-  - platform: event
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: "{{ zha_controller }}"
@@ -163,11 +163,11 @@ trigger:
       cluster_id: 6
       endpoint_id: 1
     id: press-off-zha-e2201
-  - platform: mqtt
+  - trigger: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "off"
     id: press-off-z2m-e2201
-  - platform: event
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: "{{ zha_controller }}"
@@ -176,11 +176,11 @@ trigger:
       endpoint_id: 1
       args: [0, 83]
     id: hold-on-zha-e2201
-  - platform: mqtt
+  - trigger: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "brightness_move_up"
     id: hold-on-z2m-e2201
-  - platform: event
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: "{{ zha_controller }}"
@@ -189,11 +189,11 @@ trigger:
       endpoint_id: 1
       args: [1, 83, 0, 0]
     id: hold-off-zha-e2201
-  - platform: mqtt
+  - trigger: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "brightness_move_down"
     id: hold-off-z2m-e2201
-  - platform: event
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: "{{ zha_controller }}"
@@ -201,13 +201,13 @@ trigger:
       cluster_id: 8
       command: stop_with_on_off
     id: release-zha-e2201
-  - platform: mqtt
+  - trigger: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "brightness_stop"
     id: release-z2m-e2201
 
   # SOMRIG - E2213
-  - platform: event
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: "{{ zha_controller }}"
@@ -216,11 +216,11 @@ trigger:
       endpoint_id: 1
       args: [0]
     id: press-dots1-zha-e2213
-  - platform: mqtt
+  - trigger: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "1_short_release"
     id: press-dots1-z2m-e2213
-  - platform: event
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: "{{ zha_controller }}"
@@ -229,11 +229,11 @@ trigger:
       endpoint_id: 2
       args: [0]
     id: press-dots2-zha-e2213
-  - platform: mqtt
+  - trigger: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "2_short_release"
     id: press-dots2-z2m-e2213
-  - platform: event
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: "{{ zha_controller }}"
@@ -242,11 +242,11 @@ trigger:
       endpoint_id: 1
       args: [0, 2]
     id: double-press-dots1-zha-e2213
-  - platform: mqtt
+  - trigger: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "1_double_press"
     id: double-press-dots1-z2m-e2213
-  - platform: event
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: "{{ zha_controller }}"
@@ -255,11 +255,11 @@ trigger:
       endpoint_id: 2
       args: [0, 2]
     id: double-press-dots2-zha-e2213
-  - platform: mqtt
+  - trigger: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "2_double_press"
     id: double-press-dots2-z2m-e2213
-  - platform: event
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: "{{ zha_controller }}"
@@ -268,11 +268,11 @@ trigger:
       endpoint_id: 1
       args: [0]
     id: hold-dots1-zha-e2213
-  - platform: mqtt
+  - trigger: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "1_long_press"
     id: hold-dots1-z2m-e2213
-  - platform: event
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: "{{ zha_controller }}"
@@ -281,11 +281,11 @@ trigger:
       endpoint_id: 2
       args: [0]
     id: hold-dots2-zha-e2213
-  - platform: mqtt
+  - trigger: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "2_long_press"
     id: hold-dots2-z2m-e2213
-  - platform: event
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: "{{ zha_controller }}"
@@ -294,11 +294,11 @@ trigger:
       endpoint_id: 1
       args: [0]
     id: release-hold-dots1-zha-e2213
-  - platform: mqtt
+  - trigger: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "1_long_release"
     id: release-hold-dots1-z2m-e2213
-  - platform: event
+  - trigger: event
     event_type: zha_event
     event_data:
       device_id: "{{ zha_controller }}"
@@ -307,7 +307,7 @@ trigger:
       endpoint_id: 2
       args: [0]
     id: release-hold-dots2-zha-e2213
-  - platform: mqtt
+  - trigger: mqtt
     topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
     payload: "2_long_release"
     id: release-hold-dots2-z2m-e2213
@@ -338,7 +338,7 @@ action:
                           - press-on-zha-e2201
                     sequence:
                       - wait_for_trigger:
-                          - platform: event
+                          - trigger: event
                             event_type: zha_event
                             event_data:
                               device_id: "{{ zha_controller }}"
@@ -359,7 +359,7 @@ action:
                           - press-on-z2m-e2201
                     sequence:
                       - wait_for_trigger:
-                          - platform: mqtt
+                          - trigger: mqtt
                             topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
                             payload: "on"
                         timeout:
@@ -391,7 +391,7 @@ action:
                           - press-off-zha-e2201
                     sequence:
                       - wait_for_trigger:
-                          - platform: event
+                          - trigger: event
                             event_type: zha_event
                             event_data:
                               device_id: "{{ zha_controller }}"
@@ -412,7 +412,7 @@ action:
                           - press-off-z2m-e2201
                     sequence:
                       - wait_for_trigger:
-                          - platform: mqtt
+                          - trigger: mqtt
                             topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
                             payload: "off"
                         timeout:
@@ -459,7 +459,7 @@ action:
                                     - hold-dots1-zha-e2213
                               sequence:
                                 - wait_for_trigger:
-                                    - platform: event
+                                    - trigger: event
                                       event_type: zha_event
                                       event_data:
                                         device_id: "{{ zha_controller }}"
@@ -481,10 +481,10 @@ action:
                                     - hold-dots1-z2m-e2213
                               sequence:
                                 - wait_for_trigger:
-                                    - platform: mqtt
+                                    - trigger: mqtt
                                       topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
                                       payload: "brightness_stop"
-                                    - platform: mqtt
+                                    - trigger: mqtt
                                       topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
                                       payload: "1_long_release"
                                   timeout:
@@ -517,7 +517,7 @@ action:
                                     - hold-dots2-zha-e2213
                               sequence:
                                 - wait_for_trigger:
-                                    - platform: event
+                                    - trigger: event
                                       event_type: zha_event
                                       event_data:
                                         device_id: "{{ zha_controller }}"
@@ -539,10 +539,10 @@ action:
                                     - hold-dots2-z2m-e2213
                               sequence:
                                 - wait_for_trigger:
-                                    - platform: mqtt
+                                    - trigger: mqtt
                                       topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
                                       payload: "brightness_stop"
-                                    - platform: mqtt
+                                    - trigger: mqtt
                                       topic: "{{ z2m_base_topic ~ '/' ~ z2m_controller ~ '/action' }}"
                                       payload: "2_long_release"
                                   timeout:
