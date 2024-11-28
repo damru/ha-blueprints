@@ -135,7 +135,7 @@ blueprint:
 mode: single
 max_exceeded: silent
 trigger_variables:
-  remote_controller: !input remote_name
+  remote_controller: !input remote_device
 trigger:
   # RODRET - E2201
   - trigger: event
