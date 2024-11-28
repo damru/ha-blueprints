@@ -338,7 +338,6 @@ action:
       off_double_press_exposed: !input off_double_press_exposed
       remote_controller: !input remote_device
       z2m_base_topic: !input base_topic
-      remote_controller: !input remote_name
   - choose:
       - conditions:
           - condition: trigger
