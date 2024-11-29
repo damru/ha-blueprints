@@ -22,9 +22,9 @@ blueprint:
   domain: automation
   input:
     remote_device:
-      name: (ZHA) Remote
+      name: Remote
       description: >
-        **_Choose if you are using ZHA._** IKEA remote to use.
+        IKEA remote (Rodret, Somrig) to use.
       default: ""
       selector:
         device:
