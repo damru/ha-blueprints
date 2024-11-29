@@ -134,7 +134,7 @@ blueprint:
           mode: slider
 mode: single
 max_exceeded: silent
-trigger:
+triggers:
   # RODRET - E2201
   - trigger: event
     event_type: zha_event
@@ -330,7 +330,7 @@ trigger:
     type: action
     subtype: "2_long_release"
     id: release-hold-dots2-z2m-e2213
-action:
+actions:
   - variables:
       on_double_press_exposed: !input on_double_press_exposed
       off_double_press_exposed: !input off_double_press_exposed
