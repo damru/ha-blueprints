@@ -300,7 +300,7 @@ actions:
       - conditions:
           - condition: trigger
             id:
-              - press-off-zha
+              - press-off-zha-e2201
               - press-off-z2m-e2201
               - press-dots2-zha-e2213
               - press-dots2-z2m-e2213
