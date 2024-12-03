@@ -1,4 +1,8 @@
 blueprint:
+  homeassistant:
+    min_version: 2024.10.0
+  author: damru
+  domain: automation
   name: IKEA Rodret (E2201) or IKEA Somrig (E2213) Light control (ZHA/Z2M)
   description: >
     ## Control a light with **IKEA RODRET** or **IKEA SOMRIG** remotes
@@ -19,7 +23,6 @@ blueprint:
     - Hold **on** (Rodret) or **1 dot** button to increase the brightness
 
     - Hold **off** (Rodret) or **2 dots** button to decrease the brightness down to 1%
-  domain: automation
   input:
     remote_device:
       name: Remote
@@ -270,7 +273,7 @@ triggers:
 actions:
   - variables:
       helper_force_brightness: !input helper_force_brightness
-      helper_hold_delay: 0.05
+      helper_hold_delay: 0.1
       helper_hold_dim_step: 5
       light: !input light
   - choose:
