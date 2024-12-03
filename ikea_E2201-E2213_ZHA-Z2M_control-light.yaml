@@ -275,7 +275,6 @@ actions:
       helper_force_brightness: !input helper_force_brightness
       helper_hold_delay: 0.1
       helper_hold_dim_step: 5
-      light: !input light
   - choose:
       - conditions:
           - condition: trigger
