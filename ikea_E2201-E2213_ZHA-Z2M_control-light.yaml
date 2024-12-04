@@ -155,9 +155,7 @@ triggers:
     event_data:
       device_id: !input remote_device
       command: "short_release"
-      cluster_id: 64640
       endpoint_id: 1
-      args: [0]
     id: press-dots1-zha-e2213
   - trigger: device
     domain: mqtt
@@ -170,9 +168,7 @@ triggers:
     event_data:
       device_id: !input remote_device
       command: "short_release"
-      cluster_id: 64640
       endpoint_id: 2
-      args: [0]
     id: press-dots2-zha-e2213
   - trigger: device
     domain: mqtt
@@ -185,9 +181,7 @@ triggers:
     event_data:
       device_id: !input remote_device
       command: "multi_press_complete"
-      cluster_id: 64640
       endpoint_id: 1
-      args: [0, 2]
     id: double-press-dots1-zha-e2213
   - trigger: device
     domain: mqtt
@@ -200,9 +194,7 @@ triggers:
     event_data:
       device_id: !input remote_device
       command: "multi_press_complete"
-      cluster_id: 64640
       endpoint_id: 2
-      args: [0, 2]
     id: double-press-dots2-zha-e2213
   - trigger: device
     domain: mqtt
@@ -215,9 +207,7 @@ triggers:
     event_data:
       device_id: !input remote_device
       command: "long_press"
-      cluster_id: 64640
       endpoint_id: 1
-      args: [0]
     id: hold-dots1-zha-e2213
   - trigger: device
     domain: mqtt
@@ -230,9 +220,7 @@ triggers:
     event_data:
       device_id: !input remote_device
       command: "long_press"
-      cluster_id: 64640
       endpoint_id: 2
-      args: [0]
     id: hold-dots2-zha-e2213
   - trigger: device
     domain: mqtt
@@ -245,9 +233,7 @@ triggers:
     event_data:
       device_id: !input remote_device
       command: "long_release"
-      cluster_id: 64640
       endpoint_id: 1
-      args: [0]
     id: release-hold-dots1-zha-e2213
   - trigger: device
     domain: mqtt
@@ -260,9 +246,7 @@ triggers:
     event_data:
       device_id: !input remote_device
       command: "long_release"
-      cluster_id: 64640
       endpoint_id: 2
-      args: [0]
     id: release-hold-dots2-zha-e2213
   - trigger: device
     domain: mqtt
