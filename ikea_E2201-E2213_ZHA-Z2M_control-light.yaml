@@ -317,6 +317,7 @@ actions:
                         entity_id: !input light
                       data:
                         brightness_step_pct: "{{ helper_hold_dim_step }}"
+                        transition: "{{ helper_hold_delay }}"
                     - delay: "{{ helper_hold_delay }}"
       - conditions:
           - condition: trigger
@@ -335,13 +336,15 @@ actions:
               sequence:
                 - parallel:
                     - action: light.turn_on
-                      data:
-                        brightness_step_pct: "{{ helper_hold_dim_step | int * -1 }}"
                       target:
                         entity_id: !input light
+                      data:
+                        brightness_step_pct: "{{ helper_hold_dim_step | int * -1 }}"
+                        transition: "{{ helper_hold_delay }}"
                     - delay: "{{ helper_hold_delay }}"
           - action: light.turn_on
-            data:
-              brightness_pct: 1
             target:
               entity_id: !input light
+            data:
+              brightness_pct: 1
+              transition: "{{ helper_hold_delay }}"
