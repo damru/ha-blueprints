@@ -264,7 +264,7 @@ actions:
   - variables:
       helper_force_brightness: !input helper_force_brightness
       helper_hold_delay: 0.1
-      helper_hold_dim_step: 5
+      helper_hold_dim_step: 4
       light: !input light
   - choose:
       - conditions:
@@ -333,12 +333,11 @@ actions:
               - hold-dots2-zha-e2213
               - hold-dots2-z2m-e2213
         sequence:
+          - variables:
+              brightness_pct: "{{ iif(is_state(light, 'on'), state_attr(light, 'brightness'), 0) * 100 / 255 }}"
+              total_iterations_to_zero: "{{ (brightness_pct / helper_hold_dim_step) | round(0, 'ceil') }}"
           - repeat:
-              while:
-                - condition: template
-                  value_template:
-                    "{{ state_attr(light, 'brightness') | int / 255 > helper_hold_dim_step/100
-                    }}"
+              count: "{{ total_iterations_to_zero - 1 }}"
               sequence:
                 - parallel:
                     - action: light.turn_on
