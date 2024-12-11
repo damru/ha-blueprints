@@ -77,15 +77,15 @@ blueprint:
       name: Double press action (on / 1 dot)
       description: >
         Choose action(s) to run when the **on** (Rodret, Tradfri) or **1 dot** (Somrig) button is **pressed twice**.
-        (**_NB for Rodret only_**: **Double press event (on)** must be exposed and **Helper - Double press delay** interval is used as a timeout.)
+        (**_NB for Rodret, Tradfri only_**: **Double press event (on)** must be exposed and **Helper - Double press delay** interval is used as a timeout.)
       default: []
       selector:
         action: {}
     off_double_press_action:
       name: Double press action (off / 2 dots)
       description: >
-        Choose action(s) to run when the **off** (Rodret, Tradfri) or **2 dots** (Rodret) button is **pressed twice**. 
-        (**_NB for Rodret only_**: **Double press event (off)** must be exposed and **Helper - Double press delay** interval is used as a timeout.)
+        Choose action(s) to run when the **off** (Rodret, Tradfri) or **2 dots** (Somrig) button is **pressed twice**. 
+        (**_NB for Rodret, Tradfri only_**: **Double press event (off)** must be exposed and **Helper - Double press delay** interval is used as a timeout.)
       default: []
       selector:
         action: {}
@@ -113,7 +113,7 @@ blueprint:
     on_double_press_exposed:
       name: (Rodret, Tradfri only) Double press event (on)
       description: >
-        **_(Rodret only)_** Choose whether or not to expose the virtual **double press** event for the **on** button. 
+        **_(Rodret, Tradfri only)_** Choose whether or not to expose the virtual **double press** event for the **on** button. 
         Turn this on if you are providing action(s) for the **Double press action (on / 1 dot)**.
       default: false
       selector:
