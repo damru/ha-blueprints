@@ -20,7 +20,8 @@ blueprint:
     - Double press **on/off** (Rodret, _Optional_)  **1 dot/2 dots** (Somrig)
 
     - Hold **on/off** (Rodret)  **1 dot/2 dots** (Somrig). 
-    Actions will be executed every **Helper - Hold delay**, but maximum **Helper - Max number of loops** times.
+    Actions will be executed every **Hold delay**, but maximum **Max number of loops** times.
+  source_url: https://github.com/damru/ha-blueprints/blob/main/ikea_E2201-E2213_ZHA-Z2M_control-anything.yaml
   input:
     remote_device:
       name: Remote
@@ -44,97 +45,109 @@ blueprint:
               model: SOMRIG shortcut button (E2213)
           multiple: false
     on_press_action:
-      name: Single press action (on / 1 dot)
+      name: Press "on / 1 dot" action
       description: Choose action(s) to run when **on** (Rodret) or **1 dot** (Somrig) button is **pressed**.
       default: []
       selector:
         action: {}
     off_press_action:
-      name: Single press action (off / 2 dots)
+      name: Press "off / 2 dots" action
       description: Choose action(s) to run when **off** (Rodret) or **2 dots** (Somrig) button is **pressed**.
       default: []
       selector:
         action: {}
     on_hold_action:
-      name: Hold action (on / 1 dot)
+      name: Hold "on / 1 dot" action
       description: Choose action(s) to run when **on** (Rodret) or **1 dot** (Somrig) button is **held**.
       default: []
       selector:
         action: {}
     off_hold_action:
-      name: Hold action (off / 2 dots)
+      name: Hold "off / 2 dots" action
       description: Choose action(s) to run when **off** (Rodret) or **2 dots** (Somrig) button is **held**.
       default: []
       selector:
         action: {}
     on_double_press_action:
-      name: Double press action (on / 1 dot)
+      name: Double press "on / 1 dot" action
       description: >
         Choose action(s) to run when the **on** (Rodret) or **1 dot** (Somrig) button is **pressed twice**.
-        (**_NB for Rodret only_**: **Double press event (on)** must be exposed and **Helper - Double press delay** interval is used as a timeout.)
+
+        **_NB for Rodret only_**: **Double press event (on)** must be exposed and **Double press delay** interval is used as a timeout.
       default: []
       selector:
         action: {}
     off_double_press_action:
-      name: Double press action (off / 2 dots)
+      name: Double press "off / 2 dots" action
       description: >
         Choose action(s) to run when the **off** (Rodret) or **2 dots** (Rodret) button is **pressed twice**. 
-        (**_NB for Rodret only_**: **Double press event (off)** must be exposed and **Helper - Double press delay** interval is used as a timeout.)
+
+        **_NB for Rodret only_**: **Double press event (off)** must be exposed and **Double press delay** interval is used as a timeout.
       default: []
       selector:
         action: {}
-    helper_hold_delay:
-      name: Helper - Hold delay
-      description: Delay between the execution of the **Hold** action(s).
-      default: 250
-      selector:
-        number:
-          unit_of_measurement: milliseconds
-          min: 100.0
-          max: 5000.0
-          step: 10.0
-          mode: slider
-    helper_max_loops:
-      name: Helper - Max number of loops
-      description: Maximum number of loops when holding down a button.
-      default: 20
-      selector:
-        number:
-          min: 1.0
-          max: 1000.0
-          step: 1.0
-          mode: slider
-    on_double_press_exposed:
-      name: (Rodret only) Double press event (on)
-      description: >
-        **_(Rodret only)_** Choose whether or not to expose the virtual **double press** event for the **on** button. 
-        Turn this on if you are providing action(s) for the **Double press action (on / 1 dot)**.
-      default: false
-      selector:
-        boolean: {}
-    off_double_press_exposed:
-      name: (Rodret only) Double press event (off)
-      description: >
-        **_(Rodret only)_** Choose whether or not to expose the virtual **double press** event for the **off** button. 
-        Turn this on if you are providing an action for the **Double press action (off / 2 dots)**.
-      default: false
-      selector:
-        boolean: {}
-    helper_double_press_delay:
-      name: (Rodret only) Helper - Double press delay
-      description: >
-        **(Rodret only)** Max delay between the first and the second button press for the
-        **Double press events**. Provide a value only if you are using a double press action.
-        Increase this value if you notice that the double press action is not triggered
-        properly.
-      default: 250
-      selector:
-        number:
-          unit_of_measurement: milliseconds
-          min: 100.0
-          max: 5000.0
-          step: 10.0
-          mode: slider
+    helper_section :
+      name: Helpers
+      icon: mdi:cog-outline
+      collapsed: true
+      input:
+        helper_hold_delay:
+          name: Hold delay
+          description: Delay between the execution of the **Hold** action(s).
+          default: 250
+          selector:
+            number:
+              unit_of_measurement: milliseconds
+              min: 100.0
+              max: 5000.0
+              step: 10.0
+              mode: slider
+        helper_max_loops:
+          name: Max number of loops
+          description: Maximum number of loops when holding down a button.
+          default: 20
+          selector:
+            number:
+              min: 1.0
+              max: 1000.0
+              step: 1.0
+              mode: slider
+    rodret_options_section:
+      name: Rodret options
+      icon: mdi:remote
+      collapsed: true
+      input:
+        on_double_press_exposed:
+          name: Expose virtual double press "on" event
+          description: >
+            Choose whether or not to expose the virtual **double press** event for the **on** button. 
+            Turn this on if you are providing action(s) for the **Double press action (on / 1 dot)**.
+          default: false
+          selector:
+            boolean: {}
+        off_double_press_exposed:
+          name: Expose virtual double press "off" event
+          description: >
+            Choose whether or not to expose the virtual **double press** event for the **off** button. 
+            Turn this on if you are providing an action for the **Double press action (off / 2 dots)**.
+          default: false
+          selector:
+            boolean: {}
+        helper_double_press_delay:
+          name: Double press delay
+          description: >
+            Max delay between the first and the second button press for the
+            **Double press events**. Provide a value only if you are using a double press action.
+            Increase this value if you notice that the double press action is not triggered
+            properly.
+          default: 250
+          selector:
+            number:
+              unit_of_measurement: milliseconds
+              min: 100.0
+              max: 5000.0
+              step: 10.0
+              mode: slider
 mode: single
 max_exceeded: silent
 triggers:
