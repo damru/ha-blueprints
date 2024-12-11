@@ -3,9 +3,9 @@ blueprint:
     min_version: 2024.10.0
   author: damru
   domain: automation
-  name: IKEA Rodret (E2201) or IKEA Somrig (E2213) Light control (ZHA/Z2M)
+  name: IKEA Rodret (E2201) or IKEA Tradfri (E1743) or IKEA Somrig (E2213) Light control (ZHA/Z2M)
   description: >
-    ## Control a light with **IKEA RODRET** or **IKEA SOMRIG** remotes
+    ## Control a light with **IKEA RODRET** or **IKEA TRADFRI ON/OFF** or **IKEA SOMRIG** remotes
 
 
     Only for use with [ZHA](https://www.home-assistant.io/integrations/zha/)
@@ -15,19 +15,19 @@ blueprint:
 
     Available controls:
 
-    - Press **on** (Rodret) or **1 dot** (Somrig) to turn on the light 
+    - Press **on** (Rodret, Tradfri) or **1 dot** (Somrig) to turn on the light 
     (Optional: set the target brightness by enabling **Helper - Force Brightness** and setting a **Helper - Brightness** value)
 
-    - Press **off** (Rodret) or **2 dots** (Somrig) to turn off the light
+    - Press **off** (Rodret, Tradfri) or **2 dots** (Somrig) to turn off the light
 
-    - Hold **on** (Rodret) or **1 dot** button to increase the brightness
+    - Hold **on** (Rodret, Tradfri) or **1 dot** button to increase the brightness
 
-    - Hold **off** (Rodret) or **2 dots** button to decrease the brightness down to 1%
+    - Hold **off** (Rodret, Tradfri) or **2 dots** button to decrease the brightness down to 1%
   input:
     remote_device:
       name: Remote
       description: >
-        IKEA remote (Rodret, Somrig) to use.
+        IKEA remote (Rodret, Tradfri, Somrig) to use.
       default: ""
       selector:
         device:
@@ -37,10 +37,16 @@ blueprint:
               model: RODRET Dimmer
             - integration: zha
               manufacturer: IKEA of Sweden
+              model: TRADFRI on/off switch
+            - integration: zha
+              manufacturer: IKEA of Sweden
               model: SOMRIG shortcut button
             - integration: mqtt
               manufacturer: IKEA
               model: RODRET wireless dimmer/power switch (E2201)
+            - integration: mqtt
+              manufacturer: IKEA
+              model: TRADFRI on/off switch (E1743)
             - integration: mqtt
               manufacturer: IKEA
               model: SOMRIG shortcut button (E2213)
@@ -75,7 +81,7 @@ blueprint:
 mode: restart
 max_exceeded: silent
 triggers:
-  # RODRET - E2201
+  # RODRET - E2201 _ TRADFRI - E1743
   - trigger: event
     event_type: zha_event
     event_data:
