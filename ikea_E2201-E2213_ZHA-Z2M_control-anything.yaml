@@ -3,9 +3,9 @@ blueprint:
     min_version: 2024.10.0
   author: damru
   domain: automation
-  name: IKEA Rodret (E2201) or IKEA Somrig (E2213) Controls (ZHA/Z2M)
+  name: IKEA Rodret (E2201) IKEA Tradfri on/off (E1743) or IKEA Somrig (E2213) Controls (ZHA/Z2M)
   description: >
-    ## Control anything with **IKEA RODRET** or **IKEA SOMRIG** remotes
+    ## Control anything with **IKEA RODRET** or **IKEA TRADFRI ON/OFF** or **IKEA SOMRIG** remotes
 
 
     Only for use with [ZHA](https://www.home-assistant.io/integrations/zha/)
@@ -15,17 +15,17 @@ blueprint:
 
     Available controls:
 
-    - Single press **on/off** (Rodret)  **1 dot/2 dots** (Somrig) 
+    - Single press **on/off** (Rodret, Tradfri)  **1 dot/2 dots** (Somrig) 
 
-    - Double press **on/off** (Rodret, _Optional_)  **1 dot/2 dots** (Somrig)
+    - Double press **on/off** (Rodret, Tradfri, _Optional_)  **1 dot/2 dots** (Somrig)
 
-    - Hold **on/off** (Rodret)  **1 dot/2 dots** (Somrig). 
+    - Hold **on/off** (Rodret, Tradfri)  **1 dot/2 dots** (Somrig). 
     Actions will be executed every **Helper - Hold delay**, but maximum **Helper - Max number of loops** times.
   input:
     remote_device:
       name: Remote
       description: >
-        IKEA remote (Somrig, Rodret) to use.
+        IKEA remote (Somrig, Rodret, Tradfri) to use.
       default: []
       selector:
         device:
@@ -33,6 +33,9 @@ blueprint:
             - integration: zha
               manufacturer: IKEA of Sweden
               model: RODRET Dimmer
+            - integration: zha     
+              manufacturer: IKEA of Sweden
+              model: TRADFRI on/off switch
             - integration: zha
               manufacturer: IKEA of Sweden
               model: SOMRIG shortcut button
@@ -41,36 +44,39 @@ blueprint:
               model: RODRET wireless dimmer/power switch (E2201)
             - integration: mqtt
               manufacturer: IKEA
+              model: TRADFRI on/off switch (E1743)
+            - integration: mqtt
+              manufacturer: IKEA
               model: SOMRIG shortcut button (E2213)
           multiple: false
     on_press_action:
       name: Single press action (on / 1 dot)
-      description: Choose action(s) to run when **on** (Rodret) or **1 dot** (Somrig) button is **pressed**.
+      description: Choose action(s) to run when **on** (Rodret, Tradfri) or **1 dot** (Somrig) button is **pressed**.
       default: []
       selector:
         action: {}
     off_press_action:
       name: Single press action (off / 2 dots)
-      description: Choose action(s) to run when **off** (Rodret) or **2 dots** (Somrig) button is **pressed**.
+      description: Choose action(s) to run when **off** (Rodret, Tradfri) or **2 dots** (Somrig) button is **pressed**.
       default: []
       selector:
         action: {}
     on_hold_action:
       name: Hold action (on / 1 dot)
-      description: Choose action(s) to run when **on** (Rodret) or **1 dot** (Somrig) button is **held**.
+      description: Choose action(s) to run when **on** (Rodret, Tradfri) or **1 dot** (Somrig) button is **held**.
       default: []
       selector:
         action: {}
     off_hold_action:
       name: Hold action (off / 2 dots)
-      description: Choose action(s) to run when **off** (Rodret) or **2 dots** (Somrig) button is **held**.
+      description: Choose action(s) to run when **off** (Rodret, Tradfri) or **2 dots** (Somrig) button is **held**.
       default: []
       selector:
         action: {}
     on_double_press_action:
       name: Double press action (on / 1 dot)
       description: >
-        Choose action(s) to run when the **on** (Rodret) or **1 dot** (Somrig) button is **pressed twice**.
+        Choose action(s) to run when the **on** (Rodret, Tradfri) or **1 dot** (Somrig) button is **pressed twice**.
         (**_NB for Rodret only_**: **Double press event (on)** must be exposed and **Helper - Double press delay** interval is used as a timeout.)
       default: []
       selector:
@@ -78,7 +84,7 @@ blueprint:
     off_double_press_action:
       name: Double press action (off / 2 dots)
       description: >
-        Choose action(s) to run when the **off** (Rodret) or **2 dots** (Rodret) button is **pressed twice**. 
+        Choose action(s) to run when the **off** (Rodret, Tradfri) or **2 dots** (Rodret) button is **pressed twice**. 
         (**_NB for Rodret only_**: **Double press event (off)** must be exposed and **Helper - Double press delay** interval is used as a timeout.)
       default: []
       selector:
@@ -105,7 +111,7 @@ blueprint:
           step: 1.0
           mode: slider
     on_double_press_exposed:
-      name: (Rodret only) Double press event (on)
+      name: (Rodret, Tradfri only) Double press event (on)
       description: >
         **_(Rodret only)_** Choose whether or not to expose the virtual **double press** event for the **on** button. 
         Turn this on if you are providing action(s) for the **Double press action (on / 1 dot)**.
@@ -113,17 +119,17 @@ blueprint:
       selector:
         boolean: {}
     off_double_press_exposed:
-      name: (Rodret only) Double press event (off)
+      name: (Rodret, Tradfri only) Double press event (off)
       description: >
-        **_(Rodret only)_** Choose whether or not to expose the virtual **double press** event for the **off** button. 
+        **_(Rodret, Tradfri only)_** Choose whether or not to expose the virtual **double press** event for the **off** button. 
         Turn this on if you are providing an action for the **Double press action (off / 2 dots)**.
       default: false
       selector:
         boolean: {}
     helper_double_press_delay:
-      name: (Rodret only) Helper - Double press delay
+      name: (Rodret, Tradfri only) Helper - Double press delay
       description: >
-        **(Rodret only)** Max delay between the first and the second button press for the
+        **(Rodret, Tradfri only)** Max delay between the first and the second button press for the
         **Double press events**. Provide a value only if you are using a double press action.
         Increase this value if you notice that the double press action is not triggered
         properly.
@@ -138,7 +144,7 @@ blueprint:
 mode: single
 max_exceeded: silent
 triggers:
-  # RODRET - E2201
+  # RODRET - E2201 + TRADFRI - E1743
   - trigger: event
     event_type: zha_event
     event_data:
