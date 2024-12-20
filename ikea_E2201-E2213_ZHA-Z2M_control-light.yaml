@@ -16,13 +16,14 @@ blueprint:
     Available controls:
 
     - Press **on** (Rodret) or **1 dot** (Somrig) to turn on the light 
-    (Optional: set the target brightness by enabling **Helper - Force Brightness** and setting a **Helper - Brightness** value)
+    (Optional: set the target brightness by enabling **Force Brightness** and setting a **Brightness** value)
 
     - Press **off** (Rodret) or **2 dots** (Somrig) to turn off the light
 
     - Hold **on** (Rodret) or **1 dot** button to increase the brightness
 
     - Hold **off** (Rodret) or **2 dots** button to decrease the brightness down to 1%
+  source_url: https://github.com/damru/ha-blueprints/blob/main/ikea_E2201-E2213_ZHA-Z2M_control-light.yaml
   input:
     remote_device:
       name: Remote
@@ -53,25 +54,30 @@ blueprint:
           filter:
             domain: light
           multiple: false
-    helper_force_brightness:
-      name: Helper - Force brightness
-      description: Force the brightness to **Helper - Brightness** value when light turns on.
-      default: false
-      selector:
-        boolean: {}
-    helper_brightness:
-      name: Helper - Brightness
-      description:
-        Target light brightness when turning on. Requires **Helper - Force brightness**
-        to be enabled.
-      default: 50
-      selector:
-        number:
-          unit_of_measurement: "%"
-          min: 1.0
-          max: 100.0
-          step: 1.0
-          mode: slider
+    brightness_section:
+      name: Brightness
+      icon: mdi:lightbulb-on-50
+      collapsed: true
+      input:
+        helper_force_brightness:
+          name: Force brightness
+          description: Force the brightness to **Brightness** value when light turns on.
+          default: false
+          selector:
+            boolean: {}
+        helper_brightness:
+          name: Brightness
+          description:
+            Target light brightness when turning on. Requires **Force brightness**
+            to be enabled.
+          default: 50
+          selector:
+            number:
+              unit_of_measurement: "%"
+              min: 1.0
+              max: 100.0
+              step: 1.0
+              mode: slider
 mode: restart
 max_exceeded: silent
 triggers:
@@ -258,7 +264,7 @@ actions:
   - variables:
       helper_force_brightness: !input helper_force_brightness
       helper_hold_delay: 0.1
-      helper_hold_dim_step: 5
+      helper_hold_dim_step: 4
       light: !input light
   - choose:
       - conditions:
@@ -317,6 +323,7 @@ actions:
                         entity_id: !input light
                       data:
                         brightness_step_pct: "{{ helper_hold_dim_step }}"
+                        transition: "{{ helper_hold_delay }}"
                     - delay: "{{ helper_hold_delay }}"
       - conditions:
           - condition: trigger
@@ -326,22 +333,23 @@ actions:
               - hold-dots2-zha-e2213
               - hold-dots2-z2m-e2213
         sequence:
+          - variables:
+              brightness_pct: "{{ iif(is_state(light, 'on'), state_attr(light, 'brightness'), 0) * 100 / 255 }}"
+              total_iterations_to_zero: "{{ (brightness_pct / helper_hold_dim_step) | round(0, 'ceil') }}"
           - repeat:
-              while:
-                - condition: template
-                  value_template:
-                    "{{ state_attr(light, 'brightness') | int / 255 > helper_hold_dim_step/100
-                    }}"
+              count: "{{ total_iterations_to_zero - 1 }}"
               sequence:
                 - parallel:
                     - action: light.turn_on
-                      data:
-                        brightness_step_pct: "{{ helper_hold_dim_step | int * -1 }}"
                       target:
                         entity_id: !input light
+                      data:
+                        brightness_step_pct: "{{ helper_hold_dim_step | int * -1 }}"
+                        transition: "{{ helper_hold_delay }}"
                     - delay: "{{ helper_hold_delay }}"
           - action: light.turn_on
-            data:
-              brightness_pct: 1
             target:
               entity_id: !input light
+            data:
+              brightness_pct: 1
+              transition: "{{ helper_hold_delay }}"
