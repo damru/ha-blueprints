@@ -21,7 +21,6 @@ blueprint:
 
     - Hold **on/off** (Rodret)  **1 dot/2 dots** (Somrig). 
     Actions will be executed every **Hold delay**, but maximum **Max number of loops** times.
-  source_url: https://github.com/damru/ha-blueprints/blob/main/ikea_E2201-E2213_ZHA-Z2M_control-anything.yaml
   input:
     remote_device:
       name: Remote
