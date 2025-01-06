@@ -39,10 +39,10 @@ blueprint:
               model: SOMRIG shortcut button
             - integration: mqtt
               manufacturer: IKEA
-              model: RODRET wireless dimmer/power switch (E2201)
+              model: RODRET wireless dimmer/power switch
             - integration: mqtt
               manufacturer: IKEA
-              model: SOMRIG shortcut button (E2213)
+              model: SOMRIG shortcut button
           multiple: false
     on_press_action:
       name: Press "on / 1 dot" action
