@@ -20,9 +20,9 @@ blueprint:
 
     - Press **off** (Rodret, Tradfri) or **2 dots** (Somrig) to turn off the light
 
-    - Hold **on** (Rodret, Tradfri) or **1 dot** button to increase the brightness
+    - Hold **on** (Rodret, Tradfri) or **1 dot** (Somrig) button to increase the brightness
 
-    - Hold **off** (Rodret, Tradfri) or **2 dots** button to decrease the brightness down to 1%
+    - Hold **off** (Rodret, Tradfri) or **2 dots** (Somrig) button to decrease the brightness down to 1%
   input:
     remote_device:
       name: Remote
