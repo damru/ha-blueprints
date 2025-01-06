@@ -20,9 +20,9 @@ blueprint:
 
     - Press **off** (Rodret) or **2 dots** (Somrig) to turn off the light
 
-    - Hold **on** (Rodret) or **1 dot** button to increase the brightness
+    - Hold **on** (Rodret) or **1 dot** (Somrig) button to increase the brightness
 
-    - Hold **off** (Rodret) or **2 dots** button to decrease the brightness down to 1%
+    - Hold **off** (Rodret) or **2 dots** (Somrig) button to decrease the brightness down to 1%
   source_url: https://github.com/damru/ha-blueprints/blob/main/ikea_E2201-E2213_ZHA-Z2M_control-light.yaml
   input:
     remote_device:
