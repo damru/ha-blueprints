@@ -48,6 +48,14 @@ blueprint:
             - integration: mqtt
               manufacturer: IKEA
               model: SOMRIG shortcut button
+            # DEPRECATED - for removal, keeping for z2m v1 backward compatibility
+            - integration: mqtt
+              manufacturer: IKEA
+              model: RODRET wireless dimmer/power switch (E2201)
+            # DEPRECATED - for removal, keeping for z2m v1 backward compatibility
+            - integration: mqtt
+              manufacturer: IKEA
+              model: SOMRIG shortcut button (E2213)
           multiple: false
     on_press_action:
       name: Press "on / 1 dot" action
