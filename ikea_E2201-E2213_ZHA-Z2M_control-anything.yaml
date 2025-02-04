@@ -3,9 +3,9 @@ blueprint:
     min_version: 2024.10.0
   author: damru
   domain: automation
-  name: IKEA Rodret (E2201) or IKEA Somrig (E2213) Controls (ZHA/Z2M)
+  name: Ikea's Rodret or Somrig ⚙️ Controls
   description: >
-    ## Control anything with **IKEA RODRET** or **IKEA SOMRIG** remotes
+    ## ⚙️ Control anything with **IKEA RODRET** or **IKEA SOMRIG** remotes
 
 
     Only for use with [ZHA](https://www.home-assistant.io/integrations/zha/)
@@ -173,7 +173,7 @@ triggers:
   - trigger: event
     event_type: zha_event
     event_data:
-      command: 'off'
+      command: "off"
       cluster_id: 6
       endpoint_id: 1
     id: press-off-zha-e2201
@@ -300,12 +300,12 @@ variables:
   off_double_press_exposed: !input off_double_press_exposed
   remote_devices: !input remote_devices
   remote_device: >-
-    {% set is_zha = trigger.platform == 'zha_event' %}
-    {% set is_mqtt = trigger.platform == 'mqtt' %}
-    {% set device_name = trigger.topic.split('/')[1] if is_mqtt else none %}
+    {% set is_zha = trigger.platform == "zha_event" %}
+    {% set is_mqtt = trigger.platform == "mqtt" %}
+    {% set device_name = trigger.topic.split("/")[1] if is_mqtt else none %}
     {{ 
       (trigger.event.data.device_id if is_zha) or
-      (device_id(trigger.topic.split('/')[1]) if is_mqtt and device_name)
+      (device_id(trigger.topic.split("/")[1]) if is_mqtt and device_name)
     }}
   mqtt_topic: "{{ trigger.topic }}"
 condition:
