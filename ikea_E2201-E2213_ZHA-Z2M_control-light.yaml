@@ -164,7 +164,8 @@ triggers:
     id: press-dots2-zha-e2213
   - trigger: mqtt
     topic: "+/+/action"
-    payload: press-dots2-z2m-e2213
+    payload: 2_short_release
+    id: press-dots2-z2m-e2213
   - trigger: event
     event_type: zha_event
     event_data:
