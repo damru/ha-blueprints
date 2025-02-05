@@ -3,9 +3,9 @@ blueprint:
     min_version: 2024.10.0
   author: damru
   domain: automation
-  name: IKEA Rodret (E2201) or IKEA Somrig (E2213) Controls (ZHA/Z2M)
+  name: IKEA Tradfri on/off (E1743), IKEA Rodret (E2201) or IKEA Somrig (E2213) Controls (ZHA/Z2M)
   description: >
-    ## Control anything with **IKEA RODRET** or **IKEA SOMRIG** remotes
+    ## Control anything with **IKEA TRADFRI ON/OFF** or **IKEA RODRET** or **IKEA SOMRIG** remotes
 
 
     Only for use with [ZHA](https://www.home-assistant.io/integrations/zha/)
@@ -15,21 +15,24 @@ blueprint:
 
     Available controls:
 
-    - Single press **on/off** (Rodret)  **1 dot/2 dots** (Somrig) 
+    - Single press **on/off** (Tradri, Rodret)  **1 dot/2 dots** (Somrig)
 
-    - Double press **on/off** (Rodret, _Optional_)  **1 dot/2 dots** (Somrig)
+    - Double press **on/off** (Tradri, Rodret, _Optional_)  **1 dot/2 dots** (Somrig)
 
-    - Hold **on/off** (Rodret)  **1 dot/2 dots** (Somrig). 
+    - Hold **on/off** (Tradfri, Rodret)  **1 dot/2 dots** (Somrig).
     Actions will be executed every **Hold delay**, but maximum **Max number of loops** times.
   input:
     remote_device:
       name: Remote
       description: >
-        IKEA remote (Somrig, Rodret) to use.
+        IKEA remote (Tradfri, Rodret, Somrig) to use.
       default: []
       selector:
         device:
           filter:
+            - integration: zha
+              manufacturer: IKEA of Sweden
+              model: TRADFRI on/off switch
             - integration: zha
               manufacturer: IKEA of Sweden
               model: RODRET Dimmer
@@ -38,10 +41,17 @@ blueprint:
               model: SOMRIG shortcut button
             - integration: mqtt
               manufacturer: IKEA
+              model: TRADFRI on/off switch
+            - integration: mqtt
+              manufacturer: IKEA
               model: RODRET wireless dimmer/power switch
             - integration: mqtt
               manufacturer: IKEA
               model: SOMRIG shortcut button
+            # DEPRECATED - for removal, keeping for z2m v1 backward compatibility
+            - integration: mqtt
+              manufacturer: IKEA
+              model: TRADFRI on/off switch (E1743)
             # DEPRECATED - for removal, keeping for z2m v1 backward compatibility
             - integration: mqtt
               manufacturer: IKEA
@@ -53,43 +63,43 @@ blueprint:
           multiple: false
     on_press_action:
       name: Press "on / 1 dot" action
-      description: Choose action(s) to run when **on** (Rodret) or **1 dot** (Somrig) button is **pressed**.
+      description: Choose action(s) to run when **on** (Tradfri, Rodret) or **1 dot** (Somrig) button is **pressed**.
       default: []
       selector:
         action: {}
     off_press_action:
       name: Press "off / 2 dots" action
-      description: Choose action(s) to run when **off** (Rodret) or **2 dots** (Somrig) button is **pressed**.
+      description: Choose action(s) to run when **off** (Tradfri, Rodret) or **2 dots** (Somrig) button is **pressed**.
       default: []
       selector:
         action: {}
     on_hold_action:
       name: Hold "on / 1 dot" action
-      description: Choose action(s) to run when **on** (Rodret) or **1 dot** (Somrig) button is **held**.
+      description: Choose action(s) to run when **on** (Tradfri, Rodret) or **1 dot** (Somrig) button is **held**.
       default: []
       selector:
         action: {}
     off_hold_action:
       name: Hold "off / 2 dots" action
-      description: Choose action(s) to run when **off** (Rodret) or **2 dots** (Somrig) button is **held**.
+      description: Choose action(s) to run when **off** (Tradfri, Rodret) or **2 dots** (Somrig) button is **held**.
       default: []
       selector:
         action: {}
     on_double_press_action:
       name: Double press "on / 1 dot" action
       description: >
-        Choose action(s) to run when the **on** (Rodret) or **1 dot** (Somrig) button is **pressed twice**.
+        Choose action(s) to run when the **on** (Tradfri, Rodret) or **1 dot** (Somrig) button is **pressed twice**.
 
-        **_NB for Rodret only_**: **Double press event (on)** must be exposed and **Double press delay** interval is used as a timeout.
+        **_NB for Tradfri, Rodret only_**: **Double press event (on)** must be exposed and **Double press delay** interval is used as a timeout.
       default: []
       selector:
         action: {}
     off_double_press_action:
       name: Double press "off / 2 dots" action
       description: >
-        Choose action(s) to run when the **off** (Rodret) or **2 dots** (Somrig) button is **pressed twice**. 
+        Choose action(s) to run when the **off** (Tradfri, Rodret) or **2 dots** (Somrig) button is **pressed twice**. 
 
-        **_NB for Rodret only_**: **Double press event (off)** must be exposed and **Double press delay** interval is used as a timeout.
+        **_NB for Tradfri, Rodret only_**: **Double press event (off)** must be exposed and **Double press delay** interval is used as a timeout.
       default: []
       selector:
         action: {}
@@ -119,8 +129,8 @@ blueprint:
               max: 1000.0
               step: 1.0
               mode: slider
-    rodret_options_section:
-      name: Rodret options
+    tradfri_rodret_options_section:
+      name: Tradfri, Rodret options
       icon: mdi:remote
       collapsed: true
       input:
@@ -158,7 +168,7 @@ blueprint:
 mode: single
 max_exceeded: silent
 triggers:
-  # RODRET - E2201
+  # TRADFRI - E1743 + RODRET - E2201
   - trigger: event
     event_type: zha_event
     event_data:
@@ -166,13 +176,13 @@ triggers:
       command: "on"
       cluster_id: 6
       endpoint_id: 1
-    id: press-on-zha-e2201
+    id: press-on-zha-e1743-e2201
   - trigger: device
     domain: mqtt
     device_id: !input remote_device
     type: action
     subtype: "on"
-    id: press-on-z2m-e2201
+    id: press-on-z2m-e1743-e2201
   - trigger: event
     event_type: zha_event
     event_data:
@@ -180,13 +190,13 @@ triggers:
       command: "off"
       cluster_id: 6
       endpoint_id: 1
-    id: press-off-zha-e2201
+    id: press-off-zha-e1743-e2201
   - trigger: device
     domain: mqtt
     device_id: !input remote_device
     type: action
     subtype: "off"
-    id: press-off-z2m-e2201
+    id: press-off-z2m-e1743-e2201
   - trigger: event
     event_type: zha_event
     event_data:
@@ -195,13 +205,13 @@ triggers:
       cluster_id: 8
       endpoint_id: 1
       args: [0, 83]
-    id: hold-on-zha-e2201
+    id: hold-on-zha-e1743-e2201
   - trigger: device
     domain: mqtt
     device_id: !input remote_device
     type: action
     subtype: "brightness_move_up"
-    id: hold-on-z2m-e2201
+    id: hold-on-z2m-e1743-e2201
   - trigger: event
     event_type: zha_event
     event_data:
@@ -210,13 +220,13 @@ triggers:
       cluster_id: 8
       endpoint_id: 1
       args: [1, 83, 0, 0]
-    id: hold-off-zha-e2201
+    id: hold-off-zha-e1743-e2201
   - trigger: device
     domain: mqtt
     device_id: !input remote_device
     type: action
     subtype: "brightness_move_down"
-    id: hold-off-z2m-e2201
+    id: hold-off-z2m-e1743-e2201
   - trigger: event
     event_type: zha_event
     event_data:
@@ -224,13 +234,13 @@ triggers:
       endpoint_id: 1
       cluster_id: 8
       command: stop_with_on_off
-    id: release-zha-e2201
+    id: release-zha-e1743-e2201
   - trigger: device
     domain: mqtt
     device_id: !input remote_device
     type: action
     subtype: "brightness_stop"
-    id: release-z2m-e2201
+    id: release-z2m-e1743-e2201
 
   # SOMRIG - E2213
   - trigger: event
@@ -345,8 +355,8 @@ actions:
       - conditions:
           - condition: trigger
             id:
-              - press-on-zha-e2201
-              - press-on-z2m-e2201
+              - press-on-zha-e1743-e2201
+              - press-on-z2m-e1743-e2201
               - press-dots1-zha-e2213
               - press-dots1-z2m-e2213
         sequence:
@@ -358,7 +368,7 @@ actions:
                   - conditions:
                       - condition: trigger
                         id:
-                          - press-on-zha-e2201
+                          - press-on-zha-e1743-e2201
                     sequence:
                       - wait_for_trigger:
                           - trigger: event
@@ -379,7 +389,7 @@ actions:
                   - conditions:
                       - condition: trigger
                         id:
-                          - press-on-z2m-e2201
+                          - press-on-z2m-e1743-e2201
                     sequence:
                       - wait_for_trigger:
                           - trigger: device
@@ -400,8 +410,8 @@ actions:
       - conditions:
           - condition: trigger
             id:
-              - press-off-zha-e2201
-              - press-off-z2m-e2201
+              - press-off-zha-e1743-e2201
+              - press-off-z2m-e1743-e2201
               - press-dots2-zha-e2213
               - press-dots2-z2m-e2213
         sequence:
@@ -413,7 +423,7 @@ actions:
                   - conditions:
                       - condition: trigger
                         id:
-                          - press-off-zha-e2201
+                          - press-off-zha-e1743-e2201
                     sequence:
                       - wait_for_trigger:
                           - trigger: event
@@ -434,7 +444,7 @@ actions:
                   - conditions:
                       - condition: trigger
                         id:
-                          - press-off-z2m-e2201
+                          - press-off-z2m-e1743-e2201
                     sequence:
                       - wait_for_trigger:
                           - trigger: device
@@ -464,11 +474,13 @@ actions:
               - double-press-dots2-zha-e2213
               - double-press-dots2-z2m-e2213
         sequence: !input off_double_press_action
+      # 
+      # Actions for up button long press
       - conditions:
           - condition: trigger
             id:
-              - hold-on-zha-e2201
-              - hold-on-z2m-e2201
+              - hold-on-zha-e1743-e2201
+              - hold-on-z2m-e1743-e2201
               - hold-dots1-zha-e2213
               - hold-dots1-z2m-e2213
         sequence:
@@ -482,7 +494,7 @@ actions:
                             - conditions:
                                 - condition: trigger
                                   id:
-                                    - hold-on-zha-e2201
+                                    - hold-on-zha-e1743-e2201
                                     - hold-dots1-zha-e2213
                               sequence:
                                 - wait_for_trigger:
@@ -504,7 +516,7 @@ actions:
                             - conditions:
                                 - condition: trigger
                                   id:
-                                    - hold-on-z2m-e2201
+                                    - hold-on-z2m-e1743-e2201
                                     - hold-dots1-z2m-e2213
                               sequence:
                                 - wait_for_trigger:
@@ -529,8 +541,8 @@ actions:
       - conditions:
           - condition: trigger
             id:
-              - hold-off-zha-e2201
-              - hold-off-z2m-e2201
+              - hold-off-zha-e1743-e2201
+              - hold-off-z2m-e1743-e2201
               - hold-dots2-zha-e2213
               - hold-dots2-z2m-e2213
         sequence:
@@ -544,7 +556,7 @@ actions:
                             - conditions:
                                 - condition: trigger
                                   id:
-                                    - hold-off-zha-e2201
+                                    - hold-off-zha-e1743-e2201
                                     - hold-dots2-zha-e2213
                               sequence:
                                 - wait_for_trigger:
@@ -566,7 +578,7 @@ actions:
                             - conditions:
                                 - condition: trigger
                                   id:
-                                    - hold-off-z2m-e2201
+                                    - hold-off-z2m-e1743-e2201
                                     - hold-dots2-z2m-e2213
                               sequence:
                                 - wait_for_trigger:

@@ -3,9 +3,9 @@ blueprint:
     min_version: 2024.10.0
   author: damru
   domain: automation
-  name: IKEA Rodret (E2201) or IKEA Somrig (E2213) Light control (ZHA/Z2M)
+  name: IKEA Tradfri (E1743) or IKEA Rodret (E2201) or IKEA Somrig (E2213) Light control (ZHA/Z2M)
   description: >
-    ## Control a light with **IKEA RODRET** or **IKEA SOMRIG** remotes
+    ## Control a light with **IKEA TRADFRI ON/OFF** or **IKEA RODRET** or **IKEA SOMRIG** remotes
 
 
     Only for use with [ZHA](https://www.home-assistant.io/integrations/zha/)
@@ -15,23 +15,26 @@ blueprint:
 
     Available controls:
 
-    - Press **on** (Rodret) or **1 dot** (Somrig) to turn on the light 
+    - Press **on** (Tradfri, Rodret) or **1 dot** (Somrig) to turn on the light
     (Optional: set the target brightness by enabling **Force Brightness** and setting a **Brightness** value)
 
-    - Press **off** (Rodret) or **2 dots** (Somrig) to turn off the light
+    - Press **off** (Tradfri, Rodret) or **2 dots** (Somrig) to turn off the light
 
-    - Hold **on** (Rodret) or **1 dot** (Somrig) button to increase the brightness
+    - Hold **on** (Tradfri, Rodret) or **1 dot** (Somrig) button to increase the brightness
 
-    - Hold **off** (Rodret) or **2 dots** (Somrig) button to decrease the brightness down to 1%
+    - Hold **off** (Tradfri, Rodret) or **2 dots** (Somrig) button to decrease the brightness down to 1%
   input:
     remote_device:
       name: Remote
       description: >
-        IKEA remote (Rodret, Somrig) to use.
+        IKEA remote (Tradfri, Rodret, Somrig) to use.
       default: ""
       selector:
         device:
           filter:
+            - integration: zha
+              manufacturer: IKEA of Sweden
+              model: TRADFRI on/off switch
             - integration: zha
               manufacturer: IKEA of Sweden
               model: RODRET Dimmer
@@ -40,10 +43,17 @@ blueprint:
               model: SOMRIG shortcut button
             - integration: mqtt
               manufacturer: IKEA
+              model: TRADFRI on/off switch
+            - integration: mqtt
+              manufacturer: IKEA
               model: RODRET wireless dimmer/power switch
             - integration: mqtt
               manufacturer: IKEA
               model: SOMRIG shortcut button
+            # DEPRECATED - for removal, keeping for z2m v1 backward compatibility
+            - integration: mqtt
+              manufacturer: IKEA
+              model: TRADFRI on/off switch (E1743)
             # DEPRECATED - for removal, keeping for z2m v1 backward compatibility
             - integration: mqtt
               manufacturer: IKEA
@@ -88,7 +98,7 @@ blueprint:
 mode: restart
 max_exceeded: silent
 triggers:
-  # RODRET - E2201
+  # TRADFRI - E1743 + RODRET - E2201
   - trigger: event
     event_type: zha_event
     event_data:
@@ -96,13 +106,13 @@ triggers:
       command: "on"
       cluster_id: 6
       endpoint_id: 1
-    id: press-on-zha-e2201
+    id: press-on-zha-e1743-e2201
   - trigger: device
     domain: mqtt
     device_id: !input remote_device
     type: action
     subtype: "on"
-    id: press-on-z2m-e2201
+    id: press-on-z2m-e1743-e2201
   - trigger: event
     event_type: zha_event
     event_data:
@@ -110,13 +120,13 @@ triggers:
       command: "off"
       cluster_id: 6
       endpoint_id: 1
-    id: press-off-zha-e2201
+    id: press-off-zha-e1743-e2201
   - trigger: device
     domain: mqtt
     device_id: !input remote_device
     type: action
     subtype: "off"
-    id: press-off-z2m-e2201
+    id: press-off-z2m-e1743-e2201
   - trigger: event
     event_type: zha_event
     event_data:
@@ -125,13 +135,13 @@ triggers:
       cluster_id: 8
       endpoint_id: 1
       args: [0, 83]
-    id: hold-on-zha-e2201
+    id: hold-on-zha-e1743-e2201
   - trigger: device
     domain: mqtt
     device_id: !input remote_device
     type: action
     subtype: "brightness_move_up"
-    id: hold-on-z2m-e2201
+    id: hold-on-z2m-e1743-e2201
   - trigger: event
     event_type: zha_event
     event_data:
@@ -140,13 +150,13 @@ triggers:
       cluster_id: 8
       endpoint_id: 1
       args: [1, 83, 0, 0]
-    id: hold-off-zha-e2201
+    id: hold-off-zha-e1743-e2201
   - trigger: device
     domain: mqtt
     device_id: !input remote_device
     type: action
     subtype: "brightness_move_down"
-    id: hold-off-z2m-e2201
+    id: hold-off-z2m-e1743-e2201
   - trigger: event
     event_type: zha_event
     event_data:
@@ -154,13 +164,13 @@ triggers:
       command: stop_with_on_off
       endpoint_id: 1
       cluster_id: 8
-    id: release-zha-e2201
+    id: release-zha-e1743-e2201
   - trigger: device
     domain: mqtt
     device_id: !input remote_device
     type: action
     subtype: "brightness_stop"
-    id: release-z2m-e2201
+    id: release-z2m-e1743-e2201
 
   # SOMRIG - E2213
   - trigger: event
@@ -277,8 +287,8 @@ actions:
       - conditions:
           - condition: trigger
             id:
-              - press-on-zha-e2201
-              - press-on-z2m-e2201
+              - press-on-zha-e1743-e2201
+              - press-on-z2m-e1743-e2201
               - press-dots1-zha-e2213
               - press-dots1-z2m-e2213
         sequence:
@@ -298,8 +308,8 @@ actions:
       - conditions:
           - condition: trigger
             id:
-              - press-off-zha-e2201
-              - press-off-z2m-e2201
+              - press-off-zha-e1743-e2201
+              - press-off-z2m-e1743-e2201
               - press-dots2-zha-e2213
               - press-dots2-z2m-e2213
         sequence:
@@ -310,8 +320,8 @@ actions:
       - conditions:
           - condition: trigger
             id:
-              - hold-on-zha-e2201
-              - hold-on-z2m-e2201
+              - hold-on-zha-e1743-e2201
+              - hold-on-z2m-e1743-e2201
               - hold-dots1-zha-e2213
               - hold-dots1-z2m-e2213
         sequence:
@@ -319,8 +329,8 @@ actions:
               while:
                 - condition: trigger
                   id:
-                    - hold-on-zha-e2201
-                    - hold-on-z2m-e2201
+                    - hold-on-zha-e1743-e2201
+                    - hold-on-z2m-e1743-e2201
                     - hold-dots1-zha-e2213
                     - hold-dots1-z2m-e2213
               sequence:
@@ -335,8 +345,8 @@ actions:
       - conditions:
           - condition: trigger
             id:
-              - hold-off-zha-e2201
-              - hold-off-z2m-e2201
+              - hold-off-zha-e1743-e2201
+              - hold-off-z2m-e1743-e2201
               - hold-dots2-zha-e2213
               - hold-dots2-z2m-e2213
         sequence:
