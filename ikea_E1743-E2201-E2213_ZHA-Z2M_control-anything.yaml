@@ -3,9 +3,9 @@ blueprint:
     min_version: 2024.10.0
   author: damru
   domain: automation
-  name: Ikea's Tradfri, Rodret or Somrig ⚙️ Controls
+  name: Ikea's Rodret, Somrig or Tradfri ⚙️ Controls
   description: >
-    ## ⚙️ Control anything with **IKEA TRADFRI ON/OFF** or **IKEA RODRET** or **IKEA SOMRIG** remotes
+    ## ⚙️ Control anything with **IKEA RODRET** or **IKEA SOMRIG** or **IKEA TRADFRI ON/OFF** remotes
 
 
     Only for use with [ZHA](https://www.home-assistant.io/integrations/zha/)
@@ -15,17 +15,17 @@ blueprint:
 
     Available controls:
 
-    - Single press **on/off** (Tradri, Rodret)  **1 dot/2 dots** (Somrig)
+    - Single press **on/off** (Rodret, Tradfri)  **1 dot/2 dots** (Somrig)
 
-    - Double press **on/off** (Tradri, Rodret, _Optional_)  **1 dot/2 dots** (Somrig)
+    - Double press **on/off** (Rodret, Tradfri, _Optional_)  **1 dot/2 dots** (Somrig)
 
-    - Hold **on/off** (Tradfri, Rodret)  **1 dot/2 dots** (Somrig).
+    - Hold **on/off** (Rodret, Tradfri)  **1 dot/2 dots** (Somrig).
     Actions will be executed every **Hold delay**, but maximum **Max number of loops** times.
   input:
     remote_devices:
       name: Remotes
       description: >
-        IKEA remote (Tradfri, Rodret, Somrig) to use.
+        IKEA remote (Rodret, Somrig, Tradfri) to use.
       default: []
       selector:
         device:
@@ -63,43 +63,43 @@ blueprint:
           multiple: true
     on_press_action:
       name: Press "on / 1 dot" action
-      description: Choose action(s) to run when **on** (Tradfri, Rodret) or **1 dot** (Somrig) button is **pressed**.
+      description: Choose action(s) to run when **on** (Rodret, Tradfri) or **1 dot** (Somrig) button is **pressed**.
       default: []
       selector:
         action: {}
     off_press_action:
       name: Press "off / 2 dots" action
-      description: Choose action(s) to run when **off** (Tradfri, Rodret) or **2 dots** (Somrig) button is **pressed**.
+      description: Choose action(s) to run when **off** (Rodret, Tradfri) or **2 dots** (Somrig) button is **pressed**.
       default: []
       selector:
         action: {}
     on_hold_action:
       name: Hold "on / 1 dot" action
-      description: Choose action(s) to run when **on** (Tradfri, Rodret) or **1 dot** (Somrig) button is **held**.
+      description: Choose action(s) to run when **on** (Rodret, Tradfri) or **1 dot** (Somrig) button is **held**.
       default: []
       selector:
         action: {}
     off_hold_action:
       name: Hold "off / 2 dots" action
-      description: Choose action(s) to run when **off** (Tradfri, Rodret) or **2 dots** (Somrig) button is **held**.
+      description: Choose action(s) to run when **off** (Rodret, Tradfri) or **2 dots** (Somrig) button is **held**.
       default: []
       selector:
         action: {}
     on_double_press_action:
       name: Double press "on / 1 dot" action
       description: >
-        Choose action(s) to run when the **on** (Tradfri, Rodret) or **1 dot** (Somrig) button is **pressed twice**.
+        Choose action(s) to run when the **on** (Rodret, Tradfri) or **1 dot** (Somrig) button is **pressed twice**.
 
-        **_NB for Tradfri, Rodret only_**: **Double press event (on)** must be exposed and **Double press delay** interval is used as a timeout.
+        **_NB for Rodret, Tradfri only_**: **Double press event (on)** must be exposed and **Double press delay** interval is used as a timeout.
       default: []
       selector:
         action: {}
     off_double_press_action:
       name: Double press "off / 2 dots" action
       description: >
-        Choose action(s) to run when the **off** (Tradfri, Rodret) or **2 dots** (Somrig) button is **pressed twice**. 
+        Choose action(s) to run when the **off** (Rodret, Tradfri) or **2 dots** (Somrig) button is **pressed twice**. 
 
-        **_NB for Tradfri, Rodret only_**: **Double press event (off)** must be exposed and **Double press delay** interval is used as a timeout.
+        **_NB for Rodret, Tradfri only_**: **Double press event (off)** must be exposed and **Double press delay** interval is used as a timeout.
       default: []
       selector:
         action: {}
@@ -129,8 +129,8 @@ blueprint:
               max: 1000.0
               step: 1.0
               mode: slider
-    tradfri_rodret_options_section:
-      name: Tradfri, Rodret options
+    rodret_tradfri_options_section:
+      name: Rodret, Tradfri options
       icon: mdi:remote
       collapsed: true
       input:
@@ -168,7 +168,7 @@ blueprint:
 mode: single
 max_exceeded: silent
 triggers:
-  # TRADFRI (E1743) + RODRET (E2201)
+  # RODRET (E2201) + TRADFRI (E1743)
   - trigger: event
     event_type: zha_event
     event_data:
