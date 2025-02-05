@@ -5,7 +5,7 @@ blueprint:
   domain: automation
   name: Ikea's Tradfri, Rodret or Somrig 💡 Light control
   description: >
-    ## 💡 Control a light with **IKEA TRADFRI ON/OFF** or ***IKEA RODRET** or **IKEA SOMRIG** remotes
+    ## 💡 Control a light with **IKEA TRADFRI ON/OFF** or **IKEA RODRET** or **IKEA SOMRIG** remotes
 
 
     Only for use with [ZHA](https://www.home-assistant.io/integrations/zha/)
