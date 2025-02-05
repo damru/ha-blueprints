@@ -3,9 +3,9 @@ blueprint:
     min_version: 2024.10.0
   author: damru
   domain: automation
-  name: Ikea's Tradfri, Rodret or Somrig 💡 Light control
+  name: Ikea's Rodret, Somrig or Tradfri 💡 Light control
   description: >
-    ## 💡 Control a light with **IKEA TRADFRI ON/OFF** or **IKEA RODRET** or **IKEA SOMRIG** remotes
+    ## 💡 Control a light with **IKEA RODRET** or **IKEA SOMRIG** or **IKEA TRADFRI ON/OFF** remotes
 
 
     Only for use with [ZHA](https://www.home-assistant.io/integrations/zha/)
@@ -15,19 +15,19 @@ blueprint:
 
     Available controls:
 
-    - Press **on** (Tradfri, Rodret) or **1 dot** (Somrig) to turn on the light
+    - Press **on** (Rodret, Tradfri) or **1 dot** (Somrig) to turn on the light
     (Optional: set the target brightness by enabling **Force Brightness** and setting a **Brightness** value)
 
-    - Press **off** (Tradfri, Rodret) or **2 dots** (Somrig) to turn off the light
+    - Press **off** (Rodret, Tradfri) or **2 dots** (Somrig) to turn off the light
 
-    - Hold **on** (Tradfri, Rodret) or **1 dot** (Somrig) button to increase the brightness
+    - Hold **on** (Rodret, Tradfri) or **1 dot** (Somrig) button to increase the brightness
 
-    - Hold **off** (Tradfri, Rodret) or **2 dots** (Somrig) button to decrease the brightness down to 1%
+    - Hold **off** (Rodret, Tradfri) or **2 dots** (Somrig) button to decrease the brightness down to 1%
   input:
     remote_devices:
       name: Remotes
       description: >
-        IKEA remote (Tradfri, Rodret, Somrig) to use.
+        IKEA remote (Rodret, Somrig, Tradfri) to use.
       default: []
       selector:
         device:
