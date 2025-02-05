@@ -8,6 +8,7 @@ changelog:
         - breaking
     - title: 🚀 Features
       labels:
+        - enhancement
         - feature
     - title: 🛠️ Fixes 
       labels:
@@ -15,7 +16,7 @@ changelog:
         - fix
     - title: 📓 Documentation 
       labels:
-        - doc
+        - documentation
     - title: ⚙️ Other Changes 
       labels:
         - "*"
