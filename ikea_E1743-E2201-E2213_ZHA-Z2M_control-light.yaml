@@ -3,9 +3,9 @@ blueprint:
     min_version: 2024.10.0
   author: damru
   domain: automation
-  name: IKEA Tradfri (E1743) or IKEA Rodret (E2201) or IKEA Somrig (E2213) Light control (ZHA/Z2M)
+  name: Ikea's Tradfri, Rodret or Somrig 💡 Light control
   description: >
-    ## Control a light with **IKEA TRADFRI ON/OFF** or **IKEA RODRET** or **IKEA SOMRIG** remotes
+    ## 💡 Control a light with **IKEA TRADFRI ON/OFF** or ***IKEA RODRET** or **IKEA SOMRIG** remotes
 
 
     Only for use with [ZHA](https://www.home-assistant.io/integrations/zha/)
@@ -24,8 +24,8 @@ blueprint:
 
     - Hold **off** (Tradfri, Rodret) or **2 dots** (Somrig) button to decrease the brightness down to 1%
   input:
-    remote_device:
-      name: Remote
+    remote_devices:
+      name: Remotes
       description: >
         IKEA remote (Tradfri, Rodret, Somrig) to use.
       default: ""
@@ -62,7 +62,7 @@ blueprint:
             - integration: mqtt
               manufacturer: IKEA
               model: SOMRIG shortcut button (E2213)
-          multiple: false
+          multiple: true
     light:
       name: Light
       description: Light to control
@@ -102,187 +102,138 @@ triggers:
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: !input remote_device
       command: "on"
       cluster_id: 6
       endpoint_id: 1
     id: press-on-zha-e1743-e2201
-  - trigger: device
-    domain: mqtt
-    device_id: !input remote_device
-    type: action
-    subtype: "on"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: "on"
     id: press-on-z2m-e1743-e2201
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: !input remote_device
       command: "off"
       cluster_id: 6
       endpoint_id: 1
     id: press-off-zha-e1743-e2201
-  - trigger: device
-    domain: mqtt
-    device_id: !input remote_device
-    type: action
-    subtype: "off"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: "off"
     id: press-off-z2m-e1743-e2201
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: !input remote_device
-      command: "move_with_on_off"
+      command: move_with_on_off
       cluster_id: 8
       endpoint_id: 1
-      args: [0, 83]
     id: hold-on-zha-e1743-e2201
-  - trigger: device
-    domain: mqtt
-    device_id: !input remote_device
-    type: action
-    subtype: "brightness_move_up"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: brightness_move_up
     id: hold-on-z2m-e1743-e2201
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: !input remote_device
-      command: "move"
+      command: move
       cluster_id: 8
       endpoint_id: 1
-      args: [1, 83, 0, 0]
     id: hold-off-zha-e1743-e2201
-  - trigger: device
-    domain: mqtt
-    device_id: !input remote_device
-    type: action
-    subtype: "brightness_move_down"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: brightness_move_down
     id: hold-off-z2m-e1743-e2201
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: !input remote_device
-      command: stop_with_on_off
       endpoint_id: 1
       cluster_id: 8
     id: release-zha-e1743-e2201
-  - trigger: device
-    domain: mqtt
-    device_id: !input remote_device
-    type: action
-    subtype: "brightness_stop"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: brightness_stop
     id: release-z2m-e1743-e2201
 
   # SOMRIG - E2213
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: !input remote_device
-      command: "short_release"
+      command: short_release
       endpoint_id: 1
     id: press-dots1-zha-e2213
-  - trigger: device
-    domain: mqtt
-    device_id: !input remote_device
-    type: action
-    subtype: "1_short_release"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: 1_short_release
     id: press-dots1-z2m-e2213
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: !input remote_device
-      command: "short_release"
+      command: short_release
       endpoint_id: 2
     id: press-dots2-zha-e2213
-  - trigger: device
-    domain: mqtt
-    device_id: !input remote_device
-    type: action
-    subtype: "2_short_release"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: 2_short_release
     id: press-dots2-z2m-e2213
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: !input remote_device
-      command: "multi_press_complete"
-      endpoint_id: 1
-    id: double-press-dots1-zha-e2213
-  - trigger: device
-    domain: mqtt
-    device_id: !input remote_device
-    type: action
-    subtype: "1_double_press"
-    id: double-press-dots1-z2m-e2213
-  - trigger: event
-    event_type: zha_event
-    event_data:
-      device_id: !input remote_device
-      command: "multi_press_complete"
-      endpoint_id: 2
-    id: double-press-dots2-zha-e2213
-  - trigger: device
-    domain: mqtt
-    device_id: !input remote_device
-    type: action
-    subtype: "2_double_press"
-    id: double-press-dots2-z2m-e2213
-  - trigger: event
-    event_type: zha_event
-    event_data:
-      device_id: !input remote_device
-      command: "long_press"
+      command: long_press
       endpoint_id: 1
     id: hold-dots1-zha-e2213
-  - trigger: device
-    domain: mqtt
-    device_id: !input remote_device
-    type: action
-    subtype: "1_long_press"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: 1_long_press
     id: hold-dots1-z2m-e2213
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: !input remote_device
-      command: "long_press"
+      command: long_press
       endpoint_id: 2
     id: hold-dots2-zha-e2213
-  - trigger: device
-    domain: mqtt
-    device_id: !input remote_device
-    type: action
-    subtype: "2_long_press"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: 2_long_press
     id: hold-dots2-z2m-e2213
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: !input remote_device
-      command: "long_release"
+      command: long_release
       endpoint_id: 1
     id: release-hold-dots1-zha-e2213
-  - trigger: device
-    domain: mqtt
-    device_id: !input remote_device
-    type: action
-    subtype: "1_long_release"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: 1_long_release
     id: release-hold-dots1-z2m-e2213
   - trigger: event
     event_type: zha_event
     event_data:
-      device_id: !input remote_device
-      command: "long_release"
+      command: long_release
       endpoint_id: 2
     id: release-hold-dots2-zha-e2213
-  - trigger: device
-    domain: mqtt
-    device_id: !input remote_device
-    type: action
-    subtype: "2_long_release"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: 2_long_release
     id: release-hold-dots2-z2m-e2213
+variables:
+  helper_force_brightness: !input helper_force_brightness
+  helper_hold_delay: 0.1
+  helper_hold_dim_step: 4
+  light: !input light
+  remote_devices: !input remote_devices
+  remote_device: >-
+    {% set is_zha = trigger.platform == "zha_event" %}
+    {% set is_mqtt = trigger.platform == "mqtt" %}
+    {% set device_name = trigger.topic.split("/")[1] if is_mqtt else none %}
+    {{ 
+      (trigger.event.data.device_id if is_zha) or
+      (device_id(trigger.topic.split("/")[1]) if is_mqtt and device_name)
+    }}
+  mqtt_topic: "{{ trigger.topic }}"
+condition:
+  - condition: template
+    value_template: "{{ remote_device in remote_devices }}"
 actions:
-  - variables:
-      helper_force_brightness: !input helper_force_brightness
-      helper_hold_delay: 0.1
-      helper_hold_dim_step: 4
-      light: !input light
   - choose:
       - conditions:
           - condition: trigger
