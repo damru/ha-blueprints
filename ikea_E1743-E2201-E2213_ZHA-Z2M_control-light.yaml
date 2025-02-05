@@ -28,7 +28,7 @@ blueprint:
       name: Remotes
       description: >
         IKEA remote (Tradfri, Rodret, Somrig) to use.
-      default: ""
+      default: []
       selector:
         device:
           filter:
