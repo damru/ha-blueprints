@@ -98,7 +98,7 @@ blueprint:
 mode: restart
 max_exceeded: silent
 triggers:
-  # TRADFRI - E1743 + RODRET - E2201
+  # RODRET (E2201) - TRADFRI (E1743)
   - trigger: event
     event_type: zha_event
     event_data:
