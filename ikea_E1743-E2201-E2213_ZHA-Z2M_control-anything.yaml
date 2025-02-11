@@ -311,7 +311,7 @@ variables:
   off_double_press_exposed: !input off_double_press_exposed
   remote_devices: !input remote_devices
   remote_device: >-
-    {% set is_zha = trigger.platform == "zha_event" %}
+    {% set is_zha = trigger.platform == "event" and trigger.event.event_type == "zha_event" %}
     {% set is_mqtt = trigger.platform == "mqtt" %}
     {% set device_name = trigger.topic.split("/")[1] if is_mqtt else none %}
     {{ 
