@@ -307,21 +307,20 @@ triggers:
     payload: 2_long_release
     id: release-hold-dots2-z2m-e2213
 variables:
+  is_mqtt: "{{ trigger.platform == 'mqtt' }}"
+  is_zha: "{{ trigger.platform == 'event' and trigger.event.event_type == 'zha_event' }}"
+  mqtt_topic: "{{ trigger.topic }}"
   on_double_press_exposed: !input on_double_press_exposed
   off_double_press_exposed: !input off_double_press_exposed
   remote_devices: !input remote_devices
-  remote_device: >-
-    {% set is_zha = trigger.platform == "event" and trigger.event.event_type == "zha_event" %}
-    {% set is_mqtt = trigger.platform == "mqtt" %}
-    {% set device_name = trigger.topic.split("/")[1] if is_mqtt else none %}
-    {{ 
-      (trigger.event.data.device_id if is_zha) or
-      (device_id(trigger.topic.split("/")[1]) if is_mqtt and device_name)
-    }}
-  mqtt_topic: "{{ trigger.topic }}"
+  remote_devices_names: "{{ remote_devices | map('device_attr', 'name') | list }}"
 condition:
   - condition: template
-    value_template: "{{ remote_device in remote_devices }}"
+    value_template: >-
+      {{ 
+        (trigger.event.data.device_id in remote_devices if is_zha) or
+        (trigger.topic.split('/')[1] in remote_devices_names if is_mqtt) 
+      }}
 actions:
   - choose:
       - conditions:
