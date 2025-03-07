@@ -222,9 +222,9 @@ variables:
   is_mqtt: "{{ trigger.platform == 'mqtt' }}"
   is_zha: "{{ trigger.platform == 'event' and trigger.event.event_type == 'zha_event' }}"
   light: !input light
+  mqtt_topic: "{{ trigger.topic }}"
   remote_devices: !input remote_devices
   remote_devices_names: "{{ remote_devices | map('device_attr', 'name') |list }}"
-  mqtt_topic: "{{ trigger.topic }}"
 condition:
   - condition: template
     value_template: >-
