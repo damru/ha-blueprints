@@ -9,8 +9,10 @@ on:
 jobs:
   label:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - uses: bcoe/conventional-release-labels@v1
         with:
-          ignore_types: '["chore", "ci"]'
+          ignored_types: '["chore", "ci"]'
           type_labels: '{"feat": "enhancement", "fix": "bug", "breaking": "breaking", "doc": "documentation"}'
