@@ -314,7 +314,7 @@ variables:
   off_double_press_exposed: !input off_double_press_exposed
   remote_devices: !input remote_devices
   remote_devices_names: "{{ remote_devices | map('device_attr', 'name') | list }}"
-  zha_device_id: "{{ trigger.event.data.device_id }}"
+  zha_device_id: "{{ trigger.event.data.device_id if is_zha }}"
 condition:
   - condition: template
     value_template: >-
