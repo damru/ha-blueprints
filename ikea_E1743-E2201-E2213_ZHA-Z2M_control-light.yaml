@@ -95,6 +95,53 @@ blueprint:
               max: 100.0
               step: 1.0
               mode: slider
+    temperature_section:
+      name: Colour temperature
+      icon: mdi:lightbulb-on-50
+      collapsed: true
+      input:
+        helper_max_temperature:
+          name: Max temperature
+          description: The maximum colour temperature before looping round to the minimum.
+          default: 450
+          selector:
+            number:
+              min: 1.0
+              max: 600.0
+              step: 1.0
+              mode: slider
+        helper_min_temperature:
+          name: Min temperature
+          description: The minimum colour temperature, set when the maximum has been reached and the temperature is changed.
+          default: 225
+          selector:
+            number:
+              min: 1.0
+              max: 600.0
+              step: 1.0
+              mode: slider
+        helper_temperature_change_step:
+          name: Temperature change step
+          description:
+            Step value to add to colour temperature for each change.
+          default: 75
+          selector:
+            number:
+              min: 1.0
+              max: 600.0
+              step: 1.0
+              mode: slider
+        helper_temperature_transition_time:
+          name: Temperature change transition time
+          description:
+            Number of seconds for temperature to transition over.
+          default: 0.5
+          selector:
+            number:
+              min: 0.0
+              max: 10.0
+              step: 0.1
+              mode: slider
 mode: restart
 max_exceeded: silent
 triggers:
@@ -220,6 +267,9 @@ variables:
   helper_force_brightness: !input helper_force_brightness
   helper_hold_delay: 0.1
   helper_hold_dim_step: 4
+  helper_min_temperature: !input helper_min_temperature
+  helper_max_temperature: !input helper_max_temperature
+  helper_temperature_change_step: !input helper_temperature_change_step
   is_mqtt: "{{ trigger.platform == 'mqtt' }}"
   is_zha: "{{ trigger.platform == 'event' and trigger.event.event_type == 'zha_event' }}"
   light: !input light
@@ -243,19 +293,31 @@ actions:
               - press-dots1-zha-e2213
               - press-dots1-z2m-e2213
         sequence:
-          - choose:
-              - conditions: "{{ helper_force_brightness }}"
-                sequence:
+          - if:
+              - condition: state
+                entity_id: !input light
+                state: "on"
+            then:
+              - action: light.turn_on
+                data:
+                  color_temp: "{% if state_attr(light, 'color_temp')|int >= helper_max_temperature %}{{ helper_min_temperature }}{% else %}{{ state_attr(light, 'color_temp')|int + helper_temperature_change_step }}{% endif %}"
+                  transition: !input helper_temperature_transition_time
+                target:
+                  entity_id: !input light
+            else:
+              - choose:
+                  - conditions: "{{ helper_force_brightness }}"
+                    sequence:
+                      - action: light.turn_on
+                        target:
+                          entity_id: !input light
+                        data:
+                          brightness_pct: !input helper_brightness
+                default:
                   - action: light.turn_on
                     target:
                       entity_id: !input light
-                    data:
-                      brightness_pct: !input helper_brightness
-            default:
-              - action: light.turn_on
-                target:
-                  entity_id: !input light
-                data: {}
+                    data: {}
       - conditions:
           - condition: trigger
             id:
