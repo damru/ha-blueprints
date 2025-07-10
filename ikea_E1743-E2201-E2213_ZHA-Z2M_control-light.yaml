@@ -40,6 +40,9 @@ blueprint:
               model: RODRET Dimmer
             - integration: zha
               manufacturer: IKEA of Sweden
+              model: RODRET wireless dimmer
+            - integration: zha
+              manufacturer: IKEA of Sweden
               model: SOMRIG shortcut button
             - integration: mqtt
               manufacturer: IKEA
