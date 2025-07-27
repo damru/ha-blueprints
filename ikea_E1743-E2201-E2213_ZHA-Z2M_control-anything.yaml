@@ -32,15 +32,15 @@ blueprint:
           filter:
             - integration: zha
               manufacturer: IKEA of Sweden
-              model: TRADFRI on/off switch
-            - integration: zha
-              manufacturer: IKEA of Sweden
               model: RODRET Dimmer
             - integration: zha
               manufacturer: IKEA of Sweden
+              model: RODRET wireless dimmer
+            - integration: zha
+              manufacturer: IKEA of Sweden
               model: SOMRIG shortcut button
-            - integration: mqtt
-              manufacturer: IKEA
+            - integration: zha
+              manufacturer: IKEA of Sweden
               model: TRADFRI on/off switch
             - integration: mqtt
               manufacturer: IKEA
@@ -48,10 +48,9 @@ blueprint:
             - integration: mqtt
               manufacturer: IKEA
               model: SOMRIG shortcut button
-            # DEPRECATED - for removal, keeping for z2m v1 backward compatibility
             - integration: mqtt
               manufacturer: IKEA
-              model: TRADFRI on/off switch (E1743)
+              model: TRADFRI on/off switch
             # DEPRECATED - for removal, keeping for z2m v1 backward compatibility
             - integration: mqtt
               manufacturer: IKEA
@@ -60,6 +59,10 @@ blueprint:
             - integration: mqtt
               manufacturer: IKEA
               model: SOMRIG shortcut button (E2213)
+            # DEPRECATED - for removal, keeping for z2m v1 backward compatibility
+            - integration: mqtt
+              manufacturer: IKEA
+              model: TRADFRI on/off switch (E1743)
           multiple: true
     on_press_action:
       name: Press "on / 1 dot" action
