@@ -3,7 +3,7 @@ blueprint:
     min_version: 2024.10.0
   author: damru
   domain: automation
-  name: Ikea's Rodret, Somrig or Tradfri 💡 Light control
+  name: Ikea's Rodret, Somrig or Tradfri 💡 Light control with Double Press Actions
   description: >
     ## 💡 Control a light with **IKEA RODRET** or **IKEA SOMRIG** or **IKEA TRADFRI ON/OFF** remotes
 
