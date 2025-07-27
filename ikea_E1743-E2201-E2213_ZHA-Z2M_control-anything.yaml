@@ -314,6 +314,7 @@ variables:
   off_double_press_exposed: !input off_double_press_exposed
   remote_devices: !input remote_devices
   remote_devices_names: "{{ remote_devices | map('device_attr', 'name') | list }}"
+  zha_device_id: "{{ trigger.event.data.device_id if is_zha }}"
 condition:
   - condition: template
     value_template: >-
@@ -345,7 +346,7 @@ actions:
                           - trigger: event
                             event_type: zha_event
                             event_data:
-                              device_id: "{{ remote_device }}"
+                              device_id: "{{ zha_device_id }}"
                               command: "on"
                               cluster_id: 6
                               endpoint_id: 1
@@ -398,7 +399,7 @@ actions:
                           - trigger: event
                             event_type: zha_event
                             event_data:
-                              device_id: "{{ remote_device }}"
+                              device_id: "{{ zha_device_id }}"
                               command: "off"
                               cluster_id: 6
                               endpoint_id: 1
@@ -468,7 +469,7 @@ actions:
                                     - trigger: event
                                       event_type: zha_event
                                       event_data:
-                                        device_id: "{{ remote_device }}"
+                                        device_id: "{{ zha_device_id }}"
                                         command: "stop_with_on_off"
                                         cluster_id: 8
                                         endpoint_id: 1
@@ -526,7 +527,7 @@ actions:
                                     - trigger: event
                                       event_type: zha_event
                                       event_data:
-                                        device_id: "{{ remote_device }}"
+                                        device_id: "{{ zha_device_id }}"
                                         command: "stop_with_on_off"
                                         cluster_id: 8
                                         endpoint_id: 1
