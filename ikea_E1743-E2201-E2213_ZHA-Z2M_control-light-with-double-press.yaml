@@ -198,7 +198,7 @@ blueprint:
               max: 5000.0
               step: 10.0
               mode: slider
-mode: restart
+mode: single
 max_exceeded: silent
 triggers:
   # RODRET (E2201) - TRADFRI (E1743)
