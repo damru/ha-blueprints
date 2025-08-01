@@ -166,6 +166,15 @@ action:
       platform: state
       entity_id: !input motion_sensors
       to: "off"
+  - if:
+      - condition: state
+        entity_id: !input motion_sensors
+        state: "on"
+    then:
+      - wait_for_trigger:
+        platform: state
+        entity_id: !input motion_sensors
+        to: "off"
   - delay: !input no_motion_wait
   - choose:
       - conditions:
