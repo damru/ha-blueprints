@@ -1,0 +1,321 @@
+blueprint:
+  name: ZHA - Philips Hue Dimmer Switch v2 - Light Control
+  description: |
+    Control lights with a Philips Hue Dimmer Switch v2.
+
+    The top "power" button behaviour is adjustable. By default it toggles the light with the last set brightness.
+    
+    Dim up/down buttons will change the brightness smoothly and can be pressed
+    and held until the brightness is satisfactory.
+
+    The bottom "scene" button will change the light temperature.
+    
+    The "power" and "scene" buttons can be assigned to an action when double
+    or triple pressed. This allows you to assign e.g. a scene or something else.
+
+    The minimum brightness setting will limit how low you can set the brightness. This will 
+    prevent dimming down until the light turns off. Set this to zero to disable this feature.
+
+    Does this blueprint not work for you? Did you add your Hue dimmer to ZHA before July 2020?
+    It might help to press the 'Reconfigure device' button on the ZHA Device info page.
+    The naming of the command attribute in the zha_event was changed back then. 
+
+  domain: automation
+
+  # Define the inputs for the blueprint
+  input:
+    remote:
+      name: Philips Hue Dimmer Switch v2
+      description: Pick RWL022 (v2 dimmer)
+      selector:
+        device:
+          integration: zha
+          manufacturer: Signify Netherlands B.V.
+          entity:
+            domain: sensor
+            device_class: battery
+    light:
+      name: The light(s) to control
+      description: >
+        The light entity to control
+        (only a single entity is supported; use light groups when needed)
+      selector:
+        entity:
+          domain: light
+    power_button_mode:
+      name: The mode for the "power" button
+      description: >
+        Choose behaviour when pressing the "power" button.
+          - Fixed brightness; Always turn on the lights with a fixed brightness
+          - Fixed brightness when on; If light is off, turn on the light; If light is on, set it to a fixed brightness
+          - Always toggle; Always turn on the light to the last set brightness
+          - Always toggle fixed brightness; Always turn on the light with a fixed brightness
+      default: always toggle
+      selector:
+        select:
+          options:
+            - fixed brightness
+            - fixed brightness when on
+            - always toggle
+            - always toggle fixed brightness
+    fixed_brightness:
+      name: Fixed Brightness
+      description: The fixed brightness of the light(s) when turning on
+      default: 255
+      selector:
+        number:
+          min: 0.0
+          max: 255.0
+          mode: slider
+          step: 1.0
+    min_brightness:
+      name: Minimum Brightness
+      description: >
+        The minimum brightness of the light(s) when dimming down.
+        Set this to zero to disable this feature.
+      default: 1
+      selector:
+        number:
+          min: 0.0
+          max: 255.0
+          mode: slider
+          step: 1.0
+    power_button_section:
+      name: Power button
+      icon: mdi:power
+      collapsed: false
+      input:
+        button_power_double:
+          name: Power button - Double press
+          description: Action to run when double pressing the power button
+          default: []
+          selector:
+            action:
+        button_power_triple:
+          name: Power button - Triple press
+          description: Action to run when triple pressing the power button
+          default: []
+          selector:
+            action:
+        button_power_long:
+          name: Power button - Long press (repeating)
+          description: Action to run when holding down the power button
+          default: []
+          selector:
+            action:
+    scene_button_section:
+      name: Scene button
+      icon: mdi:palette
+      collapsed: false
+      input:
+        button_scene_double:
+          name: Scene button - Double press
+          description: Action to run when double pressing the scene button
+          default: []
+          selector:
+            action:
+        button_scene_triple:
+          name: Scene button - Triple press
+          description: Action to run when triple pressing the scene button
+          default: []
+          selector:
+            action:
+        button_scene_long:
+          name: Scene button - Long press (repeating)
+          description: Action to run when holding down the scene button
+          default: []
+          selector:
+            action:
+    temperature_section:
+      name: Colour temperature
+      icon: mdi:lightbulb-on-50
+      collapsed: true
+      input:
+        max_temperature:
+          name: Max temperature
+          description: The maximum colour temperature before looping round to the minimum.
+          default: 375
+          selector:
+            number:
+              min: 1.0
+              max: 600.0
+              step: 1.0
+              mode: slider
+        min_temperature:
+          name: Min temperature
+          description: The minimum colour temperature, set when the maximum has been reached and the temperature is changed.
+          default: 225
+          selector:
+            number:
+              min: 1.0
+              max: 600.0
+              step: 1.0
+              mode: slider
+        temperature_change_step:
+          name: Temperature change step
+          description:
+            Step value to add to colour temperature for each change.
+          default: 50
+          selector:
+            number:
+              min: 1.0
+              max: 600.0
+              step: 1.0
+              mode: slider
+        temperature_transition_time:
+          name: Temperature change transition time
+          description:
+            Number of seconds for temperature to transition over.
+          default: 0.5
+          selector:
+            number:
+              min: 0.0
+              max: 10.0
+              step: 0.1
+              mode: slider
+
+# mode: restart
+max_exceeded: silent
+
+variables:
+  light                   : !input light
+  power_button_mode       : !input power_button_mode
+  fixed_brightness        : !input fixed_brightness
+  min_brightness          : !input min_brightness
+  min_temperature         : !input min_temperature
+  max_temperature         : !input max_temperature
+  temperature_change_step : !input temperature_change_step
+
+# Trigger the automation when the selected dimmer remote sends an event
+# Also only trigger on cluster_id 64512. This ignores the 'old' events with cluster_id 8.
+trigger:
+- platform: event
+  event_type: zha_event
+  event_data:
+    device_id: !input 'remote'
+    cluster_id: 64512
+
+action:
+  - variables:
+      command        : '{{ trigger.event.data.command }}'
+      cur_brightness : '{{ state_attr(light, "brightness") | default(0) }}'
+      is_turned_on   : '{{ states(light) == "on" }}'
+  
+  - choose:
+    - conditions: '{{ command == "on_press" }}'
+      sequence:
+      - choose:
+        - conditions: '{{ power_button_mode == "fixed brightness" }}'
+          sequence:
+          - action: light.turn_on
+            data:
+              entity_id : !input 'light'
+              transition: 0.5
+              brightness: !input 'fixed_brightness'
+        - conditions:
+            - '{{ power_button_mode == "fixed brightness when on" }}'
+            - '{{ is_turned_on }}'
+          sequence:
+          - action: light.turn_on
+            data:
+              entity_id : !input 'light'
+              transition: 0.5
+              brightness: !input 'fixed_brightness'
+        - conditions:
+            - '{{ power_button_mode == "always toggle fixed brightness" }}'
+            - '{{ is_turned_on }}'
+          sequence:
+          - action: light.turn_off
+            data:
+              entity_id : !input 'light'
+              transition: 0.5
+        - conditions:
+            - '{{ power_button_mode == "always toggle fixed brightness" }}'
+          sequence:
+          - action: light.turn_on
+            data:
+              entity_id : !input 'light'
+              transition: 0.5
+              brightness: !input 'fixed_brightness'
+        default:
+        - action: light.toggle
+          data:
+            entity_id : !input 'light'
+            transition: 0.5
+
+    - conditions: '{{ command == "on_double_press" }}'
+      sequence: !input button_power_double
+
+    - conditions: '{{ command == "on_triple_press" }}'
+      sequence: !input button_power_triple
+
+    - conditions: '{{ command == "on_hold" }}'
+      sequence: !input button_power_long
+
+    - conditions: '{{ command == "off_press" }}'
+      sequence:
+      - action: light.turn_on
+        data:
+          color_temp: "{% if state_attr(light, 'color_temp')|int >= max_temperature %}{{ min_temperature }}{% else %}{{ state_attr(light, 'color_temp')|int + temperature_change_step }}{% endif %}"
+          transition: !input temperature_transition_time
+        target:
+          entity_id: !input light
+
+    - conditions: '{{ command == "off_double_press" }}'
+      sequence: !input button_scene_double
+
+    - conditions: '{{ command == "off_triple_press" }}'
+      sequence: !input button_scene_triple
+
+    - conditions: '{{ command == "off_hold" }}'
+      sequence: !input button_scene_long
+
+    - conditions: '{{ command == "up_press" }}'
+      sequence:
+      - action: light.turn_on
+        data:
+          entity_id : !input 'light'
+          brightness_step: 25
+          transition: 0.5
+  
+    - conditions: '{{ command == "up_hold" }}'
+      sequence:
+      - action: light.turn_on
+        data:
+          entity_id : !input 'light'
+          brightness_step: 50
+          transition: 1
+  
+    - conditions: '{{ command == "down_press" }}'
+      sequence:
+      - choose:
+        - conditions: '{{ (cur_brightness - 25) >= min_brightness }}'
+          sequence:
+          - action: light.turn_on
+            data:
+              entity_id : !input 'light'
+              transition: 0.5
+              brightness_step: -25
+        default:
+        - action: light.turn_on
+          data:
+            entity_id : !input 'light'
+            transition: 0.5
+            brightness: !input 'min_brightness'
+  
+    - conditions: '{{ command == "down_hold" }}'
+      sequence:
+      - choose:
+        - conditions: '{{ (cur_brightness - 50) >= min_brightness }}'
+          sequence:
+          - action: light.turn_on
+            data:
+              entity_id : !input 'light'
+              transition: 1
+              brightness_step: -50
+        default:
+        - action: light.turn_on
+          data:
+            entity_id : !input 'light'
+            transition: 1
+            brightness: !input 'min_brightness'

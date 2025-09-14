@@ -1,0 +1,188 @@
+# adapted from https://github.com/iainsmacleod/Home-Assistant-Blueprints
+blueprint:
+  name: Motion- or sensor- activated light with brightness and temperature
+  description: Turn on lights when motion is detected, with brightness and temperature depending on sunrise/sunset (with offsets).
+  domain: automation
+  input:
+    motion_sensors:
+      name: Motion and Occupancy Sensors
+      description: Select one or more motion or occupancy sensors.
+      selector:
+        entity:
+          domain: binary_sensor
+          device_class:
+            - motion
+            - occupancy
+            - door
+          multiple: true
+    entity_target:
+      name: Lights and Switches
+      description: Select one or more lights or switches to control.
+      selector:
+        target:
+          entity:
+            domain:
+              - light
+              - switch
+    no_motion_wait:
+      name: Wait Time
+      description: Time to leave the light on after last motion is detected.
+      default: 120
+      selector:
+        number:
+          min: 0
+          max: 3600
+          unit_of_measurement: seconds
+    use_custom_settings:
+      name: Use Changing Brightness and Temperature
+      description: Enable to use brightness and temperature settings based on surrounding lights and light level.
+      default: true
+      selector:
+        boolean:
+    brightness_bright:
+      name: Brightness (bright setting)
+      description: Set the brightness level (0-255) used when high brightness is set.
+      default: 255
+      selector:
+        number:
+          min: 0
+          max: 255
+    brightness_dim:
+      name: Brightness (dim setting)
+      description: Set the brightness level (0-255) used when low brightness is set.
+      default: 150
+      selector:
+        number:
+          min: 0
+          max: 255
+    sun_offset_brightness:
+      name: Sun Offset for Brightness (Optional)
+      description: Offset from sunrise/sunset in format 'HH:MM' (e.g., '01:00' or '-01:00') at which light brightness reduces.
+      default: "00:00"
+      selector:
+        text:
+    temperature_cool:
+      name: Cool temperature
+      description: A cooler colour temperature, used during the day.
+      default: 250
+      selector:
+        number:
+          min: 1.0
+          max: 600.0
+          step: 1.0
+          mode: slider
+    temperature_warm:
+      name: Warm temperature
+      description: A warmer colour temperature, used at night.
+      default: 375
+      selector:
+        number:
+          min: 1.0
+          max: 600.0
+          step: 1.0
+          mode: slider
+    sun_offset_temperature:
+      name: Sun Offset for Temperature (Optional)
+      description: Offset from sunrise/sunset in format 'HH:MM' (e.g. '01:00' or '-01:00') at which light temperature turns warm.
+      default: "00:00"
+      selector:
+        text:
+
+mode: restart
+max_exceeded: silent
+
+trigger:
+  - platform: state
+    entity_id: !input motion_sensors
+    to: "on"
+
+variables:
+  use_custom_settings: !input use_custom_settings
+  entity_target: !input entity_target
+
+action:
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ use_custom_settings }}"
+        sequence:
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ 'light.' in entity_target.entity_id|string }}"
+                sequence:
+
+                  - if:
+                      - condition: sun
+                        after: sunrise
+                        after_offset: !input sun_offset_brightness
+                        before: sunset
+                        before_offset: !input sun_offset_brightness
+                    then:
+                      - variables:
+                          brightness: !input brightness_bright
+                    else:
+                      - variables:
+                          brightness: !input brightness_dim
+                  - if:
+                      - condition: sun
+                        after: sunrise
+                        after_offset: !input sun_offset_temperature
+                        before: sunset
+                        before_offset: !input sun_offset_temperature
+                    then:
+                      - variables:
+                          temperature: !input temperature_cool
+                    else:
+                      - variables:
+                          temperature: !input temperature_warm
+
+                  - service: light.turn_on
+                    target: !input entity_target
+                    data:
+                      brightness: "{{ brightness }}"
+                      color_temp: "{{ temperature }}"
+              - conditions:
+                  - condition: template
+                    value_template: "{{ 'switch.' in entity_target.entity_id|string }}"
+                sequence:
+                  - service: switch.turn_on
+                    target: !input entity_target
+    default:
+      - choose:
+          - conditions:
+              - condition: template
+                value_template: "{{ 'light.' in entity_target.entity_id|string }}"
+            sequence:
+              - service: light.turn_on
+                target: !input entity_target
+          - conditions:
+              - condition: template
+                value_template: "{{ 'switch.' in entity_target.entity_id|string }}"
+            sequence:
+              - service: switch.turn_on
+                target: !input entity_target
+  - if:
+      - condition: state
+        entity_id: !input motion_sensors
+        match: any
+        state: "on"
+    then:
+      - wait_for_trigger:
+          platform: state
+          entity_id: !input motion_sensors
+          to: "off"
+  - delay: !input no_motion_wait
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ 'light.' in entity_target.entity_id|string }}"
+        sequence:
+          - service: light.turn_off
+            target: !input entity_target
+      - conditions:
+          - condition: template
+            value_template: "{{ 'switch.' in entity_target.entity_id|string }}"
+        sequence:
+          - service: switch.turn_off
+            target: !input entity_target
