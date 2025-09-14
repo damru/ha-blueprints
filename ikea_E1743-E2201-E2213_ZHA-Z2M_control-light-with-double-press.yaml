@@ -610,14 +610,11 @@ actions:
               - hold-dots1-zha-e2213
               - hold-dots1-z2m-e2213
         sequence:
+          - variables:
+              brightness_pct: "{{ iif(is_state(light, 'on'), state_attr(light, 'brightness'), 0) * 100 / 255 }}"
+              total_iterations_to_full: "{{ 100 - (brightness_pct / helper_hold_dim_step) | round(0, 'ceil') }}"
           - repeat:
-              while:
-                - condition: trigger
-                  id:
-                    - hold-on-zha-e1743-e2201
-                    - hold-on-z2m-e1743-e2201
-                    - hold-dots1-zha-e2213
-                    - hold-dots1-z2m-e2213
+              count: "{{ total_iterations_to_full - 1 }}"
               sequence:
                 - parallel:
                     - action: light.turn_on
@@ -626,7 +623,52 @@ actions:
                       data:
                         brightness_step_pct: "{{ helper_hold_dim_step }}"
                         transition: "{{ helper_hold_delay }}"
-                    - delay: "{{ helper_hold_delay }}"
+                    - sequence:
+                        - choose:
+                            - conditions:
+                                - condition: trigger
+                                  id:
+                                    - hold-on-zha-e1743-e2201
+                                    - hold-dots1-zha-e2213
+                              sequence:
+                                - wait_for_trigger:
+                                    - trigger: event
+                                      event_type: zha_event
+                                      event_data:
+                                        device_id: "{{ zha_device_id }}"
+                                        command: "stop_with_on_off"
+                                        cluster_id: 8
+                                        endpoint_id: 1
+                                  timeout:
+                                    seconds: "{{ helper_hold_delay }}"
+                                  continue_on_timeout: true
+                                - if:
+                                    - condition: template
+                                      value_template: "{{ wait.trigger.idx is defined }}"
+                                  then:
+                                    - stop: button released
+                            - conditions:
+                                - condition: trigger
+                                  id:
+                                    - hold-on-z2m-e1743-e2201
+                                    - hold-dots1-z2m-e2213
+                              sequence:
+                                - wait_for_trigger:
+                                    - trigger: mqtt
+                                      topic: "{{ mqtt_topic }}"
+                                      payload: "brightness_stop"
+                                    - trigger: mqtt
+                                      topic: "{{ mqtt_topic }}"
+                                      payload: "1_long_release"
+                                  timeout:
+                                    seconds: "{{ helper_hold_delay }}"
+                                  continue_on_timeout: true
+                                - if:
+                                    - condition: template
+                                      value_template: "{{ wait.trigger.idx is defined }}"
+                                  then:
+                                    - stop: button released
+
       - conditions:
           - condition: trigger
             id:
@@ -648,7 +690,51 @@ actions:
                       data:
                         brightness_step_pct: "{{ helper_hold_dim_step | int * -1 }}"
                         transition: "{{ helper_hold_delay }}"
-                    - delay: "{{ helper_hold_delay }}"
+                    - sequence:
+                        - choose:
+                            - conditions:
+                                - condition: trigger
+                                  id:
+                                    - hold-off-zha-e1743-e2201
+                                    - hold-dots2-zha-e2213
+                              sequence:
+                                - wait_for_trigger:
+                                    - trigger: event
+                                      event_type: zha_event
+                                      event_data:
+                                        device_id: "{{ zha_device_id }}"
+                                        command: "stop_with_on_off"
+                                        cluster_id: 8
+                                        endpoint_id: 1
+                                  timeout:
+                                    seconds: "{{ helper_hold_delay }}"
+                                  continue_on_timeout: true
+                                - if:
+                                    - condition: template
+                                      value_template: "{{ wait.trigger.idx is defined }}"
+                                  then:
+                                    - stop: button released
+                            - conditions:
+                                - condition: trigger
+                                  id:
+                                    - hold-off-z2m-e1743-e2201
+                                    - hold-dots2-z2m-e2213
+                              sequence:
+                                - wait_for_trigger:
+                                    - trigger: mqtt
+                                      topic: "{{ mqtt_topic }}"
+                                      payload: "brightness_stop"
+                                    - trigger: mqtt
+                                      topic: "{{ mqtt_topic }}"
+                                      payload: "2_long_release"
+                                  timeout:
+                                    seconds: "{{ helper_hold_delay }}"
+                                  continue_on_timeout: true
+                                - if:
+                                    - condition: template
+                                      value_template: "{{ wait.trigger.idx is defined }}"
+                                  then:
+                                    - stop: button released
           - action: light.turn_on
             target:
               entity_id: !input light
