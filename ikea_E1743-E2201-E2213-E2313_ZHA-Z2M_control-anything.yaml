@@ -17,18 +17,18 @@ blueprint:
 
     - Single press **on/off** (Rodret, Tradfri, Styrbar) **1 dot/2 dots** (Somrig)
 
-    - Double press **on/off** (Rodret, Tradfri, Styrbar) _Optional_, and **1 dot/2 dots** (Somrig)
+    - Double press **on/off** (Rodret, Tradfri, Styrbar) _Virtual_, and **1 dot/2 dots** (Somrig)
 
     - Hold **on/off** (Rodret, Tradfri, Styrbar) **1 dot/2 dots** (Somrig)
 
     - Single press **left/right** (Styrbar)
 
-    - Double press **left/right** (Styrbar) _Optional_
+    - Double press **left/right** (Styrbar) _Virtual_
 
     - Hold **left/right** (Styrbar)
 
 
-    Hold actions will be executed every **Hold delay**, but maximum **Max number of loops** times.
+    Hold actions will be executed every **Hold interval**, but maximum **Max number of loops** times.
   input:
     remote_devices:
       name: Remotes
@@ -80,7 +80,7 @@ blueprint:
           multiple: true
 
     on_off_actions_section:
-      name: On / Off / Dot button actions (Rodret, Tradfri, Somrig, Styrbar)
+      name: On / Off / Dot button actions
       icon: mdi:light-switch
       collapsed: true
       input:
@@ -98,6 +98,41 @@ blueprint:
           default: []
           selector:
             action: {}
+
+        on_double_press_action:
+          name: Double press "on / 1 dot" action
+          description: >
+            Choose action(s) to run when the **on** (Rodret, Tradfri, Styrbar) or **1 dot** (Somrig) button is **pressed twice**.
+
+
+            **_NB for Rodret, Tradfri, Styrbar only_**: **Double press delay** interval is used as a timeout.
+          default: []
+          selector:
+            action: {}
+        off_double_press_action:
+          name: Double press "off / 2 dots" action
+          description: >
+            Choose action(s) to run when the **off** (Rodret, Tradfri, Styrbar) or **2 dots** (Somrig) button is **pressed twice**. 
+
+
+            **_NB for Rodret, Tradfri, Styrbar only_**: **Double press delay** interval is used as a timeout.
+          default: []
+          selector:
+            action: {}
+        helper_double_press_delay:
+          name: Double press delay (Rodret, Tradfri, Styrbar)
+          description: >
+            Max delay between the first and the second button press for the **Double press events**.
+            Increase this value if you notice that the double press action is not triggered properly.
+          default: 250
+          selector:
+            number:
+              unit_of_measurement: milliseconds
+              min: 100.0
+              max: 5000.0
+              step: 10.0
+              mode: slider
+
         on_hold_action:
           name: Hold "on / 1 dot" action
           description: >
@@ -112,92 +147,8 @@ blueprint:
           default: []
           selector:
             action: {}
-        on_double_press_action:
-          name: Double press "on / 1 dot" action
-          description: >
-            Choose action(s) to run when the **on** (Rodret, Tradfri, Styrbar) or **1 dot** (Somrig) button is **pressed twice**.
-
-            **_NB for Rodret, Tradfri, Styrbar only_**: **Double press event (on)** must be exposed and **Double press delay** interval is used as a timeout.
-          default: []
-          selector:
-            action: {}
-        off_double_press_action:
-          name: Double press "off / 2 dots" action
-          description: >
-            Choose action(s) to run when the **off** (Rodret, Tradfri, Styrbar) or **2 dots** (Somrig) button is **pressed twice**. 
-
-            **_NB for Rodret, Tradfri, Styrbar only_**: **Double press event (off)** must be exposed and **Double press delay** interval is used as a timeout.
-          default: []
-          selector:
-            action: {}
-
-    left_right_actions_section:
-      name: Left / Right button actions (Styrbar)
-      icon: mdi:swap-horizontal
-      collapsed: true
-      input:
-        left_press_action:
-          name: Press "left" action
-          description: >
-            Choose action(s) to run when **left** (Styrbar) button is **pressed**.
-          default: []
-          selector:
-            action: {}
-        right_press_action:
-          name: Press "right" action
-          description: >
-            Choose action(s) to run when **right** (Styrbar) button is **pressed**.
-          default: []
-          selector:
-            action: {}
-        left_hold_action:
-          name: Hold "left" action
-          description: >
-            Choose action(s) to run when **left** (Styrbar) button is **held**.
-          default: []
-          selector:
-            action: {}
-        right_hold_action:
-          name: Hold "right" action
-          description: >
-            Choose action(s) to run when **right** (Styrbar) button is **held**.
-          default: []
-          selector:
-            action: {}
-        left_double_press_action:
-          name: Double press "left" action
-          description: >
-            Choose action(s) to run when the **left** (Styrbar) button is **pressed twice**. 
-
-            **Double press event (left)** must be exposed and **Double press delay** interval is used as a timeout.
-          default: []
-          selector:
-            action: {}
-        right_double_press_action:
-          name: Double press "right" action
-          description: >
-            Choose action(s) to run when the **right** (Styrbar) button is **pressed twice**. 
-
-            **Double press event (right)** must be exposed and **Double press delay** interval is used as a timeout.
-          default: []
-          selector:
-            action: {}
-        decouple_left_right_hold:
-          name: Decouple left/right hold from on/off actions
-          description: >
-            Enable this option to decouple the **left/right** buttons from the **on/off** actions.
-            This way, holding the **left/right** buttons will not trigger any action(s) assigned to the **on/off** buttons.
-          default: false
-          selector:
-            boolean: {}
-
-    hold_action_repetition_section:
-      name: Hold action repetition
-      icon: mdi:gesture-tap-hold
-      collapsed: true
-      input:
         helper_hold_delay:
-          name: Hold delay
+          name: Hold interval
           description: Delay between the execution of the **Hold** action(s).
           default: 250
           selector:
@@ -218,50 +169,51 @@ blueprint:
               step: 1.0
               mode: slider
 
-    virtual_double_press_section:
-      name: Virtual double press options (Rodret, Tradfri, Styrbar)
-      icon: mdi:gesture-double-tap
+    left_right_actions_section:
+      name: Left / Right button actions
+      icon: mdi:swap-horizontal
       collapsed: true
       input:
-        on_double_press_exposed:
-          name: Expose virtual double press "on" event
+        left_press_action:
+          name: Press "left" action
           description: >
-            Choose whether or not to expose the virtual **double press** event for the **on** button. 
-            Turn this on if you are providing action(s) for the **Double press action (on / 1 dot)**.
-          default: false
+            Choose action(s) to run when **left** button is **pressed**.
+          default: []
           selector:
-            boolean: {}
-        off_double_press_exposed:
-          name: Expose virtual double press "off" event
+            action: {}
+        right_press_action:
+          name: Press "right" action
           description: >
-            Choose whether or not to expose the virtual **double press** event for the **off** button. 
-            Turn this on if you are providing an action for the **Double press action (off / 2 dots)**.
-          default: false
+            Choose action(s) to run when **right** button is **pressed**.
+          default: []
           selector:
-            boolean: {}
-        left_double_press_exposed:
-          name: Expose virtual double press "left" event
+            action: {}
+
+        left_double_press_action:
+          name: Double press "left" action
           description: >
-            Choose whether or not to expose the virtual **double press** event for the **left** button. 
-            Turn this on if you are providing action(s) for the **Double press "left" action**.
-          default: false
+            Choose action(s) to run when the **left** button is **pressed twice**. 
+
+
+            **Double press delay** interval is used as a timeout.
+          default: []
           selector:
-            boolean: {}
-        right_double_press_exposed:
-          name: Expose virtual double press "right" event
+            action: {}
+        right_double_press_action:
+          name: Double press "right" action
           description: >
-            Choose whether or not to expose the virtual **double press** event for the **right** button. 
-            Turn this on if you are providing an action for the **Double press "right" action**.
-          default: false
+            Choose action(s) to run when the **right** button is **pressed twice**. 
+
+
+            **Double press delay** interval is used as a timeout.
+          default: []
           selector:
-            boolean: {}
-        helper_double_press_delay:
+            action: {}
+        helper_double_press_left_right_delay:
           name: Double press delay
           description: >
-            Max delay between the first and the second button press for the
-            **Double press events**. Provide a value only if you are using a double press action.
-            Increase this value if you notice that the double press action is not triggered
-            properly.
+            Max delay between the first and the second button press for the **Double press events**.
+            Increase this value if you notice that the double press action is not triggered properly.
           default: 250
           selector:
             number:
@@ -271,10 +223,59 @@ blueprint:
               step: 10.0
               mode: slider
 
+        left_hold_action:
+          name: Hold "left" action
+          description: >
+            Choose action(s) to run when **left** button is **held**.
+          default: []
+          selector:
+            action: {}
+        right_hold_action:
+          name: Hold "right" action
+          description: >
+            Choose action(s) to run when **right** button is **held**.
+          default: []
+          selector:
+            action: {}
+        decouple_left_right_hold:
+          name: Decouple left/right hold from the on action
+          description: >
+            Enable this option to decouple the **left/right** buttons from the **on** action.
+
+            If not enabled, holding the **left/right** buttons also triggers the action assigned to the **on** button.
+          default: false
+          selector:
+            boolean: {}
+        helper_hold_left_right_delay:
+          name: Hold interval
+          description: Delay between the execution of the **Hold** action(s).
+          default: 250
+          selector:
+            number:
+              unit_of_measurement: milliseconds
+              min: 100.0
+              max: 5000.0
+              step: 10.0
+              mode: slider
+        helper_max_left_right_loops:
+          name: Max number of loops
+          description: Maximum number of loops when holding down a button.
+          default: 20
+          selector:
+            number:
+              min: 1.0
+              max: 1000.0
+              step: 1.0
+              mode: slider
+
 trigger_variables:
   mqtt_enabled: "{{ integration_entities('mqtt') != [] }}"
   zha_enabled: "{{ integration_entities('zha') != [] }}"
   remote_devices: !input remote_devices
+  on_double_press_action: !input on_double_press_action
+  off_double_press_action: !input off_double_press_action
+  left_double_press_action: !input left_double_press_action
+  right_double_press_action: !input right_double_press_action
 
 mode: single
 max_exceeded: silent
@@ -540,9 +541,9 @@ actions:
               - press-dots1-z2m-e2213
         sequence:
           - if:
-              - alias: If on virtual double press is exposed
+              - alias: If on virtual double press is configured
                 condition: template
-                value_template: !input on_double_press_exposed
+                value_template: "{{ not not on_double_press_action }}"
             then:
               - wait_for_trigger:
                   - trigger: event
@@ -577,9 +578,9 @@ actions:
               - press-dots2-z2m-e2213
         sequence:
           - if:
-              - alias: If off virtual double press is exposed
+              - alias: If off virtual double press is configured
                 condition: template
-                value_template: !input off_double_press_exposed
+                value_template: "{{ not not off_double_press_action }}"
             then:
               - wait_for_trigger:
                   - trigger: event
@@ -713,9 +714,9 @@ actions:
                 value_template: "{{ trigger.id == 'press-arrow-zha-e2313' and zha_arrow_direction == 'left' }}"
         sequence:
           - if:
-              - alias: If left virtual double press is exposed
+              - alias: If left virtual double press is configured
                 condition: template
-                value_template: !input left_double_press_exposed
+                value_template: "{{ not not left_double_press_action }}"
             then:
               - wait_for_trigger:
                   - trigger: event
@@ -731,7 +732,7 @@ actions:
                     payload: "arrow_left_click"
                     enabled: "{{ is_mqtt }}"
                 timeout:
-                  milliseconds: !input helper_double_press_delay
+                  milliseconds: !input helper_double_press_left_right_delay
                 continue_on_timeout: true
               - if:
                   - condition: template
@@ -751,9 +752,9 @@ actions:
                 value_template: "{{ trigger.id == 'press-arrow-zha-e2313' and zha_arrow_direction == 'right' }}"
         sequence:
           - if:
-              - alias: If right virtual double press is exposed
+              - alias: If right virtual double press is configured
                 condition: template
-                value_template: !input right_double_press_exposed
+                value_template: "{{ not not right_double_press_action }}"
             then:
               - wait_for_trigger:
                   - trigger: event
@@ -769,7 +770,7 @@ actions:
                     payload: "arrow_right_click"
                     enabled: "{{ is_mqtt }}"
                 timeout:
-                  milliseconds: !input helper_double_press_delay
+                  milliseconds: !input helper_double_press_left_right_delay
                 continue_on_timeout: true
               - if:
                   - condition: template
@@ -817,7 +818,7 @@ actions:
                 value_template: "{{ trigger.id == 'hold-arrow-zha-e2313' and zha_arrow_direction == 'left' }}"
         sequence:
           - repeat:
-              count: !input helper_max_loops
+              count: !input helper_max_left_right_loops
               sequence:
                 - parallel:
                     - sequence: !input left_hold_action
@@ -836,7 +837,7 @@ actions:
                               payload: "arrow_left_release"
                               enabled: "{{ is_mqtt }}"
                           timeout:
-                            milliseconds: !input helper_hold_delay
+                            milliseconds: !input helper_hold_left_right_delay
                           continue_on_timeout: true
                         - if:
                             - condition: template
@@ -855,7 +856,7 @@ actions:
                 value_template: "{{ trigger.id == 'hold-arrow-zha-e2313' and zha_arrow_direction == 'right' }}"
         sequence:
           - repeat:
-              count: !input helper_max_loops
+              count: !input helper_max_left_right_loops
               sequence:
                 - parallel:
                     - sequence: !input right_hold_action
@@ -874,7 +875,7 @@ actions:
                               payload: "arrow_right_release"
                               enabled: "{{ is_mqtt }}"
                           timeout:
-                            milliseconds: !input helper_hold_delay
+                            milliseconds: !input helper_hold_left_right_delay
                           continue_on_timeout: true
                         - if:
                             - condition: template
