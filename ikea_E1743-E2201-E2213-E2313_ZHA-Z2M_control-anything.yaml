@@ -27,6 +27,7 @@ blueprint:
 
     - Hold **left/right** (Styrbar)
 
+
     Hold actions will be executed every **Hold delay**, but maximum **Max number of loops** times.
   input:
     remote_devices:
@@ -190,8 +191,8 @@ blueprint:
           selector:
             boolean: {}
 
-    long_press_section:
-      name: Long press options
+    hold_action_repetition_section:
+      name: Hold action repetition
       icon: mdi:gesture-tap-hold
       collapsed: true
       input:
@@ -618,7 +619,7 @@ actions:
               - double-press-dots2-z2m-e2213
         sequence: !input off_double_press_action
 
-      - alias: On long press action
+      - alias: On hold action
         conditions:
           - condition: trigger
             id:
@@ -659,7 +660,7 @@ actions:
                           then:
                             - stop: button released
 
-      - alias: Off long press action
+      - alias: Off hold action
         conditions:
           - condition: trigger
             id:
@@ -803,7 +804,7 @@ actions:
             timeout: "{{ max((trigger.event.time_fired + timedelta(seconds=0.6)) - now(), timedelta(0)) }}"
             continue_on_timeout: true
 
-      - alias: Left long press action
+      - alias: Left hold action
         conditions:
           - condition: or
             conditions:
@@ -841,7 +842,7 @@ actions:
                           then:
                             - stop: button released
 
-      - alias: Right long press action
+      - alias: Right hold action
         conditions:
           - condition: or
             conditions:
