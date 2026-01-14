@@ -222,7 +222,7 @@ blueprint:
       icon: mdi:gesture-double-tap
       collapsed: true
       input:
-        on_virtual_double_press_exposed:
+        on_double_press_exposed:
           name: Expose virtual double press "on" event
           description: >
             Choose whether or not to expose the virtual **double press** event for the **on** button. 
@@ -230,7 +230,7 @@ blueprint:
           default: false
           selector:
             boolean: {}
-        off_virtual_double_press_exposed:
+        off_double_press_exposed:
           name: Expose virtual double press "off" event
           description: >
             Choose whether or not to expose the virtual **double press** event for the **off** button. 
@@ -238,7 +238,7 @@ blueprint:
           default: false
           selector:
             boolean: {}
-        left_virtual_double_press_exposed:
+        left_double_press_exposed:
           name: Expose virtual double press "left" event
           description: >
             Choose whether or not to expose the virtual **double press** event for the **left** button. 
@@ -246,7 +246,7 @@ blueprint:
           default: false
           selector:
             boolean: {}
-        right_virtual_double_press_exposed:
+        right_double_press_exposed:
           name: Expose virtual double press "right" event
           description: >
             Choose whether or not to expose the virtual **double press** event for the **right** button. 
@@ -540,7 +540,7 @@ actions:
           - if:
               - alias: If on virtual double press is exposed
                 condition: template
-                value_template: !input on_virtual_double_press_exposed
+                value_template: !input on_double_press_exposed
             then:
               - wait_for_trigger:
                   - trigger: event
@@ -577,7 +577,7 @@ actions:
           - if:
               - alias: If off virtual double press is exposed
                 condition: template
-                value_template: !input off_virtual_double_press_exposed
+                value_template: !input off_double_press_exposed
             then:
               - wait_for_trigger:
                   - trigger: event
@@ -713,7 +713,7 @@ actions:
           - if:
               - alias: If left virtual double press is exposed
                 condition: template
-                value_template: !input left_virtual_double_press_exposed
+                value_template: !input left_double_press_exposed
             then:
               - wait_for_trigger:
                   - trigger: event
@@ -751,7 +751,7 @@ actions:
           - if:
               - alias: If right virtual double press is exposed
                 condition: template
-                value_template: !input right_virtual_double_press_exposed
+                value_template: !input right_double_press_exposed
             then:
               - wait_for_trigger:
                   - trigger: event
