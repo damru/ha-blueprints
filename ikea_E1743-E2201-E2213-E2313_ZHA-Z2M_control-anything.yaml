@@ -17,13 +17,13 @@ blueprint:
 
     - Single press **on/off** (Rodret, Tradfri, Styrbar) **1 dot/2 dots** (Somrig)
 
-    - Double press **on/off** (Rodret, Tradfri, Styrbar _Optional_) **1 dot/2 dots** (Somrig)
+    - Double press **on/off** (Rodret, Tradfri, Styrbar) _Optional_, and **1 dot/2 dots** (Somrig)
 
     - Hold **on/off** (Rodret, Tradfri, Styrbar) **1 dot/2 dots** (Somrig)
 
     - Single press **left/right** (Styrbar)
 
-    - Double press **left/right** (Styrbar _Optional_)
+    - Double press **left/right** (Styrbar) _Optional_
 
     - Hold **left/right** (Styrbar)
 
@@ -505,6 +505,7 @@ variables:
   remote_devices_names: "{{ remote_devices | map('device_attr', 'name') | list }}"
   is_mqtt: "{{ trigger is defined and trigger.platform == 'mqtt' }}"
   is_zha: "{{ trigger is defined and trigger.platform == 'event' and trigger.event.event_type == 'zha_event' }}"
+  trigger_time: "{{ trigger.event.time_fired if is_zha else now() }}"
   mqtt_topic: "{{ trigger.topic|default('') if is_mqtt else none }}"
   mqtt_device_name: "{{ mqtt_topic.split('/')[1] if is_mqtt else none }}"
   zha_device_id: "{{ trigger.event.data.device_id if is_zha else none }}"
@@ -551,11 +552,11 @@ actions:
                       command: "on"
                       cluster_id: 6
                       endpoint_id: 1
-                    enabled: "{{ zha_enabled }}"
+                    enabled: "{{ is_zha }}"
                   - trigger: mqtt
                     topic: "{{ mqtt_topic }}"
                     payload: "on"
-                    enabled: "{{ mqtt_enabled }}"
+                    enabled: "{{ is_mqtt }}"
                 timeout:
                   milliseconds: !input helper_double_press_delay
                 continue_on_timeout: true
@@ -588,11 +589,11 @@ actions:
                       command: "off"
                       cluster_id: 6
                       endpoint_id: 1
-                    enabled: "{{ zha_enabled }}"
+                    enabled: "{{ is_zha }}"
                   - trigger: mqtt
                     topic: "{{ mqtt_topic }}"
                     payload: "off"
-                    enabled: "{{ mqtt_enabled }}"
+                    enabled: "{{ is_mqtt }}"
                 timeout:
                   milliseconds: !input helper_double_press_delay
                 continue_on_timeout: true
@@ -642,15 +643,15 @@ actions:
                                 command: "stop_with_on_off"
                                 cluster_id: 8
                                 endpoint_id: 1
-                              enabled: "{{ zha_enabled }}"
+                              enabled: "{{ is_zha }}"
                             - trigger: mqtt
                               topic: "{{ mqtt_topic }}"
                               payload: "brightness_stop"
-                              enabled: "{{ mqtt_enabled }}"
+                              enabled: "{{ is_mqtt }}"
                             - trigger: mqtt
                               topic: "{{ mqtt_topic }}"
                               payload: "1_long_release"
-                              enabled: "{{ mqtt_enabled }}"
+                              enabled: "{{ is_mqtt }}"
                           timeout:
                             milliseconds: !input helper_hold_delay
                           continue_on_timeout: true
@@ -683,15 +684,15 @@ actions:
                                 command: "stop_with_on_off"
                                 cluster_id: 8
                                 endpoint_id: 1
-                              enabled: "{{ zha_enabled }}"
+                              enabled: "{{ is_zha }}"
                             - trigger: mqtt
                               topic: "{{ mqtt_topic }}"
                               payload: "brightness_stop"
-                              enabled: "{{ mqtt_enabled }}"
+                              enabled: "{{ is_mqtt }}"
                             - trigger: mqtt
                               topic: "{{ mqtt_topic }}"
                               payload: "2_long_release"
-                              enabled: "{{ mqtt_enabled }}"
+                              enabled: "{{ is_mqtt }}"
                           timeout:
                             milliseconds: !input helper_hold_delay
                           continue_on_timeout: true
@@ -724,11 +725,11 @@ actions:
                       command: "press"
                       cluster_id: 5
                       endpoint_id: 1
-                    enabled: "{{ zha_enabled }}"
+                    enabled: "{{ is_zha }}"
                   - trigger: mqtt
                     topic: "{{ mqtt_topic }}"
                     payload: "arrow_left_click"
-                    enabled: "{{ mqtt_enabled }}"
+                    enabled: "{{ is_mqtt }}"
                 timeout:
                   milliseconds: !input helper_double_press_delay
                 continue_on_timeout: true
@@ -762,11 +763,11 @@ actions:
                       command: "press"
                       cluster_id: 5
                       endpoint_id: 1
-                    enabled: "{{ zha_enabled }}"
+                    enabled: "{{ is_zha }}"
                   - trigger: mqtt
                     topic: "{{ mqtt_topic }}"
                     payload: "arrow_right_click"
-                    enabled: "{{ mqtt_enabled }}"
+                    enabled: "{{ is_mqtt }}"
                 timeout:
                   milliseconds: !input helper_double_press_delay
                 continue_on_timeout: true
@@ -788,7 +789,8 @@ actions:
             condition: template
             value_template: !input decouple_left_right_hold
         sequence:
-          - wait_for_trigger:
+          - alias: Wait for the on command to be received (sent after 500ms)
+            wait_for_trigger:
               - trigger: event
                 event_type: zha_event
                 event_data:
@@ -796,12 +798,12 @@ actions:
                   command: "on"
                   cluster_id: 6
                   endpoint_id: 1
-                enabled: "{{ zha_enabled }}"
+                enabled: "{{ is_zha }}"
               - trigger: mqtt
                 topic: "{{ mqtt_topic }}"
                 payload: "on"
-                enabled: "{{ mqtt_enabled }}"
-            timeout: "{{ max((trigger.event.time_fired + timedelta(seconds=0.6)) - now(), timedelta(0)) }}"
+                enabled: "{{ is_mqtt }}"
+            timeout: "{{ max((trigger_time + timedelta(milliseconds=600)) - now(), timedelta(0)) }}"
             continue_on_timeout: true
 
       - alias: Left hold action
@@ -828,11 +830,11 @@ actions:
                                 command: "release"
                                 cluster_id: 5
                                 endpoint_id: 1
-                              enabled: "{{ zha_enabled }}"
+                              enabled: "{{ is_zha }}"
                             - trigger: mqtt
                               topic: "{{ mqtt_topic }}"
                               payload: "arrow_left_release"
-                              enabled: "{{ mqtt_enabled }}"
+                              enabled: "{{ is_mqtt }}"
                           timeout:
                             milliseconds: !input helper_hold_delay
                           continue_on_timeout: true
@@ -866,11 +868,11 @@ actions:
                                 command: "release"
                                 cluster_id: 5
                                 endpoint_id: 1
-                              enabled: "{{ zha_enabled }}"
+                              enabled: "{{ is_zha }}"
                             - trigger: mqtt
                               topic: "{{ mqtt_topic }}"
                               payload: "arrow_right_release"
-                              enabled: "{{ mqtt_enabled }}"
+                              enabled: "{{ is_mqtt }}"
                           timeout:
                             milliseconds: !input helper_hold_delay
                           continue_on_timeout: true
