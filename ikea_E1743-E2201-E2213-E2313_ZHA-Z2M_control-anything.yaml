@@ -506,7 +506,6 @@ variables:
   remote_devices_names: "{{ remote_devices | map('device_attr', 'name') | list }}"
   is_mqtt: "{{ trigger is defined and trigger.platform == 'mqtt' }}"
   is_zha: "{{ trigger is defined and trigger.platform == 'event' and trigger.event.event_type == 'zha_event' }}"
-  trigger_time: "{{ trigger.event.time_fired if is_zha else now() }}"
   mqtt_topic: "{{ trigger.topic|default('') if is_mqtt else none }}"
   mqtt_device_name: "{{ mqtt_topic.split('/')[1] if is_mqtt else none }}"
   zha_device_id: "{{ trigger.event.data.device_id if is_zha else none }}"
@@ -790,7 +789,12 @@ actions:
             condition: template
             value_template: !input decouple_left_right_hold
         sequence:
-          - alias: Wait for the on command to be received (sent after 500ms)
+          # The Styrbar remote issues the following command sequence when holding left/right:
+          #   - 1000ms "release"
+          #   - 1500ms "on"
+          #   - 2000ms "recall"
+          #   - 3000ms "hold" (with param1 indicating left/right)
+          - alias: Wait for the "on" command to be received (sent 500ms after "release")
             wait_for_trigger:
               - trigger: event
                 event_type: zha_event
@@ -804,7 +808,8 @@ actions:
                 topic: "{{ mqtt_topic }}"
                 payload: "on"
                 enabled: "{{ is_mqtt }}"
-            timeout: "{{ max((trigger_time + timedelta(milliseconds=600)) - now(), timedelta(0)) }}"
+            timeout:
+              milliseconds: 600
             continue_on_timeout: true
 
       - alias: Left hold action
