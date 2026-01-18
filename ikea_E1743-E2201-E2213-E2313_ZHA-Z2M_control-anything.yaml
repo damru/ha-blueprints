@@ -1,0 +1,940 @@
+blueprint:
+  homeassistant:
+    min_version: 2024.10.0
+  author: damru
+  domain: automation
+  name: Ikea's Rodret, Somrig, Tradfri and Styrbar ⚙️ Controls
+  description: >
+    ## ⚙️ Control anything with **IKEA RODRET**, **SOMRIG**, **TRADFRI** and **STYRBAR** remotes
+
+
+    Only for use with [ZHA](https://www.home-assistant.io/integrations/zha/)
+    or Zigbee2MQTT (cf [MQTT](https://www.home-assistant.io/integrations/mqtt)
+    + [Z2M addon](https://www.zigbee2mqtt.io/guide/installation/03_ha_addon.html)).
+
+
+    Available controls:
+
+    - Single press **on/off** (Rodret, Tradfri, Styrbar) **1 dot/2 dots** (Somrig)
+
+    - Double press **on/off** (Rodret, Tradfri, Styrbar) _Virtual_, and **1 dot/2 dots** (Somrig)
+
+    - Hold **on/off** (Rodret, Tradfri, Styrbar) **1 dot/2 dots** (Somrig)
+
+    - Single press **left/right** (Styrbar)
+
+    - Double press **left/right** (Styrbar) _Virtual_
+
+    - Hold **left/right** (Styrbar)
+
+
+    Hold actions will be executed every **Hold interval**, but maximum **Max number of loops** times.
+  input:
+    remote_devices:
+      name: Remotes
+      description: >
+        IKEA remote (Rodret, Somrig, Tradfri, Styrbar) to use.
+      default: []
+      selector:
+        device:
+          filter:
+            - integration: zha
+              manufacturer: IKEA of Sweden
+              model: RODRET Dimmer
+            - integration: zha
+              manufacturer: IKEA of Sweden
+              model: RODRET wireless dimmer
+            - integration: zha
+              manufacturer: IKEA of Sweden
+              model: SOMRIG shortcut button
+            - integration: zha
+              manufacturer: IKEA of Sweden
+              model: TRADFRI on/off switch
+            - integration: zha
+              manufacturer: IKEA of Sweden
+              model: Remote Control N2
+            - integration: mqtt
+              manufacturer: IKEA
+              model: RODRET wireless dimmer/power switch
+            - integration: mqtt
+              manufacturer: IKEA
+              model: SOMRIG shortcut button
+            - integration: mqtt
+              manufacturer: IKEA
+              model: TRADFRI on/off switch
+            - integration: mqtt
+              manufacturer: IKEA
+              model: STYRBAR remote control
+            # DEPRECATED - for removal, keeping for z2m v1 backward compatibility
+            - integration: mqtt
+              manufacturer: IKEA
+              model: RODRET wireless dimmer/power switch (E2201)
+            # DEPRECATED - for removal, keeping for z2m v1 backward compatibility
+            - integration: mqtt
+              manufacturer: IKEA
+              model: SOMRIG shortcut button (E2213)
+            # DEPRECATED - for removal, keeping for z2m v1 backward compatibility
+            - integration: mqtt
+              manufacturer: IKEA
+              model: TRADFRI on/off switch (E1743)
+          multiple: true
+
+    on_off_actions_section:
+      name: On / Off / Dot button actions
+      icon: mdi:light-switch
+      collapsed: true
+      input:
+        on_press_action:
+          name: Press "on / 1 dot" action
+          description: >
+            Choose action(s) to run when **on** (Rodret, Tradfri, Styrbar) or **1 dot** (Somrig) button is **pressed**.
+          default: []
+          selector:
+            action: {}
+        off_press_action:
+          name: Press "off / 2 dots" action
+          description: >
+            Choose action(s) to run when **off** (Rodret, Tradfri, Styrbar) or **2 dots** (Somrig) button is **pressed**.
+          default: []
+          selector:
+            action: {}
+
+        on_double_press_action:
+          name: Double press "on / 1 dot" action
+          description: >
+            Choose action(s) to run when the **on** (Rodret, Tradfri, Styrbar) or **1 dot** (Somrig) button is **pressed twice**.
+
+
+            **_NB for Rodret, Tradfri, Styrbar only_**:
+
+            - **Expose virtual double press "on" event** must be enabled.
+
+            - **Double press delay** interval is used as a timeout.
+          default: []
+          selector:
+            action: {}
+        off_double_press_action:
+          name: Double press "off / 2 dots" action
+          description: >
+            Choose action(s) to run when the **off** (Rodret, Tradfri, Styrbar) or **2 dots** (Somrig) button is **pressed twice**. 
+
+
+            **_NB for Rodret, Tradfri, Styrbar only_**:
+
+            - **Expose virtual double press "off" event** must be enabled.
+
+            - **Double press delay** interval is used as a timeout.
+          default: []
+          selector:
+            action: {}
+
+        on_hold_action:
+          name: Hold "on / 1 dot" action
+          description: >
+            Choose action(s) to run when **on** (Rodret, Tradfri) or **1 dot** (Somrig) button is **held**.
+          default: []
+          selector:
+            action: {}
+        off_hold_action:
+          name: Hold "off / 2 dots" action
+          description: >
+            Choose action(s) to run when **off** (Rodret, Tradfri, Styrbar) or **2 dots** (Somrig) button is **held**.
+          default: []
+          selector:
+            action: {}
+        helper_hold_delay:
+          name: Hold interval
+          description: Delay between the execution of the **Hold** action(s).
+          default: 250
+          selector:
+            number:
+              unit_of_measurement: milliseconds
+              min: 100.0
+              max: 5000.0
+              step: 10.0
+              mode: slider
+        helper_max_loops:
+          name: Max number of loops
+          description: Maximum number of loops when holding down a button.
+          default: 20
+          selector:
+            number:
+              min: 1.0
+              max: 1000.0
+              step: 1.0
+              mode: slider
+
+    left_right_actions_section:
+      name: Left / Right button actions
+      icon: mdi:swap-horizontal
+      collapsed: true
+      input:
+        left_press_action:
+          name: Press "left" action
+          description: >
+            Choose action(s) to run when **left** button is **pressed**.
+          default: []
+          selector:
+            action: {}
+        right_press_action:
+          name: Press "right" action
+          description: >
+            Choose action(s) to run when **right** button is **pressed**.
+          default: []
+          selector:
+            action: {}
+
+        left_double_press_action:
+          name: Double press "left" action
+          description: >
+            Choose action(s) to run when the **left** button is **pressed twice**. 
+
+            **_NB for Styrbar only_**:
+
+            - **Expose virtual double press "left" event** must be enabled.
+
+            - **Double press delay** interval is used as a timeout.
+          default: []
+          selector:
+            action: {}
+        right_double_press_action:
+          name: Double press "right" action
+          description: >
+            Choose action(s) to run when the **right** button is **pressed twice**. 
+
+            **_NB for Styrbar only_**:
+
+            - **Expose virtual double press "right" event** must be enabled.
+
+            - **Double press delay** interval is used as a timeout.
+          default: []
+          selector:
+            action: {}
+
+        left_hold_action:
+          name: Hold "left" action
+          description: >
+            Choose action(s) to run when **left** button is **held**.
+          default: []
+          selector:
+            action: {}
+        right_hold_action:
+          name: Hold "right" action
+          description: >
+            Choose action(s) to run when **right** button is **held**.
+          default: []
+          selector:
+            action: {}
+        decouple_left_right_hold:
+          name: Decouple left/right hold from the on action
+          description: >
+            Enable this option to decouple the **left/right** buttons from the **on** action.
+
+            If not enabled, holding the **left/right** buttons also triggers the action assigned to the **on** button.
+          default: false
+          selector:
+            boolean: {}
+        helper_hold_left_right_delay:
+          name: Hold interval
+          description: Delay between the execution of the **Hold** action(s).
+          default: 250
+          selector:
+            number:
+              unit_of_measurement: milliseconds
+              min: 100.0
+              max: 5000.0
+              step: 10.0
+              mode: slider
+        helper_max_left_right_loops:
+          name: Max number of loops
+          description: Maximum number of loops when holding down a button.
+          default: 20
+          selector:
+            number:
+              min: 1.0
+              max: 1000.0
+              step: 1.0
+              mode: slider
+
+    virtual_double_press_section:
+      name: Virtual double press options (Rodret, Tradfri, Styrbar)
+      icon: mdi:gesture-double-tap
+      collapsed: true
+      input:
+        on_double_press_exposed:
+          name: Expose virtual double press "on" event
+          description: >
+            Choose whether or not to expose the virtual **double press** event for the **on** button.
+
+            Turn this on if you are providing action(s) for the **Double press action (on / 1 dot)**.
+          default: false
+          selector:
+            boolean: {}
+        off_double_press_exposed:
+          name: Expose virtual double press "off" event
+          description: >
+            Choose whether or not to expose the virtual **double press** event for the **off** button.
+
+            Turn this on if you are providing action(s) for the **Double press action (off / 1 dot)**.
+          default: false
+          selector:
+            boolean: {}
+        helper_double_press_delay:
+          name: Double press "on"/"off" delay
+          description: >
+            Max delay between the first and the second button press for the **Double press events**.
+
+            Increase this value if you notice that the double press action is not triggered properly.
+          default: 250
+          selector:
+            number:
+              unit_of_measurement: milliseconds
+              min: 100.0
+              max: 5000.0
+              step: 10.0
+              mode: slider
+
+        left_double_press_exposed:
+          name: Expose virtual double press "left" event
+          description: >
+            Choose whether or not to expose the virtual **double press** event for the **left** button.
+
+            Turn this on if you are providing action(s) for the **Double press action (left)**.
+          default: false
+          selector:
+            boolean: {}
+        right_double_press_exposed:
+          name: Expose virtual double press "right" event
+          description: >
+            Choose whether or not to expose the virtual **double press** event for the **right** button.
+
+            Turn this on if you are providing action(s) for the **Double press action (right)**.
+          default: false
+          selector:
+            boolean: {}
+        helper_double_press_left_right_delay:
+          name: Double press "left"/"right" delay
+          description: >
+            Max delay between the first and the second button press for the **Double press events**.
+
+            Increase this value if you notice that the double press action is not triggered properly.
+          default: 250
+          selector:
+            number:
+              unit_of_measurement: milliseconds
+              min: 100.0
+              max: 5000.0
+              step: 10.0
+              mode: slider
+
+trigger_variables:
+  mqtt_enabled: "{{ integration_entities('mqtt') != [] }}"
+  zha_enabled: "{{ integration_entities('zha') != [] }}"
+  remote_devices: !input remote_devices
+
+mode: single
+max_exceeded: silent
+
+triggers:
+  # RODRET (E2201) + TRADFRI (E1743) + STYRBAR (E2313)
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      command: "on"
+      cluster_id: 6
+      endpoint_id: 1
+    id: press-on-zha-e1743-e2201-e2313
+    enabled: "{{ zha_enabled }}"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: "on"
+    id: press-on-z2m-e1743-e2201-e2313
+    enabled: "{{ mqtt_enabled }}"
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      command: "off"
+      cluster_id: 6
+      endpoint_id: 1
+    id: press-off-zha-e1743-e2201-e2313
+    enabled: "{{ zha_enabled }}"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: "off"
+    id: press-off-z2m-e1743-e2201-e2313
+    enabled: "{{ mqtt_enabled }}"
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      command: move_with_on_off
+      cluster_id: 8
+      endpoint_id: 1
+    id: hold-on-zha-e1743-e2201-e2313
+    enabled: "{{ zha_enabled }}"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: brightness_move_up
+    id: hold-on-z2m-e1743-e2201-e2313
+    enabled: "{{ mqtt_enabled }}"
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      command: move
+      cluster_id: 8
+      endpoint_id: 1
+    id: hold-off-zha-e1743-e2201-e2313
+    enabled: "{{ zha_enabled }}"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: brightness_move_down
+    id: hold-off-z2m-e1743-e2201-e2313
+    enabled: "{{ mqtt_enabled }}"
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      endpoint_id: 1
+      cluster_id: 8
+      command: stop_with_on_off
+    id: release-zha-e1743-e2201-e2313
+    enabled: "{{ zha_enabled }}"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: brightness_stop
+    id: release-z2m-e1743-e2201-e2313
+    enabled: "{{ mqtt_enabled }}"
+
+  # SOMRIG (E2213)
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      command: short_release
+      endpoint_id: 1
+    id: press-dots1-zha-e2213
+    enabled: "{{ zha_enabled }}"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: 1_short_release
+    id: press-dots1-z2m-e2213
+    enabled: "{{ mqtt_enabled }}"
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      command: short_release
+      endpoint_id: 2
+    id: press-dots2-zha-e2213
+    enabled: "{{ zha_enabled }}"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: 2_short_release
+    id: press-dots2-z2m-e2213
+    enabled: "{{ mqtt_enabled }}"
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      command: multi_press_complete
+      endpoint_id: 1
+    id: double-press-dots1-zha-e2213
+    enabled: "{{ zha_enabled }}"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: 1_double_press
+    id: double-press-dots1-z2m-e2213
+    enabled: "{{ mqtt_enabled }}"
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      command: multi_press_complete
+      endpoint_id: 2
+    id: double-press-dots2-zha-e2213
+    enabled: "{{ zha_enabled }}"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: 2_double_press
+    id: double-press-dots2-z2m-e2213
+    enabled: "{{ mqtt_enabled }}"
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      command: long_press
+      endpoint_id: 1
+    id: hold-dots1-zha-e2213
+    enabled: "{{ zha_enabled }}"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: 1_long_press
+    id: hold-dots1-z2m-e2213
+    enabled: "{{ mqtt_enabled }}"
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      command: long_press
+      endpoint_id: 2
+    id: hold-dots2-zha-e2213
+    enabled: "{{ zha_enabled }}"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: 2_long_press
+    id: hold-dots2-z2m-e2213
+    enabled: "{{ mqtt_enabled }}"
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      command: long_release
+      endpoint_id: 1
+    id: release-hold-dots1-zha-e2213
+    enabled: "{{ zha_enabled }}"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: 1_long_release
+    id: release-hold-dots1-z2m-e2213
+    enabled: "{{ mqtt_enabled }}"
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      command: long_release
+      endpoint_id: 2
+    id: release-hold-dots2-zha-e2213
+    enabled: "{{ zha_enabled }}"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: 2_long_release
+    id: release-hold-dots2-z2m-e2213
+    enabled: "{{ mqtt_enabled }}"
+
+  # STYRBAR (E2313)
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      command: "press"
+      cluster_id: 5
+      endpoint_id: 1
+    id: press-arrow-zha-e2313
+    enabled: "{{ zha_enabled }}"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: "arrow_left_click"
+    id: press-left-z2m-e2313
+    enabled: "{{ mqtt_enabled }}"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: "arrow_right_click"
+    id: press-right-z2m-e2313
+    enabled: "{{ mqtt_enabled }}"
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      command: "hold"
+      cluster_id: 5
+      endpoint_id: 1
+    id: hold-arrow-zha-e2313
+    enabled: "{{ zha_enabled }}"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: "arrow_left_hold"
+    id: hold-left-z2m-e2313
+    enabled: "{{ mqtt_enabled }}"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: "arrow_right_hold"
+    id: hold-right-z2m-e2313
+    enabled: "{{ mqtt_enabled }}"
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      command: "release"
+      cluster_id: 5
+      endpoint_id: 1
+    id: release-arrow-zha-e2313
+    enabled: "{{ zha_enabled }}"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: "arrow_left_release"
+    id: release-left-z2m-e2313
+    enabled: "{{ mqtt_enabled }}"
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: "arrow_right_release"
+    id: release-right-z2m-e2313
+    enabled: "{{ mqtt_enabled }}"
+
+variables:
+  remote_devices_names: "{{ remote_devices | map('device_attr', 'name') | list }}"
+  is_mqtt: "{{ trigger is defined and trigger.platform == 'mqtt' }}"
+  is_zha: "{{ trigger is defined and trigger.platform == 'event' and trigger.event.event_type == 'zha_event' }}"
+  mqtt_topic: "{{ trigger.topic|default('') if is_mqtt else none }}"
+  mqtt_device_name: "{{ mqtt_topic.split('/')[1] if is_mqtt else none }}"
+  zha_device_id: "{{ trigger.event.data.device_id if is_zha else none }}"
+  zha_arrow_direction: |
+    {% if not is_zha or 'arrow' not in trigger.id %}
+      {{ none }}
+    {% elif trigger.event.data.params.param1 in [257, 3329] %}
+      {{ 'left' }}
+    {% elif trigger.event.data.params.param1 in [256, 3328] %}
+      {{ 'right' }}
+    {% else %}
+      {{ none }}
+    {% endif %}
+
+condition:
+  - condition: template
+    value_template: >-
+      {{ 
+        (zha_device_id in remote_devices if is_zha) or
+        (mqtt_device_name in remote_devices_names if is_mqtt)
+      }}
+
+actions:
+  - choose:
+      - alias: On press and virtual double press action
+        conditions:
+          - condition: trigger
+            id:
+              - press-on-zha-e1743-e2201-e2313
+              - press-on-z2m-e1743-e2201-e2313
+              - press-dots1-zha-e2213
+              - press-dots1-z2m-e2213
+        sequence:
+          - if:
+              - condition: template
+                value_template: !input on_double_press_exposed
+            then:
+              - wait_for_trigger:
+                  - trigger: event
+                    event_type: zha_event
+                    event_data:
+                      device_id: "{{ zha_device_id }}"
+                      command: "on"
+                      cluster_id: 6
+                      endpoint_id: 1
+                    enabled: "{{ is_zha }}"
+                  - trigger: mqtt
+                    topic: "{{ mqtt_topic }}"
+                    payload: "on"
+                    enabled: "{{ is_mqtt }}"
+                timeout:
+                  milliseconds: !input helper_double_press_delay
+                continue_on_timeout: true
+              - if:
+                  - condition: template
+                    value_template: "{{ wait.trigger.idx is defined }}"
+                then: !input on_double_press_action
+                else: !input on_press_action
+            else: !input on_press_action
+
+      - alias: Off press and virtual double press action
+        conditions:
+          - condition: trigger
+            id:
+              - press-off-zha-e1743-e2201-e2313
+              - press-off-z2m-e1743-e2201-e2313
+              - press-dots2-zha-e2213
+              - press-dots2-z2m-e2213
+        sequence:
+          - if:
+              - condition: template
+                value_template: !input off_double_press_exposed
+            then:
+              - wait_for_trigger:
+                  - trigger: event
+                    event_type: zha_event
+                    event_data:
+                      device_id: "{{ zha_device_id }}"
+                      command: "off"
+                      cluster_id: 6
+                      endpoint_id: 1
+                    enabled: "{{ is_zha }}"
+                  - trigger: mqtt
+                    topic: "{{ mqtt_topic }}"
+                    payload: "off"
+                    enabled: "{{ is_mqtt }}"
+                timeout:
+                  milliseconds: !input helper_double_press_delay
+                continue_on_timeout: true
+              - if:
+                  - condition: template
+                    value_template: "{{ wait.trigger.idx is defined }}"
+                then: !input off_double_press_action
+                else: !input off_press_action
+            else: !input off_press_action
+
+      - alias: On double press action
+        conditions:
+          - condition: trigger
+            id:
+              - double-press-dots1-zha-e2213
+              - double-press-dots1-z2m-e2213
+        sequence: !input on_double_press_action
+
+      - alias: Off double press action
+        conditions:
+          - condition: trigger
+            id:
+              - double-press-dots2-zha-e2213
+              - double-press-dots2-z2m-e2213
+        sequence: !input off_double_press_action
+
+      - alias: On hold action
+        conditions:
+          - condition: trigger
+            id:
+              - hold-on-zha-e1743-e2201-e2313
+              - hold-on-z2m-e1743-e2201-e2313
+              - hold-dots1-zha-e2213
+              - hold-dots1-z2m-e2213
+        sequence:
+          - repeat:
+              count: !input helper_max_loops
+              sequence:
+                - parallel:
+                    - sequence: !input on_hold_action
+                    - sequence:
+                        - wait_for_trigger:
+                            - trigger: event
+                              event_type: zha_event
+                              event_data:
+                                device_id: "{{ zha_device_id }}"
+                                command: "stop_with_on_off"
+                                cluster_id: 8
+                                endpoint_id: 1
+                              enabled: "{{ is_zha }}"
+                            - trigger: mqtt
+                              topic: "{{ mqtt_topic }}"
+                              payload: "brightness_stop"
+                              enabled: "{{ is_mqtt }}"
+                            - trigger: mqtt
+                              topic: "{{ mqtt_topic }}"
+                              payload: "1_long_release"
+                              enabled: "{{ is_mqtt }}"
+                          timeout:
+                            milliseconds: !input helper_hold_delay
+                          continue_on_timeout: true
+                        - if:
+                            - condition: template
+                              value_template: "{{ wait.trigger.idx is defined }}"
+                          then:
+                            - stop: button released
+
+      - alias: Off hold action
+        conditions:
+          - condition: trigger
+            id:
+              - hold-off-zha-e1743-e2201-e2313
+              - hold-off-z2m-e1743-e2201-e2313
+              - hold-dots2-zha-e2213
+              - hold-dots2-z2m-e2213
+        sequence:
+          - repeat:
+              count: !input helper_max_loops
+              sequence:
+                - parallel:
+                    - sequence: !input off_hold_action
+                    - sequence:
+                        - wait_for_trigger:
+                            - trigger: event
+                              event_type: zha_event
+                              event_data:
+                                device_id: "{{ zha_device_id }}"
+                                command: "stop_with_on_off"
+                                cluster_id: 8
+                                endpoint_id: 1
+                              enabled: "{{ is_zha }}"
+                            - trigger: mqtt
+                              topic: "{{ mqtt_topic }}"
+                              payload: "brightness_stop"
+                              enabled: "{{ is_mqtt }}"
+                            - trigger: mqtt
+                              topic: "{{ mqtt_topic }}"
+                              payload: "2_long_release"
+                              enabled: "{{ is_mqtt }}"
+                          timeout:
+                            milliseconds: !input helper_hold_delay
+                          continue_on_timeout: true
+                        - if:
+                            - condition: template
+                              value_template: "{{ wait.trigger.idx is defined }}"
+                          then:
+                            - stop: button released
+
+      - alias: Left press and virtual double press action
+        conditions:
+          - condition: or
+            conditions:
+              - condition: trigger
+                id:
+                  - press-left-z2m-e2313
+              - condition: template
+                value_template: "{{ trigger.id == 'press-arrow-zha-e2313' and zha_arrow_direction == 'left' }}"
+        sequence:
+          - if:
+              - condition: template
+                value_template: !input left_double_press_exposed
+            then:
+              - wait_for_trigger:
+                  - trigger: event
+                    event_type: zha_event
+                    event_data:
+                      device_id: "{{ zha_device_id }}"
+                      command: "press"
+                      cluster_id: 5
+                      endpoint_id: 1
+                    enabled: "{{ is_zha }}"
+                  - trigger: mqtt
+                    topic: "{{ mqtt_topic }}"
+                    payload: "arrow_left_click"
+                    enabled: "{{ is_mqtt }}"
+                timeout:
+                  milliseconds: !input helper_double_press_left_right_delay
+                continue_on_timeout: true
+              - if:
+                  - condition: template
+                    value_template: "{{ wait.trigger.idx is defined }}"
+                then: !input left_double_press_action
+                else: !input left_press_action
+            else: !input left_press_action
+
+      - alias: Right press and virtual double press action
+        conditions:
+          - condition: or
+            conditions:
+              - condition: trigger
+                id:
+                  - press-right-z2m-e2313
+              - condition: template
+                value_template: "{{ trigger.id == 'press-arrow-zha-e2313' and zha_arrow_direction == 'right' }}"
+        sequence:
+          - if:
+              - condition: template
+                value_template: !input right_double_press_exposed
+            then:
+              - wait_for_trigger:
+                  - trigger: event
+                    event_type: zha_event
+                    event_data:
+                      device_id: "{{ zha_device_id }}"
+                      command: "press"
+                      cluster_id: 5
+                      endpoint_id: 1
+                    enabled: "{{ is_zha }}"
+                  - trigger: mqtt
+                    topic: "{{ mqtt_topic }}"
+                    payload: "arrow_right_click"
+                    enabled: "{{ is_mqtt }}"
+                timeout:
+                  milliseconds: !input helper_double_press_left_right_delay
+                continue_on_timeout: true
+              - if:
+                  - condition: template
+                    value_template: "{{ wait.trigger.idx is defined }}"
+                then: !input right_double_press_action
+                else: !input right_press_action
+            else: !input right_press_action
+
+      - alias: Decouple left/right hold from on action
+        conditions:
+          - condition: trigger
+            id:
+              - release-arrow-zha-e2313
+              - release-left-z2m-e2313
+              - release-right-z2m-e2313
+          - alias: If left/right hold is decoupled from the on action
+            condition: template
+            value_template: !input decouple_left_right_hold
+        sequence:
+          # The Styrbar remote issues the following command sequence when holding left/right:
+          #   - 1000ms "release"
+          #   - 1500ms "on"
+          #   - 2000ms "recall"
+          #   - 3000ms "hold" (with param1 indicating left/right)
+          - alias: Wait for the "on" command to be received (sent 500ms after "release")
+            wait_for_trigger:
+              - trigger: event
+                event_type: zha_event
+                event_data:
+                  device_id: "{{ zha_device_id }}"
+                  command: "on"
+                  cluster_id: 6
+                  endpoint_id: 1
+                enabled: "{{ is_zha }}"
+              - trigger: mqtt
+                topic: "{{ mqtt_topic }}"
+                payload: "on"
+                enabled: "{{ is_mqtt }}"
+            timeout:
+              milliseconds: 600
+            continue_on_timeout: true
+
+      - alias: Left hold action
+        conditions:
+          - condition: or
+            conditions:
+              - condition: trigger
+                id:
+                  - hold-left-z2m-e2313
+              - condition: template
+                value_template: "{{ trigger.id == 'hold-arrow-zha-e2313' and zha_arrow_direction == 'left' }}"
+        sequence:
+          - repeat:
+              count: !input helper_max_left_right_loops
+              sequence:
+                - parallel:
+                    - sequence: !input left_hold_action
+                    - sequence:
+                        - wait_for_trigger:
+                            - trigger: event
+                              event_type: zha_event
+                              event_data:
+                                device_id: "{{ zha_device_id }}"
+                                command: "release"
+                                cluster_id: 5
+                                endpoint_id: 1
+                              enabled: "{{ is_zha }}"
+                            - trigger: mqtt
+                              topic: "{{ mqtt_topic }}"
+                              payload: "arrow_left_release"
+                              enabled: "{{ is_mqtt }}"
+                          timeout:
+                            milliseconds: !input helper_hold_left_right_delay
+                          continue_on_timeout: true
+                        - if:
+                            - condition: template
+                              value_template: "{{ wait.trigger.idx is defined }}"
+                          then:
+                            - stop: button released
+
+      - alias: Right hold action
+        conditions:
+          - condition: or
+            conditions:
+              - condition: trigger
+                id:
+                  - hold-right-z2m-e2313
+              - condition: template
+                value_template: "{{ trigger.id == 'hold-arrow-zha-e2313' and zha_arrow_direction == 'right' }}"
+        sequence:
+          - repeat:
+              count: !input helper_max_left_right_loops
+              sequence:
+                - parallel:
+                    - sequence: !input right_hold_action
+                    - sequence:
+                        - wait_for_trigger:
+                            - trigger: event
+                              event_type: zha_event
+                              event_data:
+                                device_id: "{{ zha_device_id }}"
+                                command: "release"
+                                cluster_id: 5
+                                endpoint_id: 1
+                              enabled: "{{ is_zha }}"
+                            - trigger: mqtt
+                              topic: "{{ mqtt_topic }}"
+                              payload: "arrow_right_release"
+                              enabled: "{{ is_mqtt }}"
+                          timeout:
+                            milliseconds: !input helper_hold_left_right_delay
+                          continue_on_timeout: true
+                        - if:
+                            - condition: template
+                              value_template: "{{ wait.trigger.idx is defined }}"
+                          then:
+                            - stop: button released
