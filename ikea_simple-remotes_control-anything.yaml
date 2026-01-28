@@ -111,7 +111,7 @@ blueprint:
       default: []
       selector:
         action: {}
-    helper_section :
+    helper_section:
       name: Helpers
       icon: mdi:cog-outline
       collapsed: true
