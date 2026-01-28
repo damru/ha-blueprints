@@ -3,9 +3,9 @@ blueprint:
     min_version: 2024.10.0
   author: damru
   domain: automation
-  name: Ikea's Rodret, Somrig or Tradfri 💡 Light control
+  name: Ikea's Simple Remotes 💡 Light control
   description: >
-    ## 💡 Control a light with **IKEA RODRET** or **IKEA SOMRIG** or **IKEA TRADFRI ON/OFF** remotes
+    ## 💡 Control a light with **IKEA Bilresa** or **IKEA RODRET** or **IKEA SOMRIG** or **IKEA TRADFRI ON/OFF** remotes
 
 
     Only for use with [ZHA](https://www.home-assistant.io/integrations/zha/)
@@ -15,23 +15,26 @@ blueprint:
 
     Available controls:
 
-    - Press **on** (Rodret, Tradfri) or **1 dot** (Somrig) to turn on the light
+    - Press **on** button to turn on the light
     (Optional: set the target brightness by enabling **Force Brightness** and setting a **Brightness** value)
 
-    - Press **off** (Rodret, Tradfri) or **2 dots** (Somrig) to turn off the light
+    - Press **off** button to turn off the light
 
-    - Hold **on** (Rodret, Tradfri) or **1 dot** (Somrig) button to increase the brightness
+    - Hold **on** button to increase the brightness
 
-    - Hold **off** (Rodret, Tradfri) or **2 dots** (Somrig) button to decrease the brightness down to 1%
+    - Hold **off** button to decrease the brightness down to 1%
   input:
     remote_devices:
       name: Remotes
       description: >
-        IKEA remote (Rodret, Somrig, Tradfri) to use.
+        IKEA remote (Bilresa, Rodret, Somrig, Tradfri) to use.
       default: []
       selector:
         device:
           filter:
+            - integration: zha
+              manufacturer: IKEA of Sweden
+              model: 09B9
             - integration: zha
               manufacturer: IKEA of Sweden
               model: RODRET Dimmer
@@ -44,6 +47,9 @@ blueprint:
             - integration: zha
               manufacturer: IKEA of Sweden
               model: TRADFRI on/off switch
+            - integration: mqtt
+              manufacturer: IKEA
+              model: BILRESA remote control with buttons
             - integration: mqtt
               manufacturer: IKEA
               model: RODRET wireless dimmer/power switch
@@ -101,124 +107,128 @@ blueprint:
 mode: restart
 max_exceeded: silent
 triggers:
-  # RODRET (E2201) - TRADFRI (E1743)
+  ###########################
+  # SINGLE PRESSES
+  ###########################
   - trigger: event
     event_type: zha_event
     event_data:
       command: "on"
       cluster_id: 6
       endpoint_id: 1
-    id: press-on-zha-e1743-e2201
+    id: press-on-zha
   - trigger: mqtt
     topic: "+/+/action"
     payload: "on"
-    id: press-on-z2m-e1743-e2201
+    id: press-on-z2m
   - trigger: event
     event_type: zha_event
     event_data:
       command: "off"
       cluster_id: 6
       endpoint_id: 1
-    id: press-off-zha-e1743-e2201
+    id: press-off-zha
   - trigger: mqtt
     topic: "+/+/action"
     payload: "off"
-    id: press-off-z2m-e1743-e2201
+    id: press-off-z2m
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      command: short_release
+      endpoint_id: 1
+    id: press-on-zha-somrig
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: 1_short_release
+    id: press-on-z2m-somrig
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      command: short_release
+      endpoint_id: 2
+    id: press-off-zha-somrig
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: 2_short_release
+    id: press-off-z2m-somrig
+
+  ###########################
+  # LONG PRESSES
+  ###########################
   - trigger: event
     event_type: zha_event
     event_data:
       command: move_with_on_off
       cluster_id: 8
       endpoint_id: 1
-    id: hold-on-zha-e1743-e2201
+    id: hold-on-zha
   - trigger: mqtt
     topic: "+/+/action"
     payload: brightness_move_up
-    id: hold-on-z2m-e1743-e2201
+    id: hold-on-z2m
   - trigger: event
     event_type: zha_event
     event_data:
       command: move
       cluster_id: 8
       endpoint_id: 1
-    id: hold-off-zha-e1743-e2201
+    id: hold-off-zha
   - trigger: mqtt
     topic: "+/+/action"
     payload: brightness_move_down
-    id: hold-off-z2m-e1743-e2201
+    id: hold-off-z2m
   - trigger: event
     event_type: zha_event
     event_data:
       command: stop_with_on_off
       endpoint_id: 1
       cluster_id: 8
-    id: release-zha-e1743-e2201
+    id: release-zha
   - trigger: mqtt
     topic: "+/+/action"
     payload: brightness_stop
-    id: release-z2m-e1743-e2201
-
-  # SOMRIG - E2213
-  - trigger: event
-    event_type: zha_event
-    event_data:
-      command: short_release
-      endpoint_id: 1
-    id: press-dots1-zha-e2213
-  - trigger: mqtt
-    topic: "+/+/action"
-    payload: 1_short_release
-    id: press-dots1-z2m-e2213
-  - trigger: event
-    event_type: zha_event
-    event_data:
-      command: short_release
-      endpoint_id: 2
-    id: press-dots2-zha-e2213
-  - trigger: mqtt
-    topic: "+/+/action"
-    payload: 2_short_release
-    id: press-dots2-z2m-e2213
+    id: release-z2m
   - trigger: event
     event_type: zha_event
     event_data:
       command: long_press
       endpoint_id: 1
-    id: hold-dots1-zha-e2213
+    id: hold-on-zha-somrig
   - trigger: mqtt
     topic: "+/+/action"
     payload: 1_long_press
-    id: hold-dots1-z2m-e2213
+    id: hold-on-z2m-somrig
   - trigger: event
     event_type: zha_event
     event_data:
       command: long_press
       endpoint_id: 2
-    id: hold-dots2-zha-e2213
+    id: hold-off-zha-somrig
   - trigger: mqtt
     topic: "+/+/action"
     payload: 2_long_press
-    id: hold-dots2-z2m-e2213
+    id: hold-off-z2m-somrig
   - trigger: event
     event_type: zha_event
     event_data:
       command: long_release
       endpoint_id: 1
-    id: release-hold-dots1-zha-e2213
+    id: release-hold-on-zha-somrig
   - trigger: mqtt
     topic: "+/+/action"
     payload: 1_long_release
-    id: release-hold-dots1-z2m-e2213
+    id: release-hold-on-z2m-somrig
   - trigger: event
     event_type: zha_event
     event_data:
       command: long_release
       endpoint_id: 2
-    id: release-hold-dots2-zha-e2213
+    id: release-hold-off-zha-somrig
   - trigger: mqtt
     topic: "+/+/action"
     payload: 2_long_release
-    id: release-hold-dots2-z2m-e2213
+    id: release-hold-off-z2m-somrig
 variables:
   helper_force_brightness: !input helper_force_brightness
   helper_hold_delay: 0.1
@@ -241,10 +251,10 @@ actions:
       - conditions:
           - condition: trigger
             id:
-              - press-on-zha-e1743-e2201
-              - press-on-z2m-e1743-e2201
-              - press-dots1-zha-e2213
-              - press-dots1-z2m-e2213
+              - press-on-zha
+              - press-on-z2m
+              - press-on-zha-somrig
+              - press-on-z2m-somrig
         sequence:
           - choose:
               - conditions: "{{ helper_force_brightness }}"
@@ -262,10 +272,10 @@ actions:
       - conditions:
           - condition: trigger
             id:
-              - press-off-zha-e1743-e2201
-              - press-off-z2m-e1743-e2201
-              - press-dots2-zha-e2213
-              - press-dots2-z2m-e2213
+              - press-off-zha
+              - press-off-z2m
+              - press-off-zha-somrig
+              - press-off-z2m-somrig
         sequence:
           - action: light.turn_off
             target:
@@ -274,19 +284,19 @@ actions:
       - conditions:
           - condition: trigger
             id:
-              - hold-on-zha-e1743-e2201
-              - hold-on-z2m-e1743-e2201
-              - hold-dots1-zha-e2213
-              - hold-dots1-z2m-e2213
+              - hold-on-zha
+              - hold-on-z2m
+              - hold-on-zha-somrig
+              - hold-on-z2m-somrig
         sequence:
           - repeat:
               while:
                 - condition: trigger
                   id:
-                    - hold-on-zha-e1743-e2201
-                    - hold-on-z2m-e1743-e2201
-                    - hold-dots1-zha-e2213
-                    - hold-dots1-z2m-e2213
+                    - hold-on-zha
+                    - hold-on-z2m
+                    - hold-on-zha-somrig
+                    - hold-on-z2m-somrig
               sequence:
                 - parallel:
                     - action: light.turn_on
@@ -299,10 +309,10 @@ actions:
       - conditions:
           - condition: trigger
             id:
-              - hold-off-zha-e1743-e2201
-              - hold-off-z2m-e1743-e2201
-              - hold-dots2-zha-e2213
-              - hold-dots2-z2m-e2213
+              - hold-off-zha
+              - hold-off-z2m
+              - hold-off-zha-somrig
+              - hold-off-z2m-somrig
         sequence:
           - variables:
               brightness_pct: "{{ iif(is_state(light, 'on'), state_attr(light, 'brightness'), 0) * 100 / 255 }}"

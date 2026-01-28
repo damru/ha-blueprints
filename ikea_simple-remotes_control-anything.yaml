@@ -3,9 +3,9 @@ blueprint:
     min_version: 2024.10.0
   author: damru
   domain: automation
-  name: Ikea's Rodret, Somrig or Tradfri ⚙️ Controls
+  name: Ikea's Simple Remotes ⚙️ Controls
   description: >
-    ## ⚙️ Control anything with **IKEA RODRET** or **IKEA SOMRIG** or **IKEA TRADFRI ON/OFF** remotes
+    ## ⚙️ Control anything with **IKEA Bilresa** or **IKEA RODRET** or **IKEA SOMRIG** or **IKEA TRADFRI ON/OFF** remotes
 
 
     Only for use with [ZHA](https://www.home-assistant.io/integrations/zha/)
@@ -15,21 +15,24 @@ blueprint:
 
     Available controls:
 
-    - Single press **on/off** (Rodret, Tradfri)  **1 dot/2 dots** (Somrig)
+    - Single press **on/off**
 
-    - Double press **on/off** (Rodret, Tradfri, _Optional_)  **1 dot/2 dots** (Somrig)
+    - Double press **on/off**
 
-    - Hold **on/off** (Rodret, Tradfri)  **1 dot/2 dots** (Somrig).
+    - Hold **on/off**.
     Actions will be executed every **Hold delay**, but maximum **Max number of loops** times.
   input:
     remote_devices:
       name: Remotes
       description: >
-        IKEA remote (Rodret, Somrig, Tradfri) to use.
+        IKEA remote (Bilresa, Rodret, Somrig, Tradfri) to use.
       default: []
       selector:
         device:
           filter:
+            - integration: zha
+              manufacturer: IKEA of Sweden
+              model: 09B9
             - integration: zha
               manufacturer: IKEA of Sweden
               model: RODRET Dimmer
@@ -42,6 +45,9 @@ blueprint:
             - integration: zha
               manufacturer: IKEA of Sweden
               model: TRADFRI on/off switch
+            - integration: mqtt
+              manufacturer: IKEA
+              model: BILRESA remote control with buttons
             - integration: mqtt
               manufacturer: IKEA
               model: RODRET wireless dimmer/power switch
@@ -66,32 +72,32 @@ blueprint:
           multiple: true
     on_press_action:
       name: Press "on / 1 dot" action
-      description: Choose action(s) to run when **on** (Rodret, Tradfri) or **1 dot** (Somrig) button is **pressed**.
+      description: Choose action(s) to run when **on** button is **pressed**.
       default: []
       selector:
         action: {}
     off_press_action:
       name: Press "off / 2 dots" action
-      description: Choose action(s) to run when **off** (Rodret, Tradfri) or **2 dots** (Somrig) button is **pressed**.
+      description: Choose action(s) to run when **off** button is **pressed**.
       default: []
       selector:
         action: {}
     on_hold_action:
       name: Hold "on / 1 dot" action
-      description: Choose action(s) to run when **on** (Rodret, Tradfri) or **1 dot** (Somrig) button is **held**.
+      description: Choose action(s) to run when **on** button is **held**.
       default: []
       selector:
         action: {}
     off_hold_action:
       name: Hold "off / 2 dots" action
-      description: Choose action(s) to run when **off** (Rodret, Tradfri) or **2 dots** (Somrig) button is **held**.
+      description: Choose action(s) to run when **off** button is **held**.
       default: []
       selector:
         action: {}
     on_double_press_action:
       name: Double press "on / 1 dot" action
       description: >
-        Choose action(s) to run when the **on** (Rodret, Tradfri) or **1 dot** (Somrig) button is **pressed twice**.
+        Choose action(s) to run when the **on** button is **pressed twice**.
 
         **_NB for Rodret, Tradfri only_**: **Double press event (on)** must be exposed and **Double press delay** interval is used as a timeout.
       default: []
@@ -100,8 +106,7 @@ blueprint:
     off_double_press_action:
       name: Double press "off / 2 dots" action
       description: >
-        Choose action(s) to run when the **off** (Rodret, Tradfri) or **2 dots** (Somrig) button is **pressed twice**. 
-
+        Choose action(s) to run when the **off** button is **pressed twice**. 
         **_NB for Rodret, Tradfri only_**: **Double press event (off)** must be exposed and **Double press delay** interval is used as a timeout.
       default: []
       selector:
@@ -171,144 +176,160 @@ blueprint:
 mode: single
 max_exceeded: silent
 triggers:
-  # RODRET (E2201) + TRADFRI (E1743)
+  ###########################
+  # SINGLE PRESSES
+  ###########################
   - trigger: event
     event_type: zha_event
     event_data:
       command: "on"
       cluster_id: 6
       endpoint_id: 1
-    id: press-on-zha-e1743-e2201
+    id: press-on-zha  
   - trigger: mqtt
     topic: "+/+/action"
     payload: "on"
-    id: press-on-z2m-e1743-e2201
+    id: press-on-z2m
   - trigger: event
     event_type: zha_event
     event_data:
       command: "off"
       cluster_id: 6
       endpoint_id: 1
-    id: press-off-zha-e1743-e2201
+    id: press-off-zha
   - trigger: mqtt
     topic: "+/+/action"
     payload: "off"
-    id: press-off-z2m-e1743-e2201
+    id: press-off-z2m
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      command: short_release
+      endpoint_id: 1
+    id: press-on-zha-somrig
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: 1_short_release
+    id: press-on-z2m-somrig
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      command: short_release
+      endpoint_id: 2
+    id: press-off-zha-somrig
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: 2_short_release
+    id: press-off-z2m-somrig
+
+    ###########################
+    # DOUBLES PRESSES
+    ###########################
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: "on_double"
+    id: double-press-on-z2m-bilresa
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: "off_double"
+    id: double-press-off-z2m-bilresa
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      command: multi_press_complete
+      endpoint_id: 1
+    id: double-press-on-zha-somrig
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: 1_double_press
+    id: double-press-on-z2m-somrig
+  - trigger: event
+    event_type: zha_event
+    event_data:
+      command: multi_press_complete
+      endpoint_id: 2
+    id: double-press-off-zha-somrig
+  - trigger: mqtt
+    topic: "+/+/action"
+    payload: 2_double_press
+    id: double-press-off-z2m-somrig
+
+  ###########################
+  # LONG PRESSES
+  ###########################
   - trigger: event
     event_type: zha_event
     event_data:
       command: move_with_on_off
       cluster_id: 8
       endpoint_id: 1
-    id: hold-on-zha-e1743-e2201
+    id: hold-on-zha
   - trigger: mqtt
     topic: "+/+/action"
     payload: brightness_move_up
-    id: hold-on-z2m-e1743-e2201
+    id: hold-on-z2m
   - trigger: event
     event_type: zha_event
     event_data:
       command: move
       cluster_id: 8
       endpoint_id: 1
-    id: hold-off-zha-e1743-e2201
+    id: hold-off-zha
   - trigger: mqtt
     topic: "+/+/action"
     payload: brightness_move_down
-    id: hold-off-z2m-e1743-e2201
+    id: hold-off-z2m
   - trigger: event
     event_type: zha_event
     event_data:
       endpoint_id: 1
       cluster_id: 8
       command: stop_with_on_off
-    id: release-zha-e1743-e2201
+    id: release-zha
   - trigger: mqtt
     topic: "+/+/action"
     payload: brightness_stop
-    id: release-z2m-e1743-e2201
-
-  # SOMRIG (E2213)
-  - trigger: event
-    event_type: zha_event
-    event_data:
-      command: short_release
-      endpoint_id: 1
-    id: press-dots1-zha-e2213
-  - trigger: mqtt
-    topic: "+/+/action"
-    payload: 1_short_release
-    id: press-dots1-z2m-e2213
-  - trigger: event
-    event_type: zha_event
-    event_data:
-      command: short_release
-      endpoint_id: 2
-    id: press-dots2-zha-e2213
-  - trigger: mqtt
-    topic: "+/+/action"
-    payload: 2_short_release
-    id: press-dots2-z2m-e2213
-  - trigger: event
-    event_type: zha_event
-    event_data:
-      command: multi_press_complete
-      endpoint_id: 1
-    id: double-press-dots1-zha-e2213
-  - trigger: mqtt
-    topic: "+/+/action"
-    payload: 1_double_press
-    id: double-press-dots1-z2m-e2213
-  - trigger: event
-    event_type: zha_event
-    event_data:
-      command: multi_press_complete
-      endpoint_id: 2
-    id: double-press-dots2-zha-e2213
-  - trigger: mqtt
-    topic: "+/+/action"
-    payload: 2_double_press
-    id: double-press-dots2-z2m-e2213
+    id: release-z2m
   - trigger: event
     event_type: zha_event
     event_data:
       command: long_press
       endpoint_id: 1
-    id: hold-dots1-zha-e2213
+    id: hold-on-zha-somrig
   - trigger: mqtt
     topic: "+/+/action"
     payload: 1_long_press
-    id: hold-dots1-z2m-e2213
+    id: hold-on-z2m-somrig
   - trigger: event
     event_type: zha_event
     event_data:
       command: long_press
       endpoint_id: 2
-    id: hold-dots2-zha-e2213
+    id: hold-off-zha-somrig
   - trigger: mqtt
     topic: "+/+/action"
     payload: 2_long_press
-    id: hold-dots2-z2m-e2213
+    id: hold-off-z2m-somrig
   - trigger: event
     event_type: zha_event
     event_data:
       command: long_release
       endpoint_id: 1
-    id: release-hold-dots1-zha-e2213
+    id: release-hold-on-zha-somrig
   - trigger: mqtt
     topic: "+/+/action"
     payload: 1_long_release
-    id: release-hold-dots1-z2m-e2213
+    id: release-hold-on-z2m-somrig
   - trigger: event
     event_type: zha_event
     event_data:
       command: long_release
       endpoint_id: 2
-    id: release-hold-dots2-zha-e2213
+    id: release-hold-off-zha-somrig
   - trigger: mqtt
     topic: "+/+/action"
     payload: 2_long_release
-    id: release-hold-dots2-z2m-e2213
+    id: release-hold-off-z2m-somrig
 variables:
   is_mqtt: "{{ trigger.platform == 'mqtt' }}"
   is_zha: "{{ trigger.platform == 'event' and trigger.event.event_type == 'zha_event' }}"
@@ -330,10 +351,10 @@ actions:
       - conditions:
           - condition: trigger
             id:
-              - press-on-zha-e1743-e2201
-              - press-on-z2m-e1743-e2201
-              - press-dots1-zha-e2213
-              - press-dots1-z2m-e2213
+              - press-on-zha
+              - press-on-z2m
+              - press-on-zha-somrig
+              - press-on-z2m-somrig
         sequence:
           - if:
               - condition: template
@@ -343,7 +364,7 @@ actions:
                   - conditions:
                       - condition: trigger
                         id:
-                          - press-on-zha-e1743-e2201
+                          - press-on-zha
                     sequence:
                       - wait_for_trigger:
                           - trigger: event
@@ -364,7 +385,7 @@ actions:
                   - conditions:
                       - condition: trigger
                         id:
-                          - press-on-z2m-e1743-e2201
+                          - press-on-z2m
                     sequence:
                       - wait_for_trigger:
                           - trigger: mqtt
@@ -383,10 +404,10 @@ actions:
       - conditions:
           - condition: trigger
             id:
-              - press-off-zha-e1743-e2201
-              - press-off-z2m-e1743-e2201
-              - press-dots2-zha-e2213
-              - press-dots2-z2m-e2213
+              - press-off-zha
+              - press-off-z2m
+              - press-off-zha-somrig
+              - press-off-z2m-somrig
         sequence:
           - if:
               - condition: template
@@ -396,7 +417,7 @@ actions:
                   - conditions:
                       - condition: trigger
                         id:
-                          - press-off-zha-e1743-e2201
+                          - press-off-zha
                     sequence:
                       - wait_for_trigger:
                           - trigger: event
@@ -417,7 +438,7 @@ actions:
                   - conditions:
                       - condition: trigger
                         id:
-                          - press-off-z2m-e1743-e2201
+                          - press-off-z2m
                     sequence:
                       - wait_for_trigger:
                           - trigger: mqtt
@@ -436,24 +457,26 @@ actions:
       - conditions:
           - condition: trigger
             id:
-              - double-press-dots1-zha-e2213
-              - double-press-dots1-z2m-e2213
+              - double-press-on-zha-somrig
+              - double-press-on-z2m-somrig
+              - double-press-on-z2m-bilresa
         sequence: !input on_double_press_action
       - conditions:
           - condition: trigger
             id:
-              - double-press-dots2-zha-e2213
-              - double-press-dots2-z2m-e2213
+              - double-press-off-zha-somrig
+              - double-press-off-z2m-somrig
+              - double-press-off-z2m-bilresa
         sequence: !input off_double_press_action
       # 
       # Actions for up button long press
       - conditions:
           - condition: trigger
             id:
-              - hold-on-zha-e1743-e2201
-              - hold-on-z2m-e1743-e2201
-              - hold-dots1-zha-e2213
-              - hold-dots1-z2m-e2213
+              - hold-on-zha
+              - hold-on-z2m
+              - hold-on-zha-somrig
+              - hold-on-z2m-somrig
         sequence:
           - repeat:
               count: !input helper_max_loops
@@ -465,8 +488,8 @@ actions:
                             - conditions:
                                 - condition: trigger
                                   id:
-                                    - hold-on-zha-e1743-e2201
-                                    - hold-dots1-zha-e2213
+                                    - hold-on-zha
+                                    - hold-on-zha-somrig
                               sequence:
                                 - wait_for_trigger:
                                     - trigger: event
@@ -487,8 +510,8 @@ actions:
                             - conditions:
                                 - condition: trigger
                                   id:
-                                    - hold-on-z2m-e1743-e2201
-                                    - hold-dots1-z2m-e2213
+                                    - hold-on-z2m
+                                    - hold-on-z2m-somrig
                               sequence:
                                 - wait_for_trigger:
                                     - trigger: mqtt
@@ -508,10 +531,10 @@ actions:
       - conditions:
           - condition: trigger
             id:
-              - hold-off-zha-e1743-e2201
-              - hold-off-z2m-e1743-e2201
-              - hold-dots2-zha-e2213
-              - hold-dots2-z2m-e2213
+              - hold-off-zha
+              - hold-off-z2m
+              - hold-off-zha-somrig
+              - hold-off-z2m-somrig
         sequence:
           - repeat:
               count: !input helper_max_loops
@@ -523,8 +546,8 @@ actions:
                             - conditions:
                                 - condition: trigger
                                   id:
-                                    - hold-off-zha-e1743-e2201
-                                    - hold-dots2-zha-e2213
+                                    - hold-off-zha
+                                    - hold-off-zha-somrig
                               sequence:
                                 - wait_for_trigger:
                                     - trigger: event
@@ -545,8 +568,8 @@ actions:
                             - conditions:
                                 - condition: trigger
                                   id:
-                                    - hold-off-z2m-e1743-e2201
-                                    - hold-dots2-z2m-e2213
+                                    - hold-off-z2m
+                                    - hold-off-z2m-somrig
                               sequence:
                                 - wait_for_trigger:
                                     - trigger: mqtt
