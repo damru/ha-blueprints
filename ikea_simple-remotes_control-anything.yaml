@@ -175,6 +175,12 @@ blueprint:
               mode: slider
 mode: single
 max_exceeded: silent
+
+trigger_variables:
+  mqtt_enabled: "{{ integration_entities('mqtt') != [] }}"
+  remote_devices: !input remote_devices
+  zha_enabled: "{{ integration_entities('zha') != [] }}"
+
 triggers:
   ###########################
   # SINGLE PRESSES
@@ -186,10 +192,12 @@ triggers:
       cluster_id: 6
       endpoint_id: 1
     id: press-on-zha
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: "on"
     id: press-on-z2m
+    enabled: "{{ mqtt_enabled }}"
   - trigger: event
     event_type: zha_event
     event_data:
@@ -197,30 +205,36 @@ triggers:
       cluster_id: 6
       endpoint_id: 1
     id: press-off-zha
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: "off"
     id: press-off-z2m
+    enabled: "{{ mqtt_enabled }}"
   - trigger: event
     event_type: zha_event
     event_data:
       command: short_release
       endpoint_id: 1
     id: press-on-zha-somrig
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: 1_short_release
     id: press-on-z2m-somrig
+    enabled: "{{ mqtt_enabled }}"
   - trigger: event
     event_type: zha_event
     event_data:
       command: short_release
       endpoint_id: 2
     id: press-off-zha-somrig
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: 2_short_release
     id: press-off-z2m-somrig
+    enabled: "{{ mqtt_enabled }}"
 
     ###########################
     # DOUBLE PRESSES
@@ -229,30 +243,36 @@ triggers:
     topic: "+/+/action"
     payload: "on_double"
     id: double-press-on-z2m-bilresa
+    enabled: "{{ mqtt_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: "off_double"
     id: double-press-off-z2m-bilresa
+    enabled: "{{ mqtt_enabled }}"
   - trigger: event
     event_type: zha_event
     event_data:
       command: multi_press_complete
       endpoint_id: 1
     id: double-press-on-zha-somrig
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: 1_double_press
     id: double-press-on-z2m-somrig
+    enabled: "{{ mqtt_enabled }}"
   - trigger: event
     event_type: zha_event
     event_data:
       command: multi_press_complete
       endpoint_id: 2
     id: double-press-off-zha-somrig
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: 2_double_press
     id: double-press-off-z2m-somrig
+    enabled: "{{ mqtt_enabled }}"
 
   ###########################
   # LONG PRESSES
@@ -264,10 +284,12 @@ triggers:
       cluster_id: 8
       endpoint_id: 1
     id: hold-on-zha
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: brightness_move_up
     id: hold-on-z2m
+    enabled: "{{ mqtt_enabled }}"
   - trigger: event
     event_type: zha_event
     event_data:
@@ -275,10 +297,12 @@ triggers:
       cluster_id: 8
       endpoint_id: 1
     id: hold-off-zha
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: brightness_move_down
     id: hold-off-z2m
+    enabled: "{{ mqtt_enabled }}"
   - trigger: event
     event_type: zha_event
     event_data:
@@ -286,50 +310,60 @@ triggers:
       cluster_id: 8
       command: stop_with_on_off
     id: release-zha
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: brightness_stop
     id: release-z2m
+    enabled: "{{ mqtt_enabled }}"
   - trigger: event
     event_type: zha_event
     event_data:
       command: long_press
       endpoint_id: 1
     id: hold-on-zha-somrig
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: 1_long_press
     id: hold-on-z2m-somrig
+    enabled: "{{ mqtt_enabled }}"
   - trigger: event
     event_type: zha_event
     event_data:
       command: long_press
       endpoint_id: 2
     id: hold-off-zha-somrig
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: 2_long_press
     id: hold-off-z2m-somrig
+    enabled: "{{ mqtt_enabled }}"
   - trigger: event
     event_type: zha_event
     event_data:
       command: long_release
       endpoint_id: 1
     id: release-hold-on-zha-somrig
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: 1_long_release
     id: release-hold-on-z2m-somrig
+    enabled: "{{ mqtt_enabled }}"
   - trigger: event
     event_type: zha_event
     event_data:
       command: long_release
       endpoint_id: 2
     id: release-hold-off-zha-somrig
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: 2_long_release
     id: release-hold-off-z2m-somrig
+    enabled: "{{ mqtt_enabled }}"
 variables:
   is_mqtt: "{{ trigger.platform == 'mqtt' }}"
   is_zha: "{{ trigger.platform == 'event' and trigger.event.event_type == 'zha_event' }}"
@@ -360,46 +394,27 @@ actions:
               - condition: template
                 value_template: "{{ on_double_press_exposed }}"
             then:
-              - choose:
-                  - conditions:
-                      - condition: trigger
-                        id:
-                          - press-on-zha
-                    sequence:
-                      - wait_for_trigger:
-                          - trigger: event
-                            event_type: zha_event
-                            event_data:
-                              device_id: "{{ zha_device_id }}"
-                              command: "on"
-                              cluster_id: 6
-                              endpoint_id: 1
-                        timeout:
-                          milliseconds: !input helper_double_press_delay
-                        continue_on_timeout: true
-                      - if:
-                          - condition: template
-                            value_template: "{{ wait.trigger.idx is defined }}"
-                        then: !input on_double_press_action
-                        else: !input on_press_action
-                  - conditions:
-                      - condition: trigger
-                        id:
-                          - press-on-z2m
-                    sequence:
-                      - wait_for_trigger:
-                          - trigger: mqtt
-                            topic: "{{ mqtt_topic }}"
-                            payload: "on"
-                        timeout:
-                          milliseconds: !input helper_double_press_delay
-                        continue_on_timeout: true
-                      - if:
-                          - condition: template
-                            value_template: "{{ wait.trigger.idx is defined }}"
-                        then: !input on_double_press_action
-                        else: !input on_press_action
-                default: !input on_press_action
+              - wait_for_trigger:
+                  - trigger: event
+                    event_type: zha_event
+                    event_data:
+                      device_id: "{{ zha_device_id }}"
+                      command: "on"
+                      cluster_id: 6
+                      endpoint_id: 1
+                    enabled: "{{ is_zha }}"
+                  - trigger: mqtt
+                    topic: "{{ mqtt_topic }}"
+                    payload: "on"
+                    enabled: "{{ is_mqtt }}"
+                timeout:
+                  milliseconds: !input helper_double_press_delay
+                continue_on_timeout: true
+              - if:
+                  - condition: template
+                    value_template: "{{ wait.trigger.idx is defined }}"
+                then: !input on_double_press_action
+                else: !input on_press_action
             else: !input on_press_action
       - conditions:
           - condition: trigger
@@ -413,46 +428,27 @@ actions:
               - condition: template
                 value_template: "{{ off_double_press_exposed }}"
             then:
-              - choose:
-                  - conditions:
-                      - condition: trigger
-                        id:
-                          - press-off-zha
-                    sequence:
-                      - wait_for_trigger:
-                          - trigger: event
-                            event_type: zha_event
-                            event_data:
-                              device_id: "{{ zha_device_id }}"
-                              command: "off"
-                              cluster_id: 6
-                              endpoint_id: 1
-                        timeout:
-                          milliseconds: !input helper_double_press_delay
-                        continue_on_timeout: true
-                      - if:
-                          - condition: template
-                            value_template: "{{ wait.trigger.idx is defined }}"
-                        then: !input off_double_press_action
-                        else: !input off_press_action
-                  - conditions:
-                      - condition: trigger
-                        id:
-                          - press-off-z2m
-                    sequence:
-                      - wait_for_trigger:
-                          - trigger: mqtt
-                            topic: "{{ mqtt_topic }}"
-                            payload: "off"
-                        timeout:
-                          milliseconds: !input helper_double_press_delay
-                        continue_on_timeout: true
-                      - if:
-                          - condition: template
-                            value_template: "{{ wait.trigger.idx is defined }}"
-                        then: !input off_double_press_action
-                        else: !input off_press_action
-                default: !input off_press_action
+              - wait_for_trigger:
+                  - trigger: event
+                    event_type: zha_event
+                    event_data:
+                      device_id: "{{ zha_device_id }}"
+                      command: "off"
+                      cluster_id: 6
+                      endpoint_id: 1
+                    enabled: "{{ is_zha }}"
+                  - trigger: mqtt
+                    topic: "{{ mqtt_topic }}"
+                    payload: "off"
+                    enabled: "{{ is_mqtt }}"
+                timeout:
+                  milliseconds: !input helper_double_press_delay
+                continue_on_timeout: true
+              - if:
+                  - condition: template
+                    value_template: "{{ wait.trigger.idx is defined }}"
+                then: !input off_double_press_action
+                else: !input off_press_action
             else: !input off_press_action
       - conditions:
           - condition: trigger
@@ -484,50 +480,31 @@ actions:
                 - parallel:
                     - sequence: !input on_hold_action
                     - sequence:
-                        - choose:
-                            - conditions:
-                                - condition: trigger
-                                  id:
-                                    - hold-on-zha
-                                    - hold-on-zha-somrig
-                              sequence:
-                                - wait_for_trigger:
-                                    - trigger: event
-                                      event_type: zha_event
-                                      event_data:
-                                        device_id: "{{ zha_device_id }}"
-                                        command: "stop_with_on_off"
-                                        cluster_id: 8
-                                        endpoint_id: 1
-                                  timeout:
-                                    milliseconds: !input helper_hold_delay
-                                  continue_on_timeout: true
-                                - if:
-                                    - condition: template
-                                      value_template: "{{ wait.trigger.idx is defined }}"
-                                  then:
-                                    - stop: button released
-                            - conditions:
-                                - condition: trigger
-                                  id:
-                                    - hold-on-z2m
-                                    - hold-on-z2m-somrig
-                              sequence:
-                                - wait_for_trigger:
-                                    - trigger: mqtt
-                                      topic: "{{ mqtt_topic }}"
-                                      payload: "brightness_stop"
-                                    - trigger: mqtt
-                                      topic: "{{ mqtt_topic }}"
-                                      payload: "1_long_release"
-                                  timeout:
-                                    milliseconds: !input helper_hold_delay
-                                  continue_on_timeout: true
-                                - if:
-                                    - condition: template
-                                      value_template: "{{ wait.trigger.idx is defined }}"
-                                  then:
-                                    - stop: button released
+                        - wait_for_trigger:
+                            - trigger: event
+                              event_type: zha_event
+                              event_data:
+                                device_id: "{{ zha_device_id }}"
+                                command: "stop_with_on_off"
+                                cluster_id: 8
+                                endpoint_id: 1
+                              enabled: "{{ is_zha }}"
+                            - trigger: mqtt
+                              topic: "{{ mqtt_topic }}"
+                              payload: "brightness_stop"
+                              enabled: "{{ is_mqtt }}"
+                            - trigger: mqtt
+                              topic: "{{ mqtt_topic }}"
+                              payload: "1_long_release"
+                              enabled: "{{ is_mqtt }}"
+                          timeout:
+                            milliseconds: !input helper_hold_delay
+                          continue_on_timeout: true
+                        - if:
+                            - condition: template
+                              value_template: "{{ wait.trigger.idx is defined }}"
+                          then:
+                            - stop: button released
       - conditions:
           - condition: trigger
             id:
@@ -542,47 +519,28 @@ actions:
                 - parallel:
                     - sequence: !input off_hold_action
                     - sequence:
-                        - choose:
-                            - conditions:
-                                - condition: trigger
-                                  id:
-                                    - hold-off-zha
-                                    - hold-off-zha-somrig
-                              sequence:
-                                - wait_for_trigger:
-                                    - trigger: event
-                                      event_type: zha_event
-                                      event_data:
-                                        device_id: "{{ zha_device_id }}"
-                                        command: "stop_with_on_off"
-                                        cluster_id: 8
-                                        endpoint_id: 1
-                                  timeout:
-                                    milliseconds: !input helper_hold_delay
-                                  continue_on_timeout: true
-                                - if:
-                                    - condition: template
-                                      value_template: "{{ wait.trigger.idx is defined }}"
-                                  then:
-                                    - stop: button released
-                            - conditions:
-                                - condition: trigger
-                                  id:
-                                    - hold-off-z2m
-                                    - hold-off-z2m-somrig
-                              sequence:
-                                - wait_for_trigger:
-                                    - trigger: mqtt
-                                      topic: "{{ mqtt_topic }}"
-                                      payload: "brightness_stop"
-                                    - trigger: mqtt
-                                      topic: "{{ mqtt_topic }}"
-                                      payload: "2_long_release"
-                                  timeout:
-                                    milliseconds: !input helper_hold_delay
-                                  continue_on_timeout: true
-                                - if:
-                                    - condition: template
-                                      value_template: "{{ wait.trigger.idx is defined }}"
-                                  then:
-                                    - stop: button released
+                        - wait_for_trigger:
+                            - trigger: event
+                              event_type: zha_event
+                              event_data:
+                                device_id: "{{ zha_device_id }}"
+                                command: "stop_with_on_off"
+                                cluster_id: 8
+                                endpoint_id: 1
+                              enabled: "{{ is_zha }}"
+                            - trigger: mqtt
+                              topic: "{{ mqtt_topic }}"
+                              payload: "brightness_stop"
+                              enabled: "{{ is_mqtt }}"
+                            - trigger: mqtt
+                              topic: "{{ mqtt_topic }}"
+                              payload: "2_long_release"
+                              enabled: "{{ is_mqtt }}"
+                          timeout:
+                            milliseconds: !input helper_hold_delay
+                          continue_on_timeout: true
+                        - if:
+                            - condition: template
+                              value_template: "{{ wait.trigger.idx is defined }}"
+                          then:
+                            - stop: button released

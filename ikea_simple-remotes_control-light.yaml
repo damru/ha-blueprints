@@ -106,6 +106,12 @@ blueprint:
               mode: slider
 mode: restart
 max_exceeded: silent
+
+trigger_variables:
+  mqtt_enabled: "{{ integration_entities('mqtt') != [] }}"
+  remote_devices: !input remote_devices
+  zha_enabled: "{{ integration_entities('zha') != [] }}"
+
 triggers:
   ###########################
   # SINGLE PRESSES
@@ -117,10 +123,12 @@ triggers:
       cluster_id: 6
       endpoint_id: 1
     id: press-on-zha
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: "on"
     id: press-on-z2m
+    enabled: "{{ mqtt_enabled }}"
   - trigger: event
     event_type: zha_event
     event_data:
@@ -128,30 +136,36 @@ triggers:
       cluster_id: 6
       endpoint_id: 1
     id: press-off-zha
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: "off"
     id: press-off-z2m
+    enabled: "{{ mqtt_enabled }}"
   - trigger: event
     event_type: zha_event
     event_data:
       command: short_release
       endpoint_id: 1
     id: press-on-zha-somrig
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: 1_short_release
     id: press-on-z2m-somrig
+    enabled: "{{ mqtt_enabled }}"
   - trigger: event
     event_type: zha_event
     event_data:
       command: short_release
       endpoint_id: 2
     id: press-off-zha-somrig
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: 2_short_release
     id: press-off-z2m-somrig
+    enabled: "{{ mqtt_enabled }}"
 
   ###########################
   # LONG PRESSES
@@ -163,10 +177,12 @@ triggers:
       cluster_id: 8
       endpoint_id: 1
     id: hold-on-zha
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: brightness_move_up
     id: hold-on-z2m
+    enabled: "{{ mqtt_enabled }}"
   - trigger: event
     event_type: zha_event
     event_data:
@@ -174,10 +190,12 @@ triggers:
       cluster_id: 8
       endpoint_id: 1
     id: hold-off-zha
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: brightness_move_down
     id: hold-off-z2m
+    enabled: "{{ mqtt_enabled }}"
   - trigger: event
     event_type: zha_event
     event_data:
@@ -185,50 +203,60 @@ triggers:
       endpoint_id: 1
       cluster_id: 8
     id: release-zha
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: brightness_stop
     id: release-z2m
+    enabled: "{{ mqtt_enabled }}"
   - trigger: event
     event_type: zha_event
     event_data:
       command: long_press
       endpoint_id: 1
     id: hold-on-zha-somrig
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: 1_long_press
     id: hold-on-z2m-somrig
+    enabled: "{{ mqtt_enabled }}"
   - trigger: event
     event_type: zha_event
     event_data:
       command: long_press
       endpoint_id: 2
     id: hold-off-zha-somrig
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: 2_long_press
     id: hold-off-z2m-somrig
+    enabled: "{{ mqtt_enabled }}"
   - trigger: event
     event_type: zha_event
     event_data:
       command: long_release
       endpoint_id: 1
     id: release-hold-on-zha-somrig
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: 1_long_release
     id: release-hold-on-z2m-somrig
+    enabled: "{{ mqtt_enabled }}"
   - trigger: event
     event_type: zha_event
     event_data:
       command: long_release
       endpoint_id: 2
     id: release-hold-off-zha-somrig
+    enabled: "{{ zha_enabled }}"
   - trigger: mqtt
     topic: "+/+/action"
     payload: 2_long_release
     id: release-hold-off-z2m-somrig
+    enabled: "{{ mqtt_enabled }}"
 variables:
   helper_force_brightness: !input helper_force_brightness
   helper_hold_delay: 0.1
