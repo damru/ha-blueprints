@@ -169,7 +169,7 @@ blueprint:
               max: 5000.0
               step: 10.0
               mode: slider
-  source_url: https://github.com/damru/ha-blueprints/blob/main/ikea_simple-remotes_control-anything.yaml
+  source_url: https://github.com/damru/ha-blueprints/blob/main/ikea_remotes_control-anything.yaml
 mode: single
 max_exceeded: silent
 triggers:
