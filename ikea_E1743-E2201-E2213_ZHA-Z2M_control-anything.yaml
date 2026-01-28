@@ -9,7 +9,7 @@ blueprint:
 
     How to migrate:
 
-    - Import from the new url: https://github.com/damru/ha-blueprints/blob/main/ikea_simple-remotes_control-anything.yaml
+    - Import from the new url: https://github.com/damru/ha-blueprints/blob/main/ikea_remotes_control-anything.yaml
 
     - Reconfigure your existing automations to use the new blueprint (the old one will not receive updates anymore)
       - Edit the automation in YAML
@@ -23,7 +23,7 @@ blueprint:
         ```yaml
         use_blueprint:
           [...]
-          path: damru/ikea_simple-remotes_control-anything.yaml
+          path: damru/ikea_remotes_control-anything.yaml
         ```
     - Delete the old blueprint from your Home Assistant instance
 
@@ -190,7 +190,7 @@ blueprint:
               max: 5000.0
               step: 10.0
               mode: slider
-  source_url: https://github.com/damru/ha-blueprints/blob/main/ikea_simple-remotes_control-anything.yaml
+  source_url: https://github.com/damru/ha-blueprints/blob/main/ikea_remotes_control-anything.yaml
 mode: single
 max_exceeded: silent
 triggers:
