@@ -106,7 +106,7 @@ blueprint:
     off_double_press_action:
       name: Double press "off / 2 dots" action
       description: >
-        Choose action(s) to run when the **off** button is **pressed twice**. 
+        Choose action(s) to run when the **off** button is **pressed twice**.
         **_NB for Rodret, Tradfri only_**: **Double press event (off)** must be exposed and **Double press delay** interval is used as a timeout.
       default: []
       selector:
