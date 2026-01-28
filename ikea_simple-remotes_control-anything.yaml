@@ -223,7 +223,7 @@ triggers:
     id: press-off-z2m-somrig
 
     ###########################
-    # DOUBLES PRESSES
+    # DOUBLE PRESSES
     ###########################
   - trigger: mqtt
     topic: "+/+/action"
