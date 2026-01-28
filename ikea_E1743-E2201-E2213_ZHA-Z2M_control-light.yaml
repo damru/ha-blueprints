@@ -99,7 +99,7 @@ blueprint:
               max: 100.0
               step: 1.0
               mode: slider
-  source: https://github.com/damru/ha-blueprints/blob/main/ikea_simple-remotes_control-light.yaml
+  source_url: https://github.com/damru/ha-blueprints/blob/main/ikea_simple-remotes_control-light.yaml
 mode: restart
 max_exceeded: silent
 triggers:
