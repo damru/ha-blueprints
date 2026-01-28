@@ -8,13 +8,9 @@ blueprint:
     ## 💡 Control a light with **IKEA's remotes**
         
     Currently supported are:
-
       - Bilresa
-
       - RODRET
-
       - SOMRIG
-
       - TRADFRI ON/OFF
 
     Only for use with [ZHA](https://www.home-assistant.io/integrations/zha/)
@@ -23,15 +19,11 @@ blueprint:
 
 
     Available controls:
-
-    - Press **on** button to turn on the light
+      - Press **on** button to turn on the light
     (Optional: set the target brightness by enabling **Force Brightness** and setting a **Brightness** value)
-
-    - Press **off** button to turn off the light
-
-    - Hold **on** button to increase the brightness
-
-    - Hold **off** button to decrease the brightness down to 1%
+      - Press **off** button to turn off the light
+      - Hold **on** button to increase the brightness
+      - Hold **off** button to decrease the brightness down to 1%
   input:
     remote_devices:
       name: Remotes

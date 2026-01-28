@@ -8,13 +8,9 @@ blueprint:
     ## ⚙️ Control anything with **IKEA's remotes** 
     
     Currently supported are:
-
       - Bilresa
-
       - RODRET
-
       - SOMRIG
-
       - TRADFRI ON/OFF
 
     Only for use with [ZHA](https://www.home-assistant.io/integrations/zha/)
@@ -23,12 +19,9 @@ blueprint:
 
 
     Available controls:
-
-    - Single press **on/off**
-
-    - Double press **on/off**
-
-    - Hold **on/off**.
+      - Single press **on/off**
+      - Double press **on/off**
+      - Hold **on/off**.
     Actions will be executed every **Hold delay**, but maximum **Max number of loops** times.
   input:
     remote_devices:
