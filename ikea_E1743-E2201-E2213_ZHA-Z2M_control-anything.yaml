@@ -6,6 +6,27 @@ blueprint:
   name: ⚠️ DEPRECATED - Ikea's Rodret, Somrig or Tradfri ⚙️ Controls
   description: >
     # ⚠️⚠️ DEPRECATION NOTICE: This blueprint was renamed and is now deprecated as it is. Please reimport to update to the latest version
+
+    How to migrate:
+
+    - Import from the new url: https://github.com/damru/ha-blueprints/blob/main/ikea_simple-remotes_control-anything.yaml
+
+    - Reconfigure your existing automations to use the new blueprint (the old one will not receive updates anymore)
+      - Edit the automation in YAML
+      - Update the following:
+        ```yaml
+        use_blueprint:
+          [...]
+          path: damru/ikea_E1743-E2201-E2213_ZHA-Z2M_control-anything.yaml
+        ```
+        to:
+        ```yaml
+        use_blueprint:
+          [...]
+          path: damru/ikea_simple-remotes_control-anything.yaml
+        ```
+    - Delete the old blueprint from your Home Assistant instance
+
     ## ⚙️ Control anything with **IKEA RODRET** or **IKEA SOMRIG** or **IKEA TRADFRI ON/OFF** remotes
 
 
