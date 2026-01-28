@@ -3,10 +3,19 @@ blueprint:
     min_version: 2024.10.0
   author: damru
   domain: automation
-  name: Ikea's Simple Remotes 💡 Light control
+  name: Ikea's Remotes 💡 Light control
   description: >
-    ## 💡 Control a light with **IKEA Bilresa** or **IKEA RODRET** or **IKEA SOMRIG** or **IKEA TRADFRI ON/OFF** remotes
+    ## 💡 Control a light with **IKEA's remotes**
+        
+    Currently supported are:
 
+      - Bilresa
+
+      - RODRET
+
+      - SOMRIG
+
+      - TRADFRI ON/OFF
 
     Only for use with [ZHA](https://www.home-assistant.io/integrations/zha/)
     or Zigbee2MQTT (cf [MQTT](https://www.home-assistant.io/integrations/mqtt)
