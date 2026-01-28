@@ -185,7 +185,7 @@ triggers:
       command: "on"
       cluster_id: 6
       endpoint_id: 1
-    id: press-on-zha  
+    id: press-on-zha
   - trigger: mqtt
     topic: "+/+/action"
     payload: "on"
