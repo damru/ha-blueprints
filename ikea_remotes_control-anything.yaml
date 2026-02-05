@@ -73,31 +73,31 @@ blueprint:
               model: TRADFRI on/off switch (E1743)
           multiple: true
     on_press_action:
-      name: Press "on / 1 dot" action
+      name: Press "on" action
       description: Choose action(s) to run when **on** button is **pressed**.
       default: []
       selector:
         action: {}
     off_press_action:
-      name: Press "off / 2 dots" action
+      name: Press "off" action
       description: Choose action(s) to run when **off** button is **pressed**.
       default: []
       selector:
         action: {}
     on_hold_action:
-      name: Hold "on / 1 dot" action
+      name: Hold "on" action
       description: Choose action(s) to run when **on** button is **held**.
       default: []
       selector:
         action: {}
     off_hold_action:
-      name: Hold "off / 2 dots" action
+      name: Hold "off" action
       description: Choose action(s) to run when **off** button is **held**.
       default: []
       selector:
         action: {}
     on_double_press_action:
-      name: Double press "on / 1 dot" action
+      name: Double press "on" action
       description: >
         Choose action(s) to run when the **on** button is **pressed twice**.
 
@@ -106,7 +106,7 @@ blueprint:
       selector:
         action: {}
     off_double_press_action:
-      name: Double press "off / 2 dots" action
+      name: Double press "off" action
       description: >
         Choose action(s) to run when the **off** button is **pressed twice**.
         **_NB for Rodret, Tradfri only_**: **Double press event (off)** must be exposed and **Double press delay** interval is used as a timeout.
@@ -148,7 +148,7 @@ blueprint:
           name: Expose virtual double press "on" event
           description: >
             Choose whether or not to expose the virtual **double press** event for the **on** button. 
-            Turn this on if you are providing action(s) for the **Double press action (on / 1 dot)**.
+            Turn this on if you are providing action(s) for the **Double press action (on)**.
           default: false
           selector:
             boolean: {}
@@ -156,7 +156,7 @@ blueprint:
           name: Expose virtual double press "off" event
           description: >
             Choose whether or not to expose the virtual **double press** event for the **off** button. 
-            Turn this on if you are providing an action for the **Double press action (off / 2 dots)**.
+            Turn this on if you are providing an action for the **Double press action (off)**.
           default: false
           selector:
             boolean: {}
